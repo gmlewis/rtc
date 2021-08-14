@@ -124,6 +124,7 @@ func TestPoint_Vector_Equal(t *testing.T) {
 			wantVector: Tuple{4, -4, 3, 0},
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			gotPoint := Point(tt.args.x, tt.args.y, tt.args.z)
@@ -165,6 +166,7 @@ func TestTuple_Add(t *testing.T) {
 			want:  Tuple{1, 1, 6, 1},
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.tr.Add(tt.other); !cmp.Equal(got, tt.want) {
@@ -206,6 +208,7 @@ func TestTuple_Sub(t *testing.T) {
 			want:  Vector(-1, 2, -3),
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.tr.Sub(&tt.other); !cmp.Equal(got, tt.want) {
@@ -227,6 +230,7 @@ func TestTuple_Negate(t *testing.T) {
 			want: Tuple{-1, 2, -3, 4},
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.tr.Negate(); !cmp.Equal(got, tt.want) {
@@ -256,6 +260,7 @@ func TestTuple_MulScalar(t *testing.T) {
 			want: Tuple{0.5, -1, 1.5, -2},
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.tr.MulScalar(tt.f); !cmp.Equal(got, tt.want) {
@@ -279,10 +284,53 @@ func TestTuple_DivScalar(t *testing.T) {
 			want: Tuple{0.5, -1, 1.5, -2},
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.tr.DivScalar(tt.f); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Tuple.DivScalar() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestTuple_Magnitude(t *testing.T) {
+	tests := []struct {
+		name string
+		tr   Tuple
+		want float64
+	}{
+		{
+			name: "Computing the magnitude of vector(1,0,0)",
+			tr:   Vector(1, 0, 0),
+			want: 1,
+		},
+		{
+			name: "Computing the magnitude of vector(0,1,0)",
+			tr:   Vector(0, 1, 0),
+			want: 1,
+		},
+		{
+			name: "Computing the magnitude of vector(0,0,1)",
+			tr:   Vector(0, 0, 1),
+			want: 1,
+		},
+		{
+			name: "Computing the magnitude of vector(1,2,3)",
+			tr:   Vector(1, 2, 3),
+			want: math.Sqrt(14),
+		},
+		{
+			name: "Computing the magnitude of vector(-1,-2,-3)",
+			tr:   Vector(-1, -2, -3),
+			want: math.Sqrt(14),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.tr.Magnitude(); math.Abs(got-tt.want) > epsilon {
+				t.Errorf("Tuple.Magnitude() = %v, want %v", got, tt.want)
 			}
 		})
 	}

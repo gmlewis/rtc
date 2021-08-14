@@ -117,3 +117,12 @@ func (t *Tuple) MulScalar(f float64) Tuple {
 func (t *Tuple) DivScalar(f float64) Tuple {
 	return t.MulScalar(1 / f)
 }
+
+// Magnitude computes the magnitude or length of a vector (Tuple).
+func (t *Tuple) Magnitude() float64 {
+	return math.Sqrt(
+		t.X()*t.X() +
+			t.Y()*t.Y() +
+			t.Z()*t.Z() +
+			t.W()*t.W())
+}
