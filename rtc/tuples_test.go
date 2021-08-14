@@ -7,10 +7,6 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
-const (
-	epsilon = 1e-4
-)
-
 func TestTuples(t *testing.T) {
 	tests := []struct {
 		name       string
@@ -108,7 +104,7 @@ func TestTuples(t *testing.T) {
 	}
 }
 
-func TestPointAndVector(t *testing.T) {
+func TestPoint_Vector_Equal(t *testing.T) {
 	type args struct {
 		x float64
 		y float64
@@ -129,12 +125,26 @@ func TestPointAndVector(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Point(tt.args.x, tt.args.y, tt.args.z); !cmp.Equal(got, tt.wantPoint) {
-				t.Errorf("Point() = %v, want %v", got, tt.wantPoint)
+			gotPoint := Point(tt.args.x, tt.args.y, tt.args.z)
+			if !cmp.Equal(gotPoint, tt.wantPoint) {
+				t.Errorf("Point() = %v, want %v", gotPoint, tt.wantPoint)
+			}
+			if got := gotPoint.Equal(&tt.wantPoint); !got {
+				t.Errorf("gotPoint.Equal(wantPoint) = %v, want true", got)
+			}
+			if got := tt.wantPoint.Equal(&gotPoint); !got {
+				t.Errorf("wantPoint.Equal(gotPoint) = %v, want true", got)
 			}
 
-			if got := Vector(tt.args.x, tt.args.y, tt.args.z); !cmp.Equal(got, tt.wantVector) {
-				t.Errorf("Vector() = %v, want %v", got, tt.wantVector)
+			gotVector := Vector(tt.args.x, tt.args.y, tt.args.z)
+			if !cmp.Equal(gotVector, tt.wantVector) {
+				t.Errorf("Vector() = %v, want %v", gotVector, tt.wantVector)
+			}
+			if got := gotVector.Equal(&tt.wantVector); !got {
+				t.Errorf("gotVector.Equal(wantVector) = %v, want true", got)
+			}
+			if got := tt.wantVector.Equal(&gotVector); !got {
+				t.Errorf("wantVector.Equal(gotVector) = %v, want true", got)
 			}
 		})
 	}

@@ -1,7 +1,13 @@
 package rtc
 
 import (
+	"math"
+
 	"github.com/gmlewis/go3d/float64/vec4"
+)
+
+const (
+	epsilon = 1e-4
 )
 
 // Tuple is a vec4.
@@ -57,4 +63,22 @@ func Point(x, y, z float64) Tuple {
 // Vector returns a new Tuple as a Vector.
 func Vector(x, y, z float64) Tuple {
 	return Tuple{x, y, z, 0}
+}
+
+// Equal tests if two Tuples are equal.
+func (t *Tuple) Equal(other *Tuple) bool {
+	return math.Abs(t.X()-other.X()) < epsilon &&
+		math.Abs(t.Y()-other.Y()) < epsilon &&
+		math.Abs(t.Z()-other.Z()) < epsilon &&
+		math.Abs(t.W()-other.W()) < epsilon
+}
+
+// Add adds two Tuples and returns a new one.
+func (t *Tuple) Add(other *Tuple) Tuple {
+	return Tuple{
+		t.X() + other.X(),
+		t.Y() + other.Y(),
+		t.Z() + other.Z(),
+		t.W() + other.W(),
+	}
 }
