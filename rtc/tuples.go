@@ -112,3 +112,8 @@ func (t *Tuple) MulScalar(f float64) Tuple {
 		f * t.W(),
 	}
 }
+
+// DivScalar divides a tuple by a scalar.
+func (t *Tuple) DivScalar(f float64) Tuple {
+	return t.MulScalar(1 / f)
+}

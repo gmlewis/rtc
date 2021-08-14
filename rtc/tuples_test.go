@@ -2,6 +2,7 @@ package rtc
 
 import (
 	"math"
+	"reflect"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -259,6 +260,29 @@ func TestTuple_MulScalar(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.tr.MulScalar(tt.f); !cmp.Equal(got, tt.want) {
 				t.Errorf("Tuple.MulScalar() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestTuple_DivScalar(t *testing.T) {
+	tests := []struct {
+		name string
+		tr   Tuple
+		f    float64
+		want Tuple
+	}{
+		{
+			name: "Dividing a tuple by a scalar",
+			tr:   Tuple{1, -2, 3, -4},
+			f:    2,
+			want: Tuple{0.5, -1, 1.5, -2},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.tr.DivScalar(tt.f); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Tuple.DivScalar() = %v, want %v", got, tt.want)
 			}
 		})
 	}
