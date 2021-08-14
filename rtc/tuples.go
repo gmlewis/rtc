@@ -102,3 +102,13 @@ func (t *Tuple) Negate() Tuple {
 		-t.W(),
 	}
 }
+
+// MulScalar multiplies a tuple by a scalar.
+func (t *Tuple) MulScalar(f float64) Tuple {
+	return Tuple{
+		f * t.X(),
+		f * t.Y(),
+		f * t.Z(),
+		f * t.W(),
+	}
+}

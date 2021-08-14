@@ -234,3 +234,32 @@ func TestTuple_Negate(t *testing.T) {
 		})
 	}
 }
+
+func TestTuple_MulScalar(t *testing.T) {
+	tests := []struct {
+		name string
+		tr   Tuple
+		f    float64
+		want Tuple
+	}{
+		{
+			name: "Multiplying a tuple by a scalar",
+			tr:   Tuple{1, -2, 3, -4},
+			f:    3.5,
+			want: Tuple{3.5, -7, 10.5, -14},
+		},
+		{
+			name: "Multiplying a tuple by a fraction",
+			tr:   Tuple{1, -2, 3, -4},
+			f:    0.5,
+			want: Tuple{0.5, -1, 1.5, -2},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.tr.MulScalar(tt.f); !cmp.Equal(got, tt.want) {
+				t.Errorf("Tuple.MulScalar() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
