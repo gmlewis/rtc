@@ -126,3 +126,8 @@ func (t *Tuple) Magnitude() float64 {
 			t.Z()*t.Z() +
 			t.W()*t.W())
 }
+
+// Normalize normalizes a vector to a unit vector (of length 1).
+func (t *Tuple) Normalize() Tuple {
+	return t.DivScalar(t.Magnitude())
+}

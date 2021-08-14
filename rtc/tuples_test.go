@@ -2,7 +2,6 @@ package rtc
 
 import (
 	"math"
-	"reflect"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -287,7 +286,7 @@ func TestTuple_DivScalar(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.tr.DivScalar(tt.f); !reflect.DeepEqual(got, tt.want) {
+			if got := tt.tr.DivScalar(tt.f); !cmp.Equal(got, tt.want) {
 				t.Errorf("Tuple.DivScalar() = %v, want %v", got, tt.want)
 			}
 		})
@@ -331,6 +330,38 @@ func TestTuple_Magnitude(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.tr.Magnitude(); math.Abs(got-tt.want) > epsilon {
 				t.Errorf("Tuple.Magnitude() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestTuple_Normalize(t *testing.T) {
+	tests := []struct {
+		name string
+		tr   Tuple
+		want Tuple
+	}{
+		{
+			name: "Normalizing vector(4,0,0) gives (1,0,0)",
+			tr:   Vector(4, 0, 0),
+			want: Vector(1, 0, 0),
+		},
+		{
+			name: "Normalizing vector(1,2,3)",
+			tr:   Vector(1, 2, 3),
+			want: Vector(0.267261, 0.534522, 0.801783),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tt.tr.Normalize()
+			if !got.Equal(&tt.want) {
+				t.Errorf("Tuple.Normalize() = %v, want %v", got, tt.want)
+			}
+
+			if gotMag := got.Magnitude(); math.Abs(gotMag-1) > epsilon {
+				t.Errorf("Magnitude of Normalized vector = %v, want 1", gotMag)
 			}
 		})
 	}
