@@ -82,3 +82,13 @@ func (t *Tuple) Add(other *Tuple) Tuple {
 		t.W() + other.W(),
 	}
 }
+
+// Sub subtracts two Tuples and returns a new one.
+func (t *Tuple) Sub(other *Tuple) Tuple {
+	return Tuple{
+		t.X() - other.X(),
+		t.Y() - other.Y(),
+		t.Z() - other.Z(),
+		t.W() - other.W(),
+	}
+}

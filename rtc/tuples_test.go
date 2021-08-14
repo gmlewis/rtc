@@ -172,3 +172,38 @@ func TestTuple_Add(t *testing.T) {
 		})
 	}
 }
+
+func TestTuple_Sub(t *testing.T) {
+	tests := []struct {
+		name  string
+		tr    Tuple
+		other Tuple
+		want  Tuple
+	}{
+		{
+			name:  "book scenario 1 page 30",
+			tr:    Point(3, 2, 1),
+			other: Point(5, 6, 7),
+			want:  Vector(-2, -4, -6),
+		},
+		{
+			name:  "book scenario 2 page 30",
+			tr:    Point(3, 2, 1),
+			other: Vector(5, 6, 7),
+			want:  Point(-2, -4, -6),
+		},
+		{
+			name:  "book scenario 3 page 30",
+			tr:    Vector(3, 2, 1),
+			other: Vector(5, 6, 7),
+			want:  Vector(-2, -4, -6),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.tr.Sub(&tt.other); !cmp.Equal(got, tt.want) {
+				t.Errorf("Tuple.Sub() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
