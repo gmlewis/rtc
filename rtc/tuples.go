@@ -92,3 +92,13 @@ func (t *Tuple) Sub(other *Tuple) Tuple {
 		t.W() - other.W(),
 	}
 }
+
+// Negate negates a Tuple.
+func (t *Tuple) Negate() Tuple {
+	return Tuple{
+		-t.X(),
+		-t.Y(),
+		-t.Z(),
+		-t.W(),
+	}
+}

@@ -158,7 +158,7 @@ func TestTuple_Add(t *testing.T) {
 		want  Tuple
 	}{
 		{
-			name:  "book scenario page 29",
+			name:  "Adding two tuples",
 			tr:    &Tuple{3, -2, 5, 1},
 			other: &Tuple{-2, 3, 1, 0},
 			want:  Tuple{1, 1, 6, 1},
@@ -181,28 +181,55 @@ func TestTuple_Sub(t *testing.T) {
 		want  Tuple
 	}{
 		{
-			name:  "book scenario 1 page 30",
+			name:  "Subtracting two points",
 			tr:    Point(3, 2, 1),
 			other: Point(5, 6, 7),
 			want:  Vector(-2, -4, -6),
 		},
 		{
-			name:  "book scenario 2 page 30",
+			name:  "Subtracting a vector from a point",
 			tr:    Point(3, 2, 1),
 			other: Vector(5, 6, 7),
 			want:  Point(-2, -4, -6),
 		},
 		{
-			name:  "book scenario 3 page 30",
+			name:  "Subtracting two vectors",
 			tr:    Vector(3, 2, 1),
 			other: Vector(5, 6, 7),
 			want:  Vector(-2, -4, -6),
+		},
+		{
+			name:  "Subtracting a vector from the zero vector",
+			tr:    Vector(0, 0, 0),
+			other: Vector(1, -2, 3),
+			want:  Vector(-1, 2, -3),
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.tr.Sub(&tt.other); !cmp.Equal(got, tt.want) {
 				t.Errorf("Tuple.Sub() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestTuple_Negate(t *testing.T) {
+	tests := []struct {
+		name string
+		tr   Tuple
+		want Tuple
+	}{
+		{
+			name: "Negating a tuple",
+			tr:   Tuple{1, -2, 3, -4},
+			want: Tuple{-1, 2, -3, 4},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.tr.Negate(); !cmp.Equal(got, tt.want) {
+				t.Errorf("Tuple.Negate() = %v, want %v", got, tt.want)
 			}
 		})
 	}
