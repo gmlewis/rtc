@@ -149,3 +149,26 @@ func TestPoint_Vector_Equal(t *testing.T) {
 		})
 	}
 }
+
+func TestTuple_Add(t *testing.T) {
+	tests := []struct {
+		name  string
+		tr    *Tuple
+		other *Tuple
+		want  Tuple
+	}{
+		{
+			name:  "book scenario page 29",
+			tr:    &Tuple{3, -2, 5, 1},
+			other: &Tuple{-2, 3, 1, 0},
+			want:  Tuple{1, 1, 6, 1},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.tr.Add(tt.other); !cmp.Equal(got, tt.want) {
+				t.Errorf("Tuple.Add() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
