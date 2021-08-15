@@ -2,7 +2,7 @@ package rtc
 
 // Color returns a new Tuple as a color.
 func Color(x, y, z float64) *Tuple {
-	return &Tuple{x, y, z, 1}
+	return &Tuple{x, y, z, 0}
 }
 
 // Red returns the red component of a color (Tuple).
@@ -35,4 +35,13 @@ func (t *Tuple) Alpha() float64 {
 		return 0
 	}
 	return t[3]
+}
+
+// HadamardProduct computes the product of two colors.
+func (t *Tuple) HadamardProduct(other *Tuple) *Tuple {
+	return Color(
+		t.X()*other.X(),
+		t.Y()*other.Y(),
+		t.Z()*other.Z(),
+	)
 }
