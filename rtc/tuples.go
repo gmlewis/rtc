@@ -56,13 +56,13 @@ func (t *Tuple) IsVector() bool {
 }
 
 // Point returns a new Tuple as a Point.
-func Point(x, y, z float64) Tuple {
-	return Tuple{x, y, z, 1}
+func Point(x, y, z float64) *Tuple {
+	return &Tuple{x, y, z, 1}
 }
 
 // Vector returns a new Tuple as a Vector.
-func Vector(x, y, z float64) Tuple {
-	return Tuple{x, y, z, 0}
+func Vector(x, y, z float64) *Tuple {
+	return &Tuple{x, y, z, 0}
 }
 
 // Equal tests if two Tuples are equal.
@@ -74,8 +74,8 @@ func (t *Tuple) Equal(other *Tuple) bool {
 }
 
 // Add adds two Tuples and returns a new one.
-func (t *Tuple) Add(other *Tuple) Tuple {
-	return Tuple{
+func (t *Tuple) Add(other *Tuple) *Tuple {
+	return &Tuple{
 		t.X() + other.X(),
 		t.Y() + other.Y(),
 		t.Z() + other.Z(),
@@ -84,8 +84,8 @@ func (t *Tuple) Add(other *Tuple) Tuple {
 }
 
 // Sub subtracts two Tuples and returns a new one.
-func (t *Tuple) Sub(other *Tuple) Tuple {
-	return Tuple{
+func (t *Tuple) Sub(other *Tuple) *Tuple {
+	return &Tuple{
 		t.X() - other.X(),
 		t.Y() - other.Y(),
 		t.Z() - other.Z(),
@@ -94,8 +94,8 @@ func (t *Tuple) Sub(other *Tuple) Tuple {
 }
 
 // Negate negates a Tuple.
-func (t *Tuple) Negate() Tuple {
-	return Tuple{
+func (t *Tuple) Negate() *Tuple {
+	return &Tuple{
 		-t.X(),
 		-t.Y(),
 		-t.Z(),
@@ -104,8 +104,8 @@ func (t *Tuple) Negate() Tuple {
 }
 
 // MulScalar multiplies a tuple by a scalar.
-func (t *Tuple) MulScalar(f float64) Tuple {
-	return Tuple{
+func (t *Tuple) MulScalar(f float64) *Tuple {
+	return &Tuple{
 		f * t.X(),
 		f * t.Y(),
 		f * t.Z(),
@@ -114,7 +114,7 @@ func (t *Tuple) MulScalar(f float64) Tuple {
 }
 
 // DivScalar divides a tuple by a scalar.
-func (t *Tuple) DivScalar(f float64) Tuple {
+func (t *Tuple) DivScalar(f float64) *Tuple {
 	return t.MulScalar(1 / f)
 }
 
@@ -128,7 +128,7 @@ func (t *Tuple) Magnitude() float64 {
 }
 
 // Normalize normalizes a vector to a unit vector (of length 1).
-func (t *Tuple) Normalize() Tuple {
+func (t *Tuple) Normalize() *Tuple {
 	return t.DivScalar(t.Magnitude())
 }
 
@@ -144,7 +144,7 @@ func (t *Tuple) Dot(other *Tuple) float64 {
 
 // Cross computes the cross product of two vectors (order matters and this
 // implements t cross other).
-func (t *Tuple) Cross(other *Tuple) Tuple {
+func (t *Tuple) Cross(other *Tuple) *Tuple {
 	return Vector(
 		t.Y()*other.Z()-t.Z()*other.Y(),
 		t.Z()*other.X()-t.X()*other.Z(),
