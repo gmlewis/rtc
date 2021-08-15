@@ -102,3 +102,11 @@ func TestCanvas_ToPPM_Split_Long_Lines(t *testing.T) {
 		t.Errorf("ToPPM pixel data =\n%v\nwant:\n%v", got, want)
 	}
 }
+
+func TestCanvas_Ends_In_Newline(t *testing.T) {
+	c := NewCanvas(5, 3)
+	ppm := c.ToPPM()
+	if got, want := ppm[len(ppm)-1:], "\n"; got != want {
+		t.Errorf("ToPPM last character should be newline but got: %v", got)
+	}
+}
