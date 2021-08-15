@@ -2,6 +2,7 @@ package rtc
 
 import (
 	"math"
+	"reflect"
 	"testing"
 )
 
@@ -215,6 +216,59 @@ func TestM2_Determinant(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.m.Determinant(); got != tt.want {
 				t.Errorf("M2.Determinant() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestM3_Submatrix(t *testing.T) {
+	tests := []struct {
+		name string
+		m    M3
+		row  int
+		col  int
+		want M2
+	}{
+		{
+			name: "A submatrix of a 3x3 matrix is a 2x2 matrix",
+			m:    M3{Tuple{1, 5, 0}, Tuple{-3, 2, 7}, Tuple{0, 6, -3}},
+			row:  0,
+			col:  2,
+			want: M2{Tuple{-3, 2}, Tuple{0, 6}},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.m.Submatrix(tt.row, tt.col); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("M3.Submatrix() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestM4_Submatrix(t *testing.T) {
+	tests := []struct {
+		name string
+		m    M4
+		row  int
+		col  int
+		want M3
+	}{
+		{
+			name: "A submatrix of a 4x4 matrix is a 3x3 matrix",
+			m: M4{Tuple{-6, 1, 1, 6},
+				Tuple{-8, 5, 8, 6},
+				Tuple{-1, 0, 8, 2},
+				Tuple{-7, 1, -1, 1}},
+			row:  2,
+			col:  1,
+			want: M3{Tuple{-6, 1, 6}, Tuple{-8, 8, 6}, Tuple{-7, -1, 1}},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.m.Submatrix(tt.row, tt.col); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("M4.Submatrix() = %v, want %v", got, tt.want)
 			}
 		})
 	}

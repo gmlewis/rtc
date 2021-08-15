@@ -57,6 +57,24 @@ func (m M4) Transpose() M4 {
 	}
 }
 
+// Submatrix returns a 3x3 submatrix with a row and column removed from a 4x4 matrix.
+func (m M4) Submatrix(row, col int) M3 {
+	v := func(r, c int) float64 {
+		if r >= row {
+			r++
+		}
+		if c >= col {
+			c++
+		}
+		return m[r][c]
+	}
+	return M3{
+		Tuple{v(0, 0), v(0, 1), v(0, 2)},
+		Tuple{v(1, 0), v(1, 1), v(1, 2)},
+		Tuple{v(2, 0), v(2, 1), v(2, 2)},
+	}
+}
+
 // Column returns a column of the matrix as a Tuple.
 func (m M4) Column(col int) Tuple {
 	return Tuple{m[0][col], m[1][col], m[2][col], m[3][col]}
@@ -75,6 +93,23 @@ func (m M3) Equal(other M3) bool {
 	return m[0].Equal(other[0]) &&
 		m[1].Equal(other[1]) &&
 		m[2].Equal(other[2])
+}
+
+// Submatrix returns a 2x2 submatrix with a row and column removed from a 3x3 matrix.
+func (m M3) Submatrix(row, col int) M2 {
+	v := func(r, c int) float64 {
+		if r >= row {
+			r++
+		}
+		if c >= col {
+			c++
+		}
+		return m[r][c]
+	}
+	return M2{
+		Tuple{v(0, 0), v(0, 1)},
+		Tuple{v(1, 0), v(1, 1)},
+	}
 }
 
 // M2 is a 2x2 matrix.
