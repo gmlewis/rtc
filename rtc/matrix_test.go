@@ -212,6 +212,7 @@ func TestM2_Determinant(t *testing.T) {
 			want: 17,
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.m.Determinant(); got != tt.want {
@@ -237,6 +238,7 @@ func TestM3_Submatrix(t *testing.T) {
 			want: M2{Tuple{-3, 2}, Tuple{0, 6}},
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.m.Submatrix(tt.row, tt.col); !reflect.DeepEqual(got, tt.want) {
@@ -265,10 +267,44 @@ func TestM4_Submatrix(t *testing.T) {
 			want: M3{Tuple{-6, 1, 6}, Tuple{-8, 8, 6}, Tuple{-7, -1, 1}},
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.m.Submatrix(tt.row, tt.col); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("M4.Submatrix() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestM3_Minor(t *testing.T) {
+	tests := []struct {
+		name string
+		m    M3
+		row  int
+		col  int
+		want float64
+	}{
+		{
+			name: "Calculating a minor of a 3x3 matrix",
+			m: M3{Tuple{3, 5, 0},
+				Tuple{2, -1, -7},
+				Tuple{6, -1, 5}},
+			row:  1,
+			col:  0,
+			want: 25,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			b := tt.m.Submatrix(tt.row, tt.col)
+			if got := b.Determinant(); got != tt.want {
+				t.Errorf("b.Determinant() = %v, want %v", got, tt.want)
+			}
+
+			if got := tt.m.Minor(tt.row, tt.col); got != tt.want {
+				t.Errorf("M3.Minor() = %v, want %v", got, tt.want)
 			}
 		})
 	}

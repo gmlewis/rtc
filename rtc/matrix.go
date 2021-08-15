@@ -112,6 +112,11 @@ func (m M3) Submatrix(row, col int) M2 {
 	}
 }
 
+// Minor returns the determinant of a submatrix of a 3x3 matrix.
+func (m M3) Minor(row, col int) float64 {
+	return m.Submatrix(row, col).Determinant()
+}
+
 // M2 is a 2x2 matrix.
 type M2 [2]Tuple
 
