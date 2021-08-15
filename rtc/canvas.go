@@ -85,21 +85,32 @@ func (c *Canvas) PixelAt(x, y int) *Tuple {
 // ToPPM returns a string PPM representation of the canvas.
 func (c *Canvas) ToPPM() string {
 	header := fmt.Sprintf("P3\n%v %v\n255\n", c.width, c.height)
+
 	var lines []string
 	for y := 0; y < c.height; y++ {
 		var line string
-		for x := 0; x < c.width; x++ {
-			pixel := c.PixelAt(x, y)
-			p := fmt.Sprintf("%v %v %v", clamp8(pixel.Red()), clamp8(pixel.Green()), clamp8(pixel.Blue()))
+
+		add := func(v float64) {
+			p := fmt.Sprintf("%v", clamp8(v))
+			if len(line) == 0 {
+				line = p
+				return
+			}
 			if len(line)+1+len(p) > maxPPMLineLen {
 				lines = append(lines, line)
 				line = p
-			} else if len(line) == 0 {
-				line = p
-			} else {
-				line += " " + p
+				return
 			}
+			line += " " + p
 		}
+
+		for x := 0; x < c.width; x++ {
+			pixel := c.PixelAt(x, y)
+			add(pixel.Red())
+			add(pixel.Green())
+			add(pixel.Blue())
+		}
+
 		lines = append(lines, line)
 	}
 	return fmt.Sprintf("%v\n%v\n", header, strings.Join(lines, "\n"))

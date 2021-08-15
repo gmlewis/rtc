@@ -79,3 +79,26 @@ func TestCanvas_ToPPM_Pixel_Data(t *testing.T) {
 		t.Errorf("ToPPM pixel data =\n%v\nwant:\n%v", got, want)
 	}
 }
+
+func TestCanvas_ToPPM_Split_Long_Lines(t *testing.T) {
+	c := NewCanvas(10, 2)
+	c1 := Color(1, 0.8, 0.6)
+
+	for y := 0; y < 2; y++ {
+		for x := 0; x < 10; x++ {
+			c.WritePixel(x, y, c1)
+		}
+	}
+
+	ppm := c.ToPPM()
+
+	lines := strings.Split(ppm, "\n")
+	want := `255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204
+153 255 204 153 255 204 153 255 204 153 255 204 153
+255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204
+153 255 204 153 255 204 153 255 204 153 255 204 153`
+	got := strings.Join(lines[4:8], "\n")
+	if got != want {
+		t.Errorf("ToPPM pixel data =\n%v\nwant:\n%v", got, want)
+	}
+}
