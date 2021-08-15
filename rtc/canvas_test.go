@@ -1,6 +1,7 @@
 package rtc
 
 import (
+	"strings"
 	"testing"
 )
 
@@ -40,4 +41,10 @@ func TestCanvas_WritePixel(t *testing.T) {
 	if !got.Equal(red) {
 		t.Errorf("PixelAt(2,3) = %v, want %v", got, red)
 	}
+}
+
+func TestCanvas_ToPPM(t *testing.T) {
+	c := NewCanvas(5, 3)
+	ppm := c.ToPPM()
+	lines := strings.Split(ppm, "\n")
 }

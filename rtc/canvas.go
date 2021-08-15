@@ -1,6 +1,7 @@
 package rtc
 
 import (
+	"fmt"
 	"image"
 	"image/color"
 	"math"
@@ -69,4 +70,10 @@ func (c *Canvas) PixelAt(x, y int) *Tuple {
 	}
 	idx := y*c.width + x
 	return &c.pixels[idx]
+}
+
+// ToPPM returns a string PPM representation of the canvas.
+func (c *Canvas) ToPPM() string {
+	header := fmt.Sprintf("P3\n%v %v\n255\n", c.width, c.height)
+	return header
 }
