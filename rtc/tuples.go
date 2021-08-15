@@ -131,3 +131,13 @@ func (t *Tuple) Magnitude() float64 {
 func (t *Tuple) Normalize() Tuple {
 	return t.DivScalar(t.Magnitude())
 }
+
+// Dot computes the dot product (aka "scalar product" or "inner product")
+// of two vectors (Tuples). The dot product is the cosine of the angle
+// between two unit vectors.
+func (t *Tuple) Dot(other *Tuple) float64 {
+	return t.X()*other.X() +
+		t.Y()*other.Y() +
+		t.Z()*other.Z() +
+		t.W()*other.W()
+}

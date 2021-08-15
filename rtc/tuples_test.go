@@ -366,3 +366,27 @@ func TestTuple_Normalize(t *testing.T) {
 		})
 	}
 }
+
+func TestTuple_Dot(t *testing.T) {
+	tests := []struct {
+		name  string
+		tr    Tuple
+		other Tuple
+		want  float64
+	}{
+		{
+			name:  "The dot product of two tuples",
+			tr:    Vector(1, 2, 3),
+			other: Vector(2, 3, 4),
+			want:  20,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.tr.Dot(&tt.other); got != tt.want {
+				t.Errorf("Tuple.Dot() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
