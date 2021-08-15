@@ -33,13 +33,13 @@ var (
 )
 
 type Projectile struct {
-	Position *rtc.Tuple // Point
-	Velocity *rtc.Tuple // Vector
+	Position rtc.Tuple // Point
+	Velocity rtc.Tuple // Vector
 }
 
 type Environment struct {
-	Gravity *rtc.Tuple // Vector
-	Wind    *rtc.Tuple // Vector
+	Gravity rtc.Tuple // Vector
+	Wind    rtc.Tuple // Vector
 }
 
 func main() {

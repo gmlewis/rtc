@@ -10,7 +10,7 @@ import (
 func TestTuples(t *testing.T) {
 	tests := []struct {
 		name       string
-		tr         *Tuple
+		tr         Tuple
 		x          float64
 		y          float64
 		z          float64
@@ -25,7 +25,7 @@ func TestTuples(t *testing.T) {
 		},
 		{
 			name:       "book scenario 1 page 27",
-			tr:         &Tuple{4.3, -4.2, 3.1, 1.0},
+			tr:         Tuple{4.3, -4.2, 3.1, 1.0},
 			x:          4.3,
 			y:          -4.2,
 			z:          3.1,
@@ -35,7 +35,7 @@ func TestTuples(t *testing.T) {
 		},
 		{
 			name:       "book scenario 2 page 27",
-			tr:         &Tuple{4.3, -4.2, 3.1, 0.0},
+			tr:         Tuple{4.3, -4.2, 3.1, 0.0},
 			x:          4.3,
 			y:          -4.2,
 			z:          3.1,
@@ -70,36 +70,6 @@ func TestTuples(t *testing.T) {
 			if got := tt.tr.IsVector(); got != tt.wantVector {
 				t.Errorf("tp.IsVector() = %v, want %v", got, tt.wantVector)
 			}
-
-			if tt.tr == nil {
-				return
-			}
-
-			tup := *tt.tr
-
-			if got := tup.X(); math.Abs(got-tt.x) > epsilon {
-				t.Errorf("tup.X() = %v, want %v", got, tt.x)
-			}
-
-			if got := tup.Y(); math.Abs(got-tt.y) > epsilon {
-				t.Errorf("tup.Y() = %v, want %v", got, tt.y)
-			}
-
-			if got := tup.Z(); math.Abs(got-tt.z) > epsilon {
-				t.Errorf("tup.Z() = %v, want %v", got, tt.z)
-			}
-
-			if got := tup.W(); math.Abs(got-tt.w) > epsilon {
-				t.Errorf("tup.W() = %v, want %v", got, tt.w)
-			}
-
-			if got := tup.IsPoint(); got != tt.wantPoint {
-				t.Errorf("tup.IsPoint() = %v, want %v", got, tt.wantPoint)
-			}
-
-			if got := tup.IsVector(); got != tt.wantVector {
-				t.Errorf("tup.IsVector() = %v, want %v", got, tt.wantVector)
-			}
 		})
 	}
 }
@@ -113,14 +83,14 @@ func TestPoint_Vector_Equal(t *testing.T) {
 	tests := []struct {
 		name       string
 		args       args
-		wantPoint  *Tuple
-		wantVector *Tuple
+		wantPoint  Tuple
+		wantVector Tuple
 	}{
 		{
 			name:       "book scenarios page 27",
 			args:       args{4, -4, 3},
-			wantPoint:  &Tuple{4, -4, 3, 1},
-			wantVector: &Tuple{4, -4, 3, 0},
+			wantPoint:  Tuple{4, -4, 3, 1},
+			wantVector: Tuple{4, -4, 3, 0},
 		},
 	}
 
@@ -154,15 +124,15 @@ func TestPoint_Vector_Equal(t *testing.T) {
 func TestTuple_Add(t *testing.T) {
 	tests := []struct {
 		name  string
-		tr    *Tuple
-		other *Tuple
-		want  *Tuple
+		tr    Tuple
+		other Tuple
+		want  Tuple
 	}{
 		{
 			name:  "Adding two tuples",
-			tr:    &Tuple{3, -2, 5, 1},
-			other: &Tuple{-2, 3, 1, 0},
-			want:  &Tuple{1, 1, 6, 1},
+			tr:    Tuple{3, -2, 5, 1},
+			other: Tuple{-2, 3, 1, 0},
+			want:  Tuple{1, 1, 6, 1},
 		},
 	}
 
@@ -178,9 +148,9 @@ func TestTuple_Add(t *testing.T) {
 func TestTuple_Sub(t *testing.T) {
 	tests := []struct {
 		name  string
-		tr    *Tuple
-		other *Tuple
-		want  *Tuple
+		tr    Tuple
+		other Tuple
+		want  Tuple
 	}{
 		{
 			name:  "Subtracting two points",
@@ -221,12 +191,12 @@ func TestTuple_Negate(t *testing.T) {
 	tests := []struct {
 		name string
 		tr   Tuple
-		want *Tuple
+		want Tuple
 	}{
 		{
 			name: "Negating a tuple",
 			tr:   Tuple{1, -2, 3, -4},
-			want: &Tuple{-1, 2, -3, 4},
+			want: Tuple{-1, 2, -3, 4},
 		},
 	}
 
@@ -244,19 +214,19 @@ func TestTuple_MulScalar(t *testing.T) {
 		name string
 		tr   Tuple
 		f    float64
-		want *Tuple
+		want Tuple
 	}{
 		{
 			name: "Multiplying a tuple by a scalar",
 			tr:   Tuple{1, -2, 3, -4},
 			f:    3.5,
-			want: &Tuple{3.5, -7, 10.5, -14},
+			want: Tuple{3.5, -7, 10.5, -14},
 		},
 		{
 			name: "Multiplying a tuple by a fraction",
 			tr:   Tuple{1, -2, 3, -4},
 			f:    0.5,
-			want: &Tuple{0.5, -1, 1.5, -2},
+			want: Tuple{0.5, -1, 1.5, -2},
 		},
 	}
 
@@ -274,13 +244,13 @@ func TestTuple_DivScalar(t *testing.T) {
 		name string
 		tr   Tuple
 		f    float64
-		want *Tuple
+		want Tuple
 	}{
 		{
 			name: "Dividing a tuple by a scalar",
 			tr:   Tuple{1, -2, 3, -4},
 			f:    2,
-			want: &Tuple{0.5, -1, 1.5, -2},
+			want: Tuple{0.5, -1, 1.5, -2},
 		},
 	}
 
@@ -296,7 +266,7 @@ func TestTuple_DivScalar(t *testing.T) {
 func TestTuple_Magnitude(t *testing.T) {
 	tests := []struct {
 		name string
-		tr   *Tuple
+		tr   Tuple
 		want float64
 	}{
 		{
@@ -338,8 +308,8 @@ func TestTuple_Magnitude(t *testing.T) {
 func TestTuple_Normalize(t *testing.T) {
 	tests := []struct {
 		name string
-		tr   *Tuple
-		want *Tuple
+		tr   Tuple
+		want Tuple
 	}{
 		{
 			name: "Normalizing vector(4,0,0) gives (1,0,0)",
@@ -370,8 +340,8 @@ func TestTuple_Normalize(t *testing.T) {
 func TestTuple_Dot(t *testing.T) {
 	tests := []struct {
 		name  string
-		tr    *Tuple
-		other *Tuple
+		tr    Tuple
+		other Tuple
 		want  float64
 	}{
 		{
@@ -394,9 +364,9 @@ func TestTuple_Dot(t *testing.T) {
 func TestTuple_Cross(t *testing.T) {
 	tests := []struct {
 		name  string
-		tr    *Tuple
-		other *Tuple
-		want  *Tuple
+		tr    Tuple
+		other Tuple
+		want  Tuple
 	}{
 		{
 			name:  "The cross product of two vectors",

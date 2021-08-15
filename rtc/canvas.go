@@ -65,21 +65,21 @@ func (c *Canvas) ColorModel() color.Model {
 }
 
 // WritePixel writes a pixel to the canvas.
-func (c *Canvas) WritePixel(x, y int, color *Tuple) {
+func (c *Canvas) WritePixel(x, y int, color Tuple) {
 	if x < 0 || y < 0 || x >= c.width || y >= c.height {
 		return
 	}
 	idx := y*c.width + x
-	c.pixels[idx] = *color
+	c.pixels[idx] = color
 }
 
 // PixelAt returns the color (Tuple) at the given pixel.
-func (c *Canvas) PixelAt(x, y int) *Tuple {
+func (c *Canvas) PixelAt(x, y int) Tuple {
 	if x < 0 || y < 0 || x >= c.width || y >= c.height {
-		return &Tuple{}
+		return Tuple{}
 	}
 	idx := y*c.width + x
-	return &c.pixels[idx]
+	return c.pixels[idx]
 }
 
 // ToPPM returns a string PPM representation of the canvas.

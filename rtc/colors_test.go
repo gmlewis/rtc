@@ -10,7 +10,7 @@ import (
 func TestColors(t *testing.T) {
 	tests := []struct {
 		name string
-		tr   *Tuple
+		tr   Tuple
 		r    float64
 		g    float64
 		b    float64
@@ -46,28 +46,6 @@ func TestColors(t *testing.T) {
 			if got := tt.tr.Alpha(); math.Abs(got-tt.a) > epsilon {
 				t.Errorf("tp.Alpha() = %v, want %v", got, tt.a)
 			}
-
-			if tt.tr == nil {
-				return
-			}
-
-			tup := *tt.tr
-
-			if got := tup.Red(); math.Abs(got-tt.r) > epsilon {
-				t.Errorf("tup.Red() = %v, want %v", got, tt.r)
-			}
-
-			if got := tup.Green(); math.Abs(got-tt.g) > epsilon {
-				t.Errorf("tup.Green() = %v, want %v", got, tt.g)
-			}
-
-			if got := tup.Blue(); math.Abs(got-tt.b) > epsilon {
-				t.Errorf("tup.Blue() = %v, want %v", got, tt.b)
-			}
-
-			if got := tup.Alpha(); math.Abs(got-tt.a) > epsilon {
-				t.Errorf("tup.Alpha() = %v, want %v", got, tt.a)
-			}
 		})
 	}
 }
@@ -75,9 +53,9 @@ func TestColors(t *testing.T) {
 func TestColor_Add(t *testing.T) {
 	tests := []struct {
 		name  string
-		tr    *Tuple
-		other *Tuple
-		want  *Tuple
+		tr    Tuple
+		other Tuple
+		want  Tuple
 	}{
 		{
 			name:  "Adding colors",
@@ -99,9 +77,9 @@ func TestColor_Add(t *testing.T) {
 func TestColor_Sub(t *testing.T) {
 	tests := []struct {
 		name  string
-		tr    *Tuple
-		other *Tuple
-		want  *Tuple
+		tr    Tuple
+		other Tuple
+		want  Tuple
 	}{
 		{
 			name:  "Subtracting colors",
@@ -123,9 +101,9 @@ func TestColor_Sub(t *testing.T) {
 func TestColor_MulScalar(t *testing.T) {
 	tests := []struct {
 		name string
-		tr   *Tuple
+		tr   Tuple
 		f    float64
-		want *Tuple
+		want Tuple
 	}{
 		{
 			name: "Multiplying a color by a scalar",
@@ -147,9 +125,9 @@ func TestColor_MulScalar(t *testing.T) {
 func TestColor_HadamardProduct(t *testing.T) {
 	tests := []struct {
 		name  string
-		tr    *Tuple
-		other *Tuple
-		want  *Tuple
+		tr    Tuple
+		other Tuple
+		want  Tuple
 	}{
 		{
 			name:  "Multiplying colors",
