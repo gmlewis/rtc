@@ -45,7 +45,7 @@ type Environment struct {
 func main() {
 	p := &Projectile{
 		Position: rtc.Point(*posx, *posy, *posz),
-		Velocity: rtc.Vector(*velx, *vely, *velz).Normalize().MulScalar(*vels),
+		Velocity: rtc.Vector(*velx, *vely, *velz).Normalize().MultScalar(*vels),
 	}
 	e := &Environment{
 		Gravity: rtc.Vector(*gravx, *gravy, *gravz),

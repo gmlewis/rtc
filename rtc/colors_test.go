@@ -98,7 +98,7 @@ func TestColor_Sub(t *testing.T) {
 	}
 }
 
-func TestColor_MulScalar(t *testing.T) {
+func TestColor_MultScalar(t *testing.T) {
 	tests := []struct {
 		name string
 		tr   Tuple
@@ -115,8 +115,8 @@ func TestColor_MulScalar(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.tr.MulScalar(tt.f); !cmp.Equal(got, tt.want) {
-				t.Errorf("Color.MulScalar() = %v, want %v", got, tt.want)
+			if got := tt.tr.MultScalar(tt.f); !cmp.Equal(got, tt.want) {
+				t.Errorf("Color.MultScalar() = %v, want %v", got, tt.want)
 			}
 		})
 	}

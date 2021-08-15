@@ -104,3 +104,38 @@ func TestMatrix_Equal4x4(t *testing.T) {
 		t.Errorf("4x4 m3.Equal(m1) = %v, want false", true)
 	}
 }
+
+func TestMatrix_Mult4x4(t *testing.T) {
+	m1 := M4{
+		Tuple{1, 2, 3, 4},
+		Tuple{5, 6, 7, 8},
+		Tuple{9, 8, 7, 6},
+		Tuple{5, 4, 3, 2},
+	}
+	m2 := M4{
+		Tuple{-2, 1, 2, 3},
+		Tuple{3, 2, 1, -1},
+		Tuple{4, 3, 6, 5},
+		Tuple{1, 2, 7, 8},
+	}
+
+	want := M4{
+		Tuple{20, 22, 50, 48},
+		Tuple{44, 54, 114, 108},
+		Tuple{40, 58, 110, 102},
+		Tuple{16, 26, 46, 42},
+	}
+	if got := m1.Mult(m2); !got.Equal(want) {
+		t.Errorf("4x4 m1.Mult(m2) = %v, want %v", got, want)
+	}
+
+	want = M4{
+		Tuple{36, 30, 24, 18},
+		Tuple{17, 22, 27, 32},
+		Tuple{98, 94, 90, 86},
+		Tuple{114, 102, 90, 78},
+	}
+	if got := m2.Mult(m1); !got.Equal(want) {
+		t.Errorf("4x4 m2.Mult(m1) = %v, want %v", got, want)
+	}
+}

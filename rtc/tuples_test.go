@@ -209,7 +209,7 @@ func TestTuple_Negate(t *testing.T) {
 	}
 }
 
-func TestTuple_MulScalar(t *testing.T) {
+func TestTuple_MultScalar(t *testing.T) {
 	tests := []struct {
 		name string
 		tr   Tuple
@@ -232,8 +232,8 @@ func TestTuple_MulScalar(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.tr.MulScalar(tt.f); !cmp.Equal(got, tt.want) {
-				t.Errorf("Tuple.MulScalar() = %v, want %v", got, tt.want)
+			if got := tt.tr.MultScalar(tt.f); !cmp.Equal(got, tt.want) {
+				t.Errorf("Tuple.MultScalar() = %v, want %v", got, tt.want)
 			}
 		})
 	}

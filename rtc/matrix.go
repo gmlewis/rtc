@@ -16,6 +16,22 @@ func (m M4) Equal(other M4) bool {
 		m[3].Equal(other[3])
 }
 
+// Mult multiplies two M4 matrices. Order is important.
+func (m M4) Mult(other M4) M4 {
+	oc := M4{other.Column(0), other.Column(1), other.Column(2), other.Column(3)}
+	return M4{
+		Tuple{m[0].Dot(oc[0]), m[0].Dot(oc[1]), m[0].Dot(oc[2]), m[0].Dot(oc[3])},
+		Tuple{m[1].Dot(oc[0]), m[1].Dot(oc[1]), m[1].Dot(oc[2]), m[1].Dot(oc[3])},
+		Tuple{m[2].Dot(oc[0]), m[2].Dot(oc[1]), m[2].Dot(oc[2]), m[2].Dot(oc[3])},
+		Tuple{m[3].Dot(oc[0]), m[3].Dot(oc[1]), m[3].Dot(oc[2]), m[3].Dot(oc[3])},
+	}
+}
+
+// Column returns a column of the matrix as a Tuple.
+func (m M4) Column(col int) Tuple {
+	return Tuple{m[0][col], m[1][col], m[2][col], m[3][col]}
+}
+
 // M3 is a 3x3 matrix.
 type M3 [3]Tuple
 

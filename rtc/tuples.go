@@ -101,8 +101,8 @@ func (t Tuple) Negate() Tuple {
 	}
 }
 
-// MulScalar multiplies a tuple by a scalar.
-func (t Tuple) MulScalar(f float64) Tuple {
+// MultScalar multiplies a tuple by a scalar.
+func (t Tuple) MultScalar(f float64) Tuple {
 	return Tuple{
 		f * t.X(),
 		f * t.Y(),
@@ -113,7 +113,7 @@ func (t Tuple) MulScalar(f float64) Tuple {
 
 // DivScalar divides a tuple by a scalar.
 func (t Tuple) DivScalar(f float64) Tuple {
-	return t.MulScalar(1 / f)
+	return t.MultScalar(1 / f)
 }
 
 // Magnitude computes the magnitude or length of a vector (Tuple).
