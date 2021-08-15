@@ -27,6 +27,16 @@ func (m M4) Mult(other M4) M4 {
 	}
 }
 
+// MultTuple multiples a M4 matrix by a tuple.
+func (m M4) MultTuple(other Tuple) Tuple {
+	return Tuple{
+		m[0].Dot(other),
+		m[1].Dot(other),
+		m[2].Dot(other),
+		m[3].Dot(other),
+	}
+}
+
 // Column returns a column of the matrix as a Tuple.
 func (m M4) Column(col int) Tuple {
 	return Tuple{m[0][col], m[1][col], m[2][col], m[3][col]}

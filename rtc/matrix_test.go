@@ -139,3 +139,18 @@ func TestMatrix_Mult4x4(t *testing.T) {
 		t.Errorf("4x4 m2.Mult(m1) = %v, want %v", got, want)
 	}
 }
+
+func TestMatrix_MultTuple(t *testing.T) {
+	a := M4{
+		Tuple{1, 2, 3, 4},
+		Tuple{2, 4, 4, 2},
+		Tuple{8, 6, 4, 1},
+		Tuple{0, 0, 0, 1},
+	}
+	b := Tuple{1, 2, 3, 1}
+
+	want := Tuple{18, 24, 33, 1}
+	if got := a.MultTuple(b); !got.Equal(want) {
+		t.Errorf("a.MultTuple(b) = %v, want %v", got, want)
+	}
+}
