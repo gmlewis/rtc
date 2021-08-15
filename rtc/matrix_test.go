@@ -309,3 +309,44 @@ func TestM3_Minor(t *testing.T) {
 		})
 	}
 }
+
+func TestM3_Cofactor(t *testing.T) {
+	a := M3{Tuple{3, 5, 0},
+		Tuple{2, -1, -7},
+		Tuple{6, -1, 5}}
+
+	tests := []struct {
+		name     string
+		row      int
+		col      int
+		minor    float64
+		cofactor float64
+	}{
+		{
+			name:     "test 1",
+			row:      0,
+			col:      0,
+			minor:    -12,
+			cofactor: -12,
+		},
+		{
+			name:     "test 1",
+			row:      1,
+			col:      0,
+			minor:    25,
+			cofactor: -25,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := a.Minor(tt.row, tt.col); got != tt.minor {
+				t.Errorf("a.Minor(%v,%v) = %v, want %v", tt.row, tt.col, got, tt.minor)
+			}
+
+			if got := a.Cofactor(tt.row, tt.col); got != tt.cofactor {
+				t.Errorf("a.Cofactor(%v,%v) = %v, want %v", tt.row, tt.col, got, tt.cofactor)
+			}
+		})
+	}
+}

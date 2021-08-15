@@ -117,6 +117,15 @@ func (m M3) Minor(row, col int) float64 {
 	return m.Submatrix(row, col).Determinant()
 }
 
+// Cofactor returns the cofactor of a submatrix of a 3x3 matrix.
+func (m M3) Cofactor(row, col int) float64 {
+	minor := m.Minor(row, col)
+	if (row+col)%2 == 1 {
+		minor = -minor
+	}
+	return minor
+}
+
 // M2 is a 2x2 matrix.
 type M2 [2]Tuple
 
