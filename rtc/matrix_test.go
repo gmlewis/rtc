@@ -3,11 +3,6 @@ package rtc
 import (
 	"math"
 	"testing"
-
-	"github.com/gmlewis/go3d/float64/mat2"
-	"github.com/gmlewis/go3d/float64/mat3"
-	"github.com/gmlewis/go3d/float64/vec2"
-	"github.com/gmlewis/go3d/float64/vec3"
 )
 
 func TestMatrix_Construction4x4(t *testing.T) {
@@ -35,13 +30,13 @@ func TestMatrix_Construction4x4(t *testing.T) {
 }
 
 func TestMatrix_Construction2x2(t *testing.T) {
-	m := mat2.T{
-		vec2.T{-3, 5},
-		vec2.T{1, -2},
+	m := M2{
+		Tuple{-3, 5},
+		Tuple{1, -2},
 	}
 
 	assertValue := func(row, col int, want float64) {
-		got := m.Get(row, col) // row-major
+		got := m.Get(row, col)
 		if math.Abs(got-want) > epsilon {
 			t.Errorf("m[%v,%v] = %v, want %v", row, col, got, want)
 		}
@@ -54,14 +49,14 @@ func TestMatrix_Construction2x2(t *testing.T) {
 }
 
 func TestMatrix_Construction3x3(t *testing.T) {
-	m := mat3.T{
-		vec3.T{-3, 5, 0},
-		vec3.T{1, -2, -7},
-		vec3.T{0, 1, 1},
+	m := M3{
+		Tuple{-3, 5, 0},
+		Tuple{1, -2, -7},
+		Tuple{0, 1, 1},
 	}
 
 	assertValue := func(row, col int, want float64) {
-		got := m.Get(row, col) // row-major
+		got := m.Get(row, col)
 		if math.Abs(got-want) > epsilon {
 			t.Errorf("m[%v,%v] = %v, want %v", row, col, got, want)
 		}

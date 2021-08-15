@@ -2,16 +2,14 @@ package rtc
 
 import (
 	"math"
-
-	"github.com/gmlewis/go3d/float64/vec4"
 )
 
 const (
 	epsilon = 1e-4
 )
 
-// Tuple is a vec4.
-type Tuple vec4.T
+// Tuple is a 4-float vector.
+type Tuple [4]float64
 
 // X returns the X value of the Tuple.
 func (t Tuple) X() float64 {
