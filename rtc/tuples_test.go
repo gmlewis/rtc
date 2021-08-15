@@ -390,3 +390,32 @@ func TestTuple_Dot(t *testing.T) {
 		})
 	}
 }
+
+func TestTuple_Cross(t *testing.T) {
+	tests := []struct {
+		name  string
+		tr    Tuple
+		other Tuple
+		want  Tuple
+	}{
+		{
+			name:  "The cross product of two vectors",
+			tr:    Vector(1, 2, 3),
+			other: Vector(2, 3, 4),
+			want:  Vector(-1, 2, -1),
+		},
+		{
+			name:  "The cross product of two vectors, reversed",
+			tr:    Vector(2, 3, 4),
+			other: Vector(1, 2, 3),
+			want:  Vector(1, -2, 1),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.tr.Cross(&tt.other); !got.Equal(&tt.want) {
+				t.Errorf("Tuple.Cross() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

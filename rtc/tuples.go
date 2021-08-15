@@ -141,3 +141,13 @@ func (t *Tuple) Dot(other *Tuple) float64 {
 		t.Z()*other.Z() +
 		t.W()*other.W()
 }
+
+// Cross computes the cross product of two vectors (order matters and this
+// implements t cross other).
+func (t *Tuple) Cross(other *Tuple) Tuple {
+	return Vector(
+		t.Y()*other.Z()-t.Z()*other.Y(),
+		t.Z()*other.X()-t.X()*other.Z(),
+		t.X()*other.Y()-t.Y()*other.X(),
+	)
+}
