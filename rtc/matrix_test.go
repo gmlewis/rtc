@@ -198,3 +198,24 @@ func TestMatrix_Transpose(t *testing.T) {
 		t.Errorf("4x4 ident.Transpose = %v, want %v", got, want)
 	}
 }
+
+func TestM2_Determinant(t *testing.T) {
+	tests := []struct {
+		name string
+		m    M2
+		want float64
+	}{
+		{
+			name: "Calculating the determinant of a 2x2 matrix",
+			m:    M2{Tuple{1, 5}, Tuple{-3, 2}},
+			want: 17,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.m.Determinant(); got != tt.want {
+				t.Errorf("M2.Determinant() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

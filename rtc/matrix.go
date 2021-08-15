@@ -90,3 +90,8 @@ func (m M2) Equal(other M2) bool {
 	return m[0].Equal(other[0]) &&
 		m[1].Equal(other[1])
 }
+
+// Determinant finds the determinant of a 2x2 matrix.
+func (m M2) Determinant() float64 {
+	return m[0][0]*m[1][1] - m[0][1]*m[1][0]
+}
