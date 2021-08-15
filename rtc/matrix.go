@@ -75,6 +75,25 @@ func (m M4) Submatrix(row, col int) M3 {
 	}
 }
 
+// Minor returns the determinant of a submatrix of a 4x4 matrix.
+func (m M4) Minor(row, col int) float64 {
+	return m.Submatrix(row, col).Determinant()
+}
+
+// Cofactor returns the cofactor of a submatrix of a 4x4 matrix.
+func (m M4) Cofactor(row, col int) float64 {
+	minor := m.Minor(row, col)
+	if (row+col)%2 == 1 {
+		minor = -minor
+	}
+	return minor
+}
+
+// Determinant returns the determinant of the 4x4 matrix.
+func (m M4) Determinant() float64 {
+	return m[0][0]*m.Cofactor(0, 0) + m[0][1]*m.Cofactor(0, 1) + m[0][2]*m.Cofactor(0, 2) + m[0][3]*m.Cofactor(0, 3)
+}
+
 // Column returns a column of the matrix as a Tuple.
 func (m M4) Column(col int) Tuple {
 	return Tuple{m[0][col], m[1][col], m[2][col], m[3][col]}
@@ -124,6 +143,11 @@ func (m M3) Cofactor(row, col int) float64 {
 		minor = -minor
 	}
 	return minor
+}
+
+// Determinant returns the determinant of the 3x3 matrix.
+func (m M3) Determinant() float64 {
+	return m[0][0]*m.Cofactor(0, 0) + m[0][1]*m.Cofactor(0, 1) + m[0][2]*m.Cofactor(0, 2)
 }
 
 // M2 is a 2x2 matrix.

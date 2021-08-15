@@ -350,3 +350,102 @@ func TestM3_Cofactor(t *testing.T) {
 		})
 	}
 }
+
+func TestM3_Determinant(t *testing.T) {
+	a := M3{
+		Tuple{1, 2, 6},
+		Tuple{-5, 8, -4},
+		Tuple{2, 6, 4},
+	}
+
+	tests := []struct {
+		name string
+		row  int
+		col  int
+		want float64
+	}{
+		{
+			name: "test 1",
+			row:  0,
+			col:  0,
+			want: 56,
+		},
+		{
+			name: "test 2",
+			row:  0,
+			col:  1,
+			want: 12,
+		},
+		{
+			name: "test 3",
+			row:  0,
+			col:  2,
+			want: -46,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := a.Cofactor(tt.row, tt.col); got != tt.want {
+				t.Errorf("a.Cofactor() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+
+	if got, want := a.Determinant(), -196.0; got != want {
+		t.Errorf("a.Determinant() = %v, want %v", got, want)
+	}
+}
+
+func TestM4_Determinant(t *testing.T) {
+	a := M4{
+		Tuple{-2, -8, 3, 5},
+		Tuple{-3, 1, 7, 3},
+		Tuple{1, 2, -9, 6},
+		Tuple{-6, 7, 7, -9},
+	}
+
+	tests := []struct {
+		name string
+		row  int
+		col  int
+		want float64
+	}{
+		{
+			name: "test 1",
+			row:  0,
+			col:  0,
+			want: 690,
+		},
+		{
+			name: "test 2",
+			row:  0,
+			col:  1,
+			want: 447,
+		},
+		{
+			name: "test 3",
+			row:  0,
+			col:  2,
+			want: 210,
+		},
+		{
+			name: "test 4",
+			row:  0,
+			col:  3,
+			want: 51,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := a.Cofactor(tt.row, tt.col); got != tt.want {
+				t.Errorf("a.Cofactor() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+
+	if got, want := a.Determinant(), -4071.0; got != want {
+		t.Errorf("a.Determinant() = %v, want %v", got, want)
+	}
+}
