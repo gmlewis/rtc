@@ -5,6 +5,11 @@ import (
 	"image"
 	"image/color"
 	"math"
+	"strings"
+)
+
+const (
+	maxPPMLineLen = 70
 )
 
 // Canvas represents an image canvas and implements the image.Image interface.
@@ -25,9 +30,14 @@ func NewCanvas(width, height int) *Canvas {
 	}
 }
 
-func clamp(v float64) uint16 {
+func clamp8(v float64) uint8 {
 	clamped := math.Max(math.Min(v, 1), 0)
-	return uint16(math.Floor(65535 * clamped))
+	return uint8(math.Floor(0.5 + 255*clamped))
+}
+
+func clamp16(v float64) uint16 {
+	clamped := math.Max(math.Min(v, 1), 0)
+	return uint16(math.Floor(0.5 + 65535*clamped))
 }
 
 // At returns the color at the provides location in the canvas.
@@ -37,10 +47,10 @@ func (c *Canvas) At(x, y int) color.Color {
 	}
 	idx := y*c.width + x
 	pixel := &c.pixels[idx]
-	r := clamp(pixel.Red())
-	g := clamp(pixel.Green())
-	b := clamp(pixel.Blue())
-	a := clamp(pixel.Alpha())
+	r := clamp16(pixel.Red())
+	g := clamp16(pixel.Green())
+	b := clamp16(pixel.Blue())
+	a := clamp16(pixel.Alpha())
 	return color.NRGBA64{R: r, G: g, B: b, A: a}
 }
 
@@ -75,5 +85,22 @@ func (c *Canvas) PixelAt(x, y int) *Tuple {
 // ToPPM returns a string PPM representation of the canvas.
 func (c *Canvas) ToPPM() string {
 	header := fmt.Sprintf("P3\n%v %v\n255\n", c.width, c.height)
-	return header
+	var lines []string
+	for y := 0; y < c.height; y++ {
+		var line string
+		for x := 0; x < c.width; x++ {
+			pixel := c.PixelAt(x, y)
+			p := fmt.Sprintf("%v %v %v", clamp8(pixel.Red()), clamp8(pixel.Green()), clamp8(pixel.Blue()))
+			if len(line)+1+len(p) > maxPPMLineLen {
+				lines = append(lines, line)
+				line = p
+			} else if len(line) == 0 {
+				line = p
+			} else {
+				line += " " + p
+			}
+		}
+		lines = append(lines, line)
+	}
+	return fmt.Sprintf("%v\n%v\n", header, strings.Join(lines, "\n"))
 }

@@ -43,8 +43,39 @@ func TestCanvas_WritePixel(t *testing.T) {
 	}
 }
 
-func TestCanvas_ToPPM(t *testing.T) {
+func TestCanvas_ToPPM_Header(t *testing.T) {
 	c := NewCanvas(5, 3)
+
 	ppm := c.ToPPM()
+
 	lines := strings.Split(ppm, "\n")
+	want := `P3
+5 3
+255`
+	got := strings.Join(lines[0:3], "\n")
+	if got != want {
+		t.Errorf("ToPPM header =\n%v\nwant:\n%v", got, want)
+	}
+}
+
+func TestCanvas_ToPPM_Pixel_Data(t *testing.T) {
+	c := NewCanvas(5, 3)
+	c1 := Color(1.5, 0, 0)
+	c2 := Color(0, 0.5, 0)
+	c3 := Color(-0.5, 0, 1)
+
+	c.WritePixel(0, 0, c1)
+	c.WritePixel(2, 1, c2)
+	c.WritePixel(4, 2, c3)
+
+	ppm := c.ToPPM()
+
+	lines := strings.Split(ppm, "\n")
+	want := `255 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 128 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 255`
+	got := strings.Join(lines[4:7], "\n")
+	if got != want {
+		t.Errorf("ToPPM pixel data =\n%v\nwant:\n%v", got, want)
+	}
 }
