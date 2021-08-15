@@ -154,3 +154,22 @@ func TestMatrix_MultTuple(t *testing.T) {
 		t.Errorf("a.MultTuple(b) = %v, want %v", got, want)
 	}
 }
+
+func TestMatrix_Mult_Identity(t *testing.T) {
+	m1 := M4{
+		Tuple{1, 2, 3, 4},
+		Tuple{5, 6, 7, 8},
+		Tuple{9, 8, 7, 6},
+		Tuple{5, 4, 3, 2},
+	}
+	m2 := M4Identity()
+
+	if got := m1.Mult(m2); !got.Equal(m1) {
+		t.Errorf("4x4 m1.Mult(m2) = %v, want %v", got, m1)
+	}
+
+	t1 := Tuple{1, 2, 3, 4}
+	if got := m2.MultTuple(t1); !got.Equal(t1) {
+		t.Errorf("m2.Mult(t1) = %v, want %v", got, t1)
+	}
+}

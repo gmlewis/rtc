@@ -37,6 +37,16 @@ func (m M4) MultTuple(other Tuple) Tuple {
 	}
 }
 
+// M4Identity returns a 4x4 identity matrix.
+func M4Identity() M4 {
+	return M4{
+		Tuple{1, 0, 0, 0},
+		Tuple{0, 1, 0, 0},
+		Tuple{0, 0, 1, 0},
+		Tuple{0, 0, 0, 1},
+	}
+}
+
 // Column returns a column of the matrix as a Tuple.
 func (m M4) Column(col int) Tuple {
 	return Tuple{m[0][col], m[1][col], m[2][col], m[3][col]}
