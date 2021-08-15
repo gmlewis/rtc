@@ -173,3 +173,28 @@ func TestMatrix_Mult_Identity(t *testing.T) {
 		t.Errorf("m2.Mult(t1) = %v, want %v", got, t1)
 	}
 }
+
+func TestMatrix_Transpose(t *testing.T) {
+	m1 := M4{
+		Tuple{0, 9, 3, 0},
+		Tuple{9, 8, 0, 8},
+		Tuple{1, 8, 5, 3},
+		Tuple{0, 0, 5, 8},
+	}
+	got := m1.Transpose()
+
+	want := M4{
+		Tuple{0, 9, 1, 0},
+		Tuple{9, 8, 8, 0},
+		Tuple{3, 0, 5, 5},
+		Tuple{0, 8, 3, 8},
+	}
+	if !got.Equal(want) {
+		t.Errorf("4x4 m1.Transpose = %v, want %v", got, want)
+	}
+
+	ident := M4Identity()
+	if got := ident.Transpose(); !got.Equal(ident) {
+		t.Errorf("4x4 ident.Transpose = %v, want %v", got, want)
+	}
+}

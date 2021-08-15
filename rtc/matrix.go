@@ -47,6 +47,16 @@ func M4Identity() M4 {
 	}
 }
 
+// Transpose transposes a 4x4 matrix.
+func (m M4) Transpose() M4 {
+	return M4{
+		m.Column(0),
+		m.Column(1),
+		m.Column(2),
+		m.Column(3),
+	}
+}
+
 // Column returns a column of the matrix as a Tuple.
 func (m M4) Column(col int) Tuple {
 	return Tuple{m[0][col], m[1][col], m[2][col], m[3][col]}
