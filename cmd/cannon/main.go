@@ -4,9 +4,11 @@ package main
 import (
 	"flag"
 	"fmt"
+	"image/png"
 	"io/ioutil"
 	"log"
 	"math"
+	"os"
 
 	"github.com/gmlewis/rtc/rtc"
 )
@@ -26,6 +28,7 @@ var (
 	windy = flag.Float64("wy", 0, "Environment wind vector y")
 	windz = flag.Float64("wz", 0, "Environment wind vector z")
 
+	pngFile = flag.String("png", "cannon.png", "Output PNG file")
 	ppmFile = flag.String("ppm", "cannon.ppm", "Output PPM file")
 )
 
@@ -73,16 +76,35 @@ func main() {
 	}
 	fmt.Printf("Projectile hit the ground after %v ticks.\n", ticks)
 
-	if *ppmFile != "" {
+	var c *rtc.Canvas
+	if *ppmFile != "" || *pngFile != "" {
 		width := int(math.Floor(1.5 + maxx))
 		height := int(math.Floor(1.5 + maxy))
-		c := rtc.NewCanvas(width, height)
+		c = rtc.NewCanvas(width, height)
 
 		red := rtc.Color(1, 0, 0)
 		for i, xv := range xvals {
 			c.WritePixel(xv, height-yvals[i]-1, red)
 		}
+	}
 
+	if *pngFile != "" {
+		f, err := os.Create(*pngFile)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if err := png.Encode(f, c); err != nil {
+			f.Close()
+			log.Fatal(err)
+		}
+
+		if err := f.Close(); err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	if *ppmFile != "" {
 		ppm := c.ToPPM()
 		if err := ioutil.WriteFile(*ppmFile, []byte(ppm), 0644); err != nil {
 			log.Fatal(err)

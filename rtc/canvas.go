@@ -50,7 +50,7 @@ func (c *Canvas) At(x, y int) color.Color {
 	r := clamp16(pixel.Red())
 	g := clamp16(pixel.Green())
 	b := clamp16(pixel.Blue())
-	a := clamp16(pixel.Alpha())
+	a := uint16(65535) // clamp16(pixel.Alpha())
 	return color.NRGBA64{R: r, G: g, B: b, A: a}
 }
 
