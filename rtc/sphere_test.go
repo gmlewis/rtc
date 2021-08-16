@@ -54,3 +54,17 @@ func TestSphere_Intersect(t *testing.T) {
 		})
 	}
 }
+
+func TestSphereT_Transform(t *testing.T) {
+	s := Sphere()
+
+	if got, want := s.Transform(), M4Identity(); got != want {
+		t.Errorf("Sphere default transform = %v, want %v", got, want)
+	}
+
+	x := Translation(2, 3, 4)
+	s.SetTransform(x)
+	if got, want := s.Transform(), x; got != want {
+		t.Errorf("Sphere modified transform = %v, want %v", got, want)
+	}
+}
