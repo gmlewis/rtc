@@ -36,3 +36,18 @@ func (w *WorldT) IntersectWorld(ray RayT) []IntersectionT {
 	}
 	return Intersections(result...) // Sorts them.
 }
+
+// ShadeHit returns the color (as a Tuple) for the precomputed intersection.
+func (w *WorldT) ShadeHit(comps *Comps) Tuple {
+	var result Tuple
+	for _, light := range w.Lights {
+		color := Lighting(comps.Object.Material(),
+			light,
+			comps.Point,
+			comps.EyeVector,
+			comps.NormalVector,
+		)
+		result = result.Add(color)
+	}
+	return result
+}

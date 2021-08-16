@@ -64,3 +64,28 @@ func TestWorldT_IntersectWorld(t *testing.T) {
 		})
 	}
 }
+
+func TestWorldT_ShadeHit(t *testing.T) {
+	w := DefaultWorld()
+	r := Ray(Point(0, 0, -5), Vector(0, 0, 1))
+	shape := w.Objects[0]
+	i := Intersection(4, shape)
+
+	comps := i.PrepareComputations(r)
+
+	if got, want := w.ShadeHit(comps), Color(0.38066, 0.47583, 0.2855); !got.Equal(want) {
+		t.Errorf("Shading an intersection from the outside: WorldT.ShadeHit() = %v, want %v", got, want)
+	}
+
+	w.Lights = []*PointLightT{PointLight(Point(0, 0.25, 0), Color(1, 1, 1))}
+	r = Ray(Point(0, 0, 0), Vector(0, 0, 1))
+	shape = w.Objects[1]
+
+	i = Intersection(0.5, shape)
+
+	comps = i.PrepareComputations(r)
+
+	if got, want := w.ShadeHit(comps), Color(0.90498, 0.90498, 0.90498); !got.Equal(want) {
+		t.Errorf("Shading an intersection from the inside: WorldT.ShadeHit() = %v, want %v", got, want)
+	}
+}
