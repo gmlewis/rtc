@@ -1,8 +1,8 @@
 package rtc
 
 // Color returns a new Tuple as a color.
-func Color(x, y, z float64) Tuple {
-	return Tuple{x, y, z, 0}
+func Color(red, green, blue float64) Tuple {
+	return Tuple{red, green, blue, 0}
 }
 
 // Red returns the red component of a color (Tuple).
