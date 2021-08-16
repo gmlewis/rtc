@@ -20,7 +20,7 @@ var (
 )
 
 func main() {
-	c := rtc.NewCanvas(*size, *size)
+	canvas := rtc.NewCanvas(*size, *size)
 
 	white := rtc.Color(1, 1, 1)
 	r := 0.35 * float64(*size)
@@ -30,7 +30,7 @@ func main() {
 		angle := 2.0 * math.Pi * float64(i) / 12
 		pt := rtc.M4Identity().Scale(r, 1, r).RotateY(angle).Translate(center, 0, center).MultTuple(rtc.Point(0, 0, 1))
 		log.Printf("i=%v, pt=%v", i, pt)
-		c.WritePixel(int(pt.X()), int(pt.Z()), white)
+		canvas.WritePixel(int(pt.X()), int(pt.Z()), white)
 	}
 
 	if *pngFile != "" {
@@ -39,7 +39,7 @@ func main() {
 			log.Fatal(err)
 		}
 
-		if err := png.Encode(f, c); err != nil {
+		if err := png.Encode(f, canvas); err != nil {
 			f.Close()
 			log.Fatal(err)
 		}
@@ -50,7 +50,7 @@ func main() {
 	}
 
 	if *ppmFile != "" {
-		ppm := c.ToPPM()
+		ppm := canvas.ToPPM()
 		if err := ioutil.WriteFile(*ppmFile, []byte(ppm), 0644); err != nil {
 			log.Fatal(err)
 		}

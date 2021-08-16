@@ -76,15 +76,15 @@ func main() {
 	}
 	fmt.Printf("Projectile hit the ground after %v ticks.\n", ticks)
 
-	var c *rtc.Canvas
+	var canvas *rtc.Canvas
 	if *ppmFile != "" || *pngFile != "" {
 		width := int(math.Floor(1.5 + maxx))
 		height := int(math.Floor(1.5 + maxy))
-		c = rtc.NewCanvas(width, height)
+		canvas = rtc.NewCanvas(width, height)
 
 		red := rtc.Color(1, 0, 0)
 		for i, xv := range xvals {
-			c.WritePixel(xv, height-yvals[i]-1, red)
+			canvas.WritePixel(xv, height-yvals[i]-1, red)
 		}
 	}
 
@@ -94,7 +94,7 @@ func main() {
 			log.Fatal(err)
 		}
 
-		if err := png.Encode(f, c); err != nil {
+		if err := png.Encode(f, canvas); err != nil {
 			f.Close()
 			log.Fatal(err)
 		}
@@ -105,7 +105,7 @@ func main() {
 	}
 
 	if *ppmFile != "" {
-		ppm := c.ToPPM()
+		ppm := canvas.ToPPM()
 		if err := ioutil.WriteFile(*ppmFile, []byte(ppm), 0644); err != nil {
 			log.Fatal(err)
 		}
