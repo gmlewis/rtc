@@ -149,3 +149,8 @@ func (t Tuple) Cross(other Tuple) Tuple {
 		t.X()*other.Y()-t.Y()*other.X(),
 	)
 }
+
+// Reflect reflects a vector around a prodived normal vector.
+func (t Tuple) Reflect(normal Tuple) Tuple {
+	return t.Sub(normal.MultScalar(2.0 * t.Dot(normal)))
+}

@@ -390,3 +390,35 @@ func TestTuple_Cross(t *testing.T) {
 		})
 	}
 }
+
+func TestTuple_Reflect(t *testing.T) {
+	sq2 := math.Sqrt(2) / 2
+
+	tests := []struct {
+		name   string
+		tr     Tuple
+		normal Tuple
+		want   Tuple
+	}{
+		{
+			name:   "Reflecting a vector approaching at 45°",
+			tr:     Vector(1, -1, 0),
+			normal: Vector(0, 1, 0),
+			want:   Vector(1, 1, 0),
+		},
+		{
+			name:   "Reflecting a vector off a slanted surface",
+			tr:     Vector(0, -1, 0),
+			normal: Vector(sq2, sq2, 0),
+			want:   Vector(1, 0, 0),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.tr.Reflect(tt.normal); !cmp.Equal(got, tt.want) {
+				t.Errorf("Tuple.Reflect() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
