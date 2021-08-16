@@ -1,6 +1,7 @@
 package rtc
 
 import (
+	"reflect"
 	"testing"
 )
 
@@ -87,33 +88,35 @@ func TestHit(t *testing.T) {
 }
 
 func TestIntersectionT_PrepareComputations(t *testing.T) {
-	r := Ray(Point(0, 0, -5), Vector(0, 0, 1))
 	shape := Sphere()
-	i := Intersection(4, shape)
 
-	comps := i.PrepareComputations(r)
-
-	if got, want := comps.T, i.T; got != want {
-		t.Errorf("comps.T = %v, want %v", got, want)
+	tests := []struct {
+		name string
+		r    RayT
+		i    IntersectionT
+		want *Comps
+	}{
+		{
+			name: "The hit, when an intersection occurs on the outside",
+			r:    Ray(Point(0, 0, -5), Vector(0, 0, 1)),
+			i:    Intersection(4, shape),
+			want: &Comps{
+				T:            4,
+				Object:       shape,
+				Point:        Point(0, 0, -1),
+				EyeVector:    Vector(0, 0, -1),
+				NormalVector: Vector(0, 0, -1),
+				Inside:       false,
+			},
+		},
 	}
 
-	if got, want := comps.Object, i.Object; got != want {
-		t.Errorf("comps.Object = %v, want %v", got, want)
-	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
 
-	if got, want := comps.Point, Point(0, 0, -1); got != want {
-		t.Errorf("comps.Point = %v, want %v", got, want)
-	}
-
-	if got, want := comps.EyeVector, Vector(0, 0, -1); got != want {
-		t.Errorf("comps.EyeVector = %v, want %v", got, want)
-	}
-
-	if got, want := comps.NormalVector, Vector(0, 0, -1); got != want {
-		t.Errorf("comps.NormalVector = %v, want %v", got, want)
-	}
-
-	if got, want := comps.Inside, false; got != want {
-		t.Errorf("comps.Inside = %v, want %v", got, want)
+			if got := tt.i.PrepareComputations(tt.r); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("IntersectionT.PrepareComputations() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
