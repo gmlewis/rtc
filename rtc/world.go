@@ -26,3 +26,13 @@ func DefaultWorld() *WorldT {
 		Lights:  []*PointLightT{PointLight(Point(-10, 10, -10), Color(1, 1, 1))},
 	}
 }
+
+// IntersectWorld intersects a world with a ray.
+func (w *WorldT) IntersectWorld(ray RayT) []IntersectionT {
+	var result []IntersectionT
+	for _, obj := range w.Objects {
+		xs := obj.Intersect(ray)
+		result = append(result, xs...)
+	}
+	return Intersections(result...) // Sorts them.
+}
