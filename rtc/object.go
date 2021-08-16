@@ -4,9 +4,16 @@ import "sort"
 
 // Object is an interface that represents an object in the scene.
 type Object interface {
+	// Intersect returns a slice of IntersectionT values where the ray intersects the object.
 	Intersect(ray RayT) []IntersectionT
+
+	// Transform returns the object's transform 4x4 matrix.
 	Transform() M4
+	// SetTransform sets the object's transform 4x4 matrix.
 	SetTransform(m M4)
+
+	// NormalAt returns the normal vector at the given point of intersection with the object.
+	NormalAt(point Tuple) Tuple
 }
 
 // IntersectionT represents an intersection with an object.

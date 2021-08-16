@@ -14,7 +14,7 @@ type SphereT struct {
 
 var _ Object = &SphereT{}
 
-// Intersect returns the collection of t values where the ray intersects the object.
+// Intersect returns a slice of IntersectionT values where the ray intersects the object.
 func (s *SphereT) Intersect(ray RayT) []IntersectionT {
 	r := ray.Transform(s.Transform().Inverse())
 
@@ -43,4 +43,9 @@ func (s *SphereT) Transform() M4 {
 // SetTransform sets the object's transform 4x4 matrix.
 func (s *SphereT) SetTransform(m M4) {
 	s.transform = m
+}
+
+// NormalAt returns the normal vector at the given point of intersection with the object.
+func (s *SphereT) NormalAt(point Tuple) Tuple {
+	return point.Sub(Point(0, 0, 0)).Normalize()
 }

@@ -1,6 +1,7 @@
 package rtc
 
 import (
+	"math"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -109,6 +110,46 @@ func TestSphere_Ray_Transform(t *testing.T) {
 
 			if !cmp.Equal(got, tt.want) {
 				t.Errorf("xs = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestSphereT_NormalAt(t *testing.T) {
+	s := Sphere()
+	sq3 := math.Sqrt(3) / 3
+
+	tests := []struct {
+		name  string
+		point Tuple
+		want  Tuple
+	}{
+		{
+			name:  "The normal on a sphere at a point on the x axis",
+			point: Point(1, 0, 0),
+			want:  Vector(1, 0, 0),
+		},
+		{
+			name:  "The normal on a sphere at a point on the y axis",
+			point: Point(0, 1, 0),
+			want:  Vector(0, 1, 0),
+		},
+		{
+			name:  "The normal on a sphere at a point on the z axis",
+			point: Point(0, 0, 1),
+			want:  Vector(0, 0, 1),
+		},
+		{
+			name:  "The normal on a sphere at a nonaxial point",
+			point: Point(sq3, sq3, sq3),
+			want:  Vector(sq3, sq3, sq3),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := s.NormalAt(tt.point); !cmp.Equal(got, tt.want) {
+				t.Errorf("SphereT.NormalAt() = %v, want %v", got, tt.want)
 			}
 		})
 	}
