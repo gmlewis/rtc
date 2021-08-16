@@ -4,12 +4,13 @@ import "math"
 
 // Sphere creates a unit sphere at the origin. It implements the Object interface.
 func Sphere() *SphereT {
-	return &SphereT{transform: M4Identity()}
+	return &SphereT{transform: M4Identity(), material: Material()}
 }
 
 // SphereT represents a sphere.
 type SphereT struct {
 	transform M4
+	material  MaterialT
 }
 
 var _ Object = &SphereT{}
@@ -43,6 +44,16 @@ func (s *SphereT) Transform() M4 {
 // SetTransform sets the object's transform 4x4 matrix.
 func (s *SphereT) SetTransform(m M4) {
 	s.transform = m
+}
+
+// Material returns the object's material.
+func (s *SphereT) Material() MaterialT {
+	return s.material
+}
+
+// SetMaterial sets the object's material.
+func (s *SphereT) SetMaterial(material MaterialT) {
+	s.material = material
 }
 
 // NormalAt returns the normal vector at the given point of intersection with the object.

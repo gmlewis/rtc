@@ -9,11 +9,11 @@ import (
 func TestMaterial(t *testing.T) {
 	tests := []struct {
 		name string
-		want *MaterialT
+		want MaterialT
 	}{
 		{
 			name: "The default material",
-			want: &MaterialT{
+			want: MaterialT{
 				Color:     Color(1, 1, 1),
 				Ambient:   0.1,
 				Diffuse:   0.9,

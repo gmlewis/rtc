@@ -12,6 +12,11 @@ type Object interface {
 	// SetTransform sets the object's transform 4x4 matrix.
 	SetTransform(m M4)
 
+	// Material returns the object's material.
+	Material() MaterialT
+	// SetMaterial sets the object's material.
+	SetMaterial(material MaterialT)
+
 	// NormalAt returns the normal vector at the given point of intersection with the object.
 	NormalAt(worldPoint Tuple) Tuple
 }
