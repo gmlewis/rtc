@@ -553,4 +553,21 @@ func TestM4_Inverse(t *testing.T) {
 	if !b.Equal(want) {
 		t.Errorf("b = %v, want %v", b, want)
 	}
+
+	a = M4{
+		Tuple{3, -9, 7, 3},
+		Tuple{3, -8, 2, -9},
+		Tuple{-4, 4, 4, 1},
+		Tuple{-6, 5, -1, 1},
+	}
+	b = M4{
+		Tuple{8, 2, 2, 2},
+		Tuple{3, -1, 7, 0},
+		Tuple{7, 0, 5, 4},
+		Tuple{6, -2, 0, 5},
+	}
+	c := a.Mult(b)
+	if got := c.Mult(b.Inverse()); !got.Equal(a) {
+		t.Errorf("c * Inverse(b) = %v, want %v", got, a)
+	}
 }
