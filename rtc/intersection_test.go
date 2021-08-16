@@ -109,6 +109,19 @@ func TestIntersectionT_PrepareComputations(t *testing.T) {
 				Inside:       false,
 			},
 		},
+		{
+			name: "The hit, when an intersection occurs on the inside",
+			r:    Ray(Point(0, 0, 0), Vector(0, 0, 1)),
+			i:    Intersection(1, shape),
+			want: &Comps{
+				T:            1,
+				Object:       shape,
+				Point:        Point(0, 0, 1),
+				EyeVector:    Vector(0, 0, -1),
+				NormalVector: Vector(0, 0, -1),
+				Inside:       true,
+			},
+		},
 	}
 
 	for _, tt := range tests {

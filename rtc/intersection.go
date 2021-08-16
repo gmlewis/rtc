@@ -52,12 +52,20 @@ type Comps struct {
 // about the intersection.
 func (i IntersectionT) PrepareComputations(ray RayT) *Comps {
 	point := ray.Position(i.T)
+	eyeVector := ray.Direction.Negate()
+	normalVector := i.Object.NormalAt(point)
+	var inside bool
+	if normalVector.Dot(eyeVector) < 0 {
+		inside = true
+		normalVector = normalVector.Negate()
+	}
 
 	return &Comps{
 		T:            i.T,
 		Object:       i.Object,
 		Point:        point,
-		EyeVector:    ray.Direction.Negate(),
-		NormalVector: i.Object.NormalAt(point),
+		EyeVector:    eyeVector,
+		NormalVector: normalVector,
+		Inside:       inside,
 	}
 }
