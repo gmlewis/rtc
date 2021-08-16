@@ -43,6 +43,8 @@ type Environment struct {
 }
 
 func main() {
+	flag.Parse()
+
 	p := &Projectile{
 		Position: rtc.Point(*posx, *posy, *posz),
 		Velocity: rtc.Vector(*velx, *vely, *velz).Normalize().MultScalar(*vels),

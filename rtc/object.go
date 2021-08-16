@@ -13,7 +13,7 @@ type Object interface {
 	SetTransform(m M4)
 
 	// Material returns the object's material.
-	Material() MaterialT
+	Material() *MaterialT
 	// SetMaterial sets the object's material.
 	SetMaterial(material MaterialT)
 

@@ -20,6 +20,8 @@ var (
 )
 
 func main() {
+	flag.Parse()
+
 	canvas := rtc.NewCanvas(*size, *size)
 
 	white := rtc.Color(1, 1, 1)

@@ -47,8 +47,8 @@ func (s *SphereT) SetTransform(m M4) {
 }
 
 // Material returns the object's material.
-func (s *SphereT) Material() MaterialT {
-	return s.material
+func (s *SphereT) Material() *MaterialT {
+	return &s.material
 }
 
 // SetMaterial sets the object's material.

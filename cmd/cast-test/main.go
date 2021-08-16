@@ -22,12 +22,18 @@ var (
 )
 
 func main() {
+	flag.Parse()
+
 	rayOrigin := rtc.Point(0, 0, -5)
 	pixelSize := *wallSize / float64(*size)
 	half := *wallSize / 2
 	canvas := rtc.NewCanvas(*size, *size)
-	color := rtc.Color(1, 0, 0)
 	shape := rtc.Sphere()
+	shape.Material().Color = rtc.Color(1, 0.2, 1)
+
+	lightPosition := rtc.Point(-10, 10, -10)
+	lightColor := rtc.Color(1, 1, 1)
+	light := rtc.PointLight(lightPosition, lightColor)
 
 	// shrink it along the y axis​
 	// shape.SetTransform(rtc.Scaling(1, 0.5, 1))
@@ -49,6 +55,10 @@ func main() {
 			r := rtc.Ray(rayOrigin, position.Sub(rayOrigin).Normalize())
 			xs := shape.Intersect(r)
 			if hit := rtc.Hit(xs); hit != nil {
+				point := r.Position(hit.T)
+				normal := hit.Object.NormalAt(point)
+				eye := r.Direction.Negate()
+				color := rtc.Lighting(hit.Object.Material(), light, point, eye, normal)
 				canvas.WritePixel(x, y, color)
 			}
 		}
