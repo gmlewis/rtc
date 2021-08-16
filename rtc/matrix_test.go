@@ -481,18 +481,42 @@ func TestM4_Invertible(t *testing.T) {
 }
 
 func TestM4_Inverse(t *testing.T) {
-	tests := []struct {
-		name string
-		m    M4
-		want M4
-	}{
-		// TODO: Add test cases.
+	a := M4{
+		Tuple{-5, 2, 6, -8},
+		Tuple{1, -5, 1, 8},
+		Tuple{7, 7, -6, -7},
+		Tuple{1, -3, 7, 4},
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.m.Inverse(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("M4.Inverse() = %v, want %v", got, tt.want)
-			}
-		})
+
+	b := a.Inverse()
+
+	if got, want := a.Determinant(), 532.0; got != want {
+		t.Errorf("a.Determinant = %v, want %v", got, want)
+	}
+
+	if got, want := a.Cofactor(2, 3), -160.0; got != want {
+		t.Errorf("a.Cofactor = %v, want %v", got, want)
+	}
+
+	if want := -160.0 / 532.0; b[3][2] != want {
+		t.Errorf("b[3][2] = %v, want %v", b[3][2], want)
+	}
+
+	if got, want := a.Cofactor(3, 2), 105.0; got != want {
+		t.Errorf("a.Cofactor = %v, want %v", got, want)
+	}
+
+	if want := 105.0 / 532.0; b[2][3] != want {
+		t.Errorf("b[2][3] = %v, want %v", b[2][3], want)
+	}
+
+	want := M4{
+		Tuple{0.21805, 0.45113, 0.24060, -0.04511},
+		Tuple{-0.80827, -1.45677, -0.44361, 0.52068},
+		Tuple{-0.07895, -0.22368, -0.05263, 0.19737},
+		Tuple{-0.52256, -0.81391, -0.30075, 0.30639},
+	}
+	if !b.Equal(want) {
+		t.Errorf("b = %v, want %v", b, want)
 	}
 }
