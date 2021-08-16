@@ -9,7 +9,7 @@ type Sphere struct {
 var _ Object = Sphere{}
 
 // Intersect returns the collection of t values where the ray intersects the object.
-func (s Sphere) Intersect(ray RayT) []float64 {
+func (s Sphere) Intersect(ray RayT) []IntersectionT {
 	sphereToRay := ray.Origin.Sub(Point(0, 0, 0))
 
 	a := ray.Direction.Dot(ray.Direction)
@@ -24,5 +24,5 @@ func (s Sphere) Intersect(ray RayT) []float64 {
 	sr := math.Sqrt(discriminant)
 	t1 := (-b - sr) / (2 * a)
 	t2 := (-b + sr) / (2 * a)
-	return []float64{t1, t2}
+	return []IntersectionT{Intersection(t1, s), Intersection(t2, s)}
 }

@@ -1,8 +1,10 @@
 package rtc
 
+import "sort"
+
 // Object is an interface that represents an object in the scene.
 type Object interface {
-	Intersect(ray RayT) []float64
+	Intersect(ray RayT) []IntersectionT
 }
 
 // IntersectionT represents an intersection with an object.
@@ -19,7 +21,24 @@ func Intersection(t float64, object Object) IntersectionT {
 	}
 }
 
-// Intersections returns a slice of IntersectionT.
+// Intersections returns a slice of IntersectionT after sorting
+// by intersection T values.
 func Intersections(args ...IntersectionT) []IntersectionT {
-	return append([]IntersectionT{}, args...)
+	all := append([]IntersectionT{}, args...)
+	sort.Slice(all, func(a, b int) bool {
+		return all[a].T < all[b].T
+	})
+	return all
+}
+
+// Hit returns the first non-negative intersection.
+// It assumes that the intersections have already been sorted by
+// Intersections above.
+func Hit(xs []IntersectionT) *IntersectionT {
+	for _, x := range xs {
+		if x.T > 0 {
+			return &x
+		}
+	}
+	return nil
 }
