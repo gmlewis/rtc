@@ -5,6 +5,8 @@ import "sort"
 // Object is an interface that represents an object in the scene.
 type Object interface {
 	Intersect(ray RayT) []IntersectionT
+	Transform() M4
+	SetTransform(m M4)
 }
 
 // IntersectionT represents an intersection with an object.

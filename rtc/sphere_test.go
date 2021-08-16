@@ -2,12 +2,10 @@ package rtc
 
 import (
 	"testing"
-
-	"github.com/google/go-cmp/cmp"
 )
 
 func TestSphere_Intersect(t *testing.T) {
-	s := Sphere{}
+	s := Sphere()
 
 	tests := []struct {
 		name string
@@ -43,8 +41,15 @@ func TestSphere_Intersect(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := s.Intersect(tt.ray); !cmp.Equal(got, tt.want) {
-				t.Errorf("Sphere.Intersect() = %v, want %v", got, tt.want)
+			got := s.Intersect(tt.ray)
+			if len(got) != len(tt.want) {
+				t.Fatalf("Sphere.Intersect() = %v, want %v", got, tt.want)
+			}
+
+			for i, w := range tt.want {
+				if got[i].T != w.T || got[i].Object != w.Object {
+					t.Errorf("Sphere.Intersect[%v] = %v, want %v", i, got[i], w)
+				}
 			}
 		})
 	}

@@ -2,12 +2,10 @@ package rtc
 
 import (
 	"testing"
-
-	"github.com/google/go-cmp/cmp"
 )
 
 func TestIntersection(t *testing.T) {
-	s := Sphere{}
+	s := Sphere()
 	i := Intersection(3.5, s)
 
 	if got, want := i.T, 3.5; got != want {
@@ -20,7 +18,7 @@ func TestIntersection(t *testing.T) {
 }
 
 func TestIntersections(t *testing.T) {
-	s := Sphere{}
+	s := Sphere()
 	i1 := Intersection(1, s)
 	i2 := Intersection(2, s)
 
@@ -40,7 +38,7 @@ func TestIntersections(t *testing.T) {
 }
 
 func TestHit(t *testing.T) {
-	s := Sphere{}
+	s := Sphere()
 
 	tests := []struct {
 		name string
@@ -71,8 +69,18 @@ func TestHit(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Hit(tt.xs); !cmp.Equal(got, tt.want) {
-				t.Errorf("Hit() = %v, want %v", got, tt.want)
+			got := Hit(tt.xs)
+
+			if (got == nil && tt.want != nil) || (got != nil && tt.want == nil) {
+				t.Fatalf("Hit = %v, want %v", got, tt.want)
+			}
+
+			if got == nil && tt.want == nil {
+				return
+			}
+
+			if got.T != tt.want.T || got.Object != tt.want.Object {
+				t.Errorf("Hit = %v, want %v", got, tt.want)
 			}
 		})
 	}
