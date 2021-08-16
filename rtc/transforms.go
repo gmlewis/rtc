@@ -93,3 +93,19 @@ func (m M4) RotateZ(radians float64) M4 {
 	t := RotationZ(radians)
 	return t.Mult(m)
 }
+
+// Shearing returns a 4x4 shearing matrix.
+func Shearing(xy, xz, yx, yz, zx, zy float64) M4 {
+	return M4{
+		Tuple{1, xy, xz, 0},
+		Tuple{yx, 1, yz, 0},
+		Tuple{zx, zy, 1, 0},
+		Tuple{0, 0, 0, 1},
+	}
+}
+
+// Shear shears a 4x4 matrix and returns a new one.
+func (m M4) Shear(xy, xz, yx, yz, zx, zy float64) M4 {
+	t := Shearing(xy, xz, yx, yz, zx, zy)
+	return t.Mult(m)
+}

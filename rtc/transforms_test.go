@@ -108,3 +108,31 @@ func TestRotationZ(t *testing.T) {
 		t.Errorf("inv.MultTuple(p) = %v, want %v", got, want)
 	}
 }
+
+func TestShearing(t *testing.T) {
+	transform := Shearing(0, 1, 0, 0, 0, 0)
+	p := Point(2, 3, 4)
+	if got, want := transform.MultTuple(p), Point(6, 3, 4); got != want {
+		t.Errorf("transform.MultTuple(p) = %v, want %v", got, want)
+	}
+
+	transform = Shearing(0, 0, 1, 0, 0, 0)
+	if got, want := transform.MultTuple(p), Point(2, 5, 4); got != want {
+		t.Errorf("transform.MultTuple(p) = %v, want %v", got, want)
+	}
+
+	transform = Shearing(0, 0, 0, 1, 0, 0)
+	if got, want := transform.MultTuple(p), Point(2, 7, 4); got != want {
+		t.Errorf("transform.MultTuple(p) = %v, want %v", got, want)
+	}
+
+	transform = Shearing(0, 0, 0, 0, 1, 0)
+	if got, want := transform.MultTuple(p), Point(2, 3, 6); got != want {
+		t.Errorf("transform.MultTuple(p) = %v, want %v", got, want)
+	}
+
+	transform = Shearing(0, 0, 0, 0, 0, 1)
+	if got, want := transform.MultTuple(p), Point(2, 3, 7); got != want {
+		t.Errorf("transform.MultTuple(p) = %v, want %v", got, want)
+	}
+}
