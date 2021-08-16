@@ -14,21 +14,21 @@ func TestMaterial(t *testing.T) {
 		{
 			name: "The default material",
 			want: &MaterialT{
-				color:     Color(1, 1, 1),
-				ambient:   0.1,
-				diffuse:   0.9,
-				specular:  0.9,
-				shininess: 200.0,
+				Color:     Color(1, 1, 1),
+				Ambient:   0.1,
+				Diffuse:   0.9,
+				Specular:  0.9,
+				Shininess: 200.0,
 			},
 		},
 	}
 
 	opt := cmp.Comparer(func(a, b MaterialT) bool {
-		return a.color == b.color &&
-			a.ambient == b.ambient &&
-			a.diffuse == b.diffuse &&
-			a.specular == b.specular &&
-			a.shininess == b.shininess
+		return a.Color == b.Color &&
+			a.Ambient == b.Ambient &&
+			a.Diffuse == b.Diffuse &&
+			a.Specular == b.Specular &&
+			a.Shininess == b.Shininess
 	})
 
 	for _, tt := range tests {
