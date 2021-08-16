@@ -16,10 +16,12 @@ var _ Object = &SphereT{}
 
 // Intersect returns the collection of t values where the ray intersects the object.
 func (s *SphereT) Intersect(ray RayT) []IntersectionT {
-	sphereToRay := ray.Origin.Sub(Point(0, 0, 0))
+	r := ray.Transform(s.Transform().Inverse())
 
-	a := ray.Direction.Dot(ray.Direction)
-	b := 2 * ray.Direction.Dot(sphereToRay)
+	sphereToRay := r.Origin.Sub(Point(0, 0, 0))
+
+	a := r.Direction.Dot(r.Direction)
+	b := 2 * r.Direction.Dot(sphereToRay)
 	c := sphereToRay.Dot(sphereToRay) - 1
 	discriminant := b*b - 4*a*c
 

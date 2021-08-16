@@ -2,6 +2,8 @@ package rtc
 
 import (
 	"testing"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestSphere_Intersect(t *testing.T) {
@@ -66,5 +68,48 @@ func TestSphereT_Transform(t *testing.T) {
 	s.SetTransform(x)
 	if got, want := s.Transform(), x; got != want {
 		t.Errorf("Sphere modified transform = %v, want %v", got, want)
+	}
+}
+
+func TestSphere_Ray_Transform(t *testing.T) {
+	tests := []struct {
+		name string
+		ray  RayT
+		m    M4
+		want []float64
+	}{
+		{
+			name: "Intersecting a scaled sphere with a ray",
+			ray:  Ray(Point(0, 0, -5), Vector(0, 0, 1)),
+			m:    Scaling(2, 2, 2),
+			want: []float64{3, 7},
+		},
+		{
+			name: "Intersecting a translated sphere with a ray",
+			ray:  Ray(Point(0, 0, -5), Vector(0, 0, 1)),
+			m:    Translation(5, 0, 0),
+			want: nil,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := Sphere()
+			s.SetTransform(tt.m)
+			xs := s.Intersect(tt.ray)
+
+			if len(xs) != len(tt.want) {
+				t.Fatalf("len(xs) = %v, want %v", len(xs), len(tt.want))
+			}
+
+			var got []float64
+			for _, x := range xs {
+				got = append(got, x.T)
+			}
+
+			if !cmp.Equal(got, tt.want) {
+				t.Errorf("xs = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
