@@ -51,3 +51,15 @@ func (w *WorldT) ShadeHit(comps *Comps) Tuple {
 	}
 	return result
 }
+
+// ColorAt returns the color (as a Tuple) when casting the given ray.
+func (w *WorldT) ColorAt(ray RayT) Tuple {
+	xs := w.IntersectWorld(ray)
+	hit := Hit(xs)
+	if hit == nil {
+		return Color(0, 0, 0)
+	}
+
+	comps := hit.PrepareComputations(ray)
+	return w.ShadeHit(comps)
+}

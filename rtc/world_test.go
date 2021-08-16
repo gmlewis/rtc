@@ -89,3 +89,48 @@ func TestWorldT_ShadeHit(t *testing.T) {
 		t.Errorf("Shading an intersection from the inside: WorldT.ShadeHit() = %v, want %v", got, want)
 	}
 }
+
+func TestWorldT_ColorAt(t *testing.T) {
+	w := DefaultWorld()
+
+	tests := []struct {
+		name         string
+		ray          RayT
+		outerAmbient float64
+		innerAmbient float64
+		want         Tuple
+	}{
+		{
+			name:         "The color when a ray misses",
+			ray:          Ray(Point(0, 0, -5), Vector(0, 1, 0)),
+			outerAmbient: 0.1,
+			innerAmbient: 0.1,
+			want:         Color(0, 0, 0),
+		},
+		{
+			name:         "The color when a ray hits",
+			ray:          Ray(Point(0, 0, -5), Vector(0, 0, 1)),
+			outerAmbient: 0.1,
+			innerAmbient: 0.1,
+			want:         Color(0.38066, 0.47583, 0.2855),
+		},
+		{
+			name:         "The color with an intersection behind the ray",
+			ray:          Ray(Point(0, 0, 0.75), Vector(0, 0, -1)),
+			outerAmbient: 1,
+			innerAmbient: 1,
+			want:         w.Objects[1].Material().Color,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			w.Objects[0].Material().Ambient = tt.outerAmbient
+			w.Objects[1].Material().Ambient = tt.innerAmbient
+
+			if got := w.ColorAt(tt.ray); !got.Equal(tt.want) {
+				t.Errorf("WorldT.ColorAt() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
