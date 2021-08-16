@@ -15,3 +15,8 @@ func Ray(origin, direction Tuple) RayT {
 func (r RayT) Position(t float64) Tuple {
 	return r.Origin.Add(r.Direction.MultScalar(t))
 }
+
+// Transform returns a new RayT that is transformed by the provided 4x4 matrix.
+func (r RayT) Transform(m M4) RayT {
+	return RayT{Origin: m.MultTuple(r.Origin), Direction: m.MultTuple(r.Direction)}
+}
