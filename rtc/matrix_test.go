@@ -449,3 +449,33 @@ func TestM4_Determinant(t *testing.T) {
 		t.Errorf("a.Determinant() = %v, want %v", got, want)
 	}
 }
+
+func TestM4_Invertible(t *testing.T) {
+	a := M4{
+		Tuple{6, 4, 4, 4},
+		Tuple{5, 5, 7, 6},
+		Tuple{4, -9, 3, -7},
+		Tuple{9, 1, 7, -6},
+	}
+
+	if got, want := a.Determinant(), -2120.0; got != want {
+		t.Errorf("a.Determinant = %v, want %v", got, want)
+	}
+	if !a.Invertible() {
+		t.Errorf("a.Invertible = false, want true")
+	}
+
+	a = M4{
+		Tuple{-4, 2, -2, -3},
+		Tuple{9, 6, 2, 6},
+		Tuple{0, -5, 1, -5},
+		Tuple{0, 0, 0, 0},
+	}
+
+	if got, want := a.Determinant(), 0.0; got != want {
+		t.Errorf("a.Determinant = %v, want %v", got, want)
+	}
+	if a.Invertible() {
+		t.Errorf("a.Invertible = true, want false")
+	}
+}

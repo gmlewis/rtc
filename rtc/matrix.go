@@ -94,6 +94,11 @@ func (m M4) Determinant() float64 {
 	return m[0][0]*m.Cofactor(0, 0) + m[0][1]*m.Cofactor(0, 1) + m[0][2]*m.Cofactor(0, 2) + m[0][3]*m.Cofactor(0, 3)
 }
 
+// Invertible returns the invertibility of the 4x4 matrix.
+func (m M4) Invertible() bool {
+	return m.Determinant() != 0
+}
+
 // Column returns a column of the matrix as a Tuple.
 func (m M4) Column(col int) Tuple {
 	return Tuple{m[0][col], m[1][col], m[2][col], m[3][col]}
