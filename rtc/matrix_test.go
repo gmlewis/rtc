@@ -519,4 +519,38 @@ func TestM4_Inverse(t *testing.T) {
 	if !b.Equal(want) {
 		t.Errorf("b = %v, want %v", b, want)
 	}
+
+	a = M4{
+		Tuple{8, -5, 9, 2},
+		Tuple{7, 5, 6, 1},
+		Tuple{-6, 0, 9, 6},
+		Tuple{-3, 0, -9, -4},
+	}
+	want = M4{
+		Tuple{-0.15385, -0.15385, -0.28205, -0.53846},
+		Tuple{-0.07692, 0.12308, 0.02564, 0.03077},
+		Tuple{0.35897, 0.35897, 0.43590, 0.92308},
+		Tuple{-0.69231, -0.69231, -0.76923, -1.92308},
+	}
+	b = a.Inverse()
+	if !b.Equal(want) {
+		t.Errorf("b = %v, want %v", b, want)
+	}
+
+	a = M4{
+		Tuple{9, 3, 0, 9},
+		Tuple{-5, -2, -6, -3},
+		Tuple{-4, 9, 6, 4},
+		Tuple{-7, 6, 6, 2},
+	}
+	want = M4{
+		Tuple{-0.04074, -0.07778, 0.14444, -0.22222},
+		Tuple{-0.07778, 0.03333, 0.36667, -0.33333},
+		Tuple{-0.02901, -0.14630, -0.10926, 0.12963},
+		Tuple{0.17778, 0.06667, -0.26667, 0.33333},
+	}
+	b = a.Inverse()
+	if !b.Equal(want) {
+		t.Errorf("b = %v, want %v", b, want)
+	}
 }
