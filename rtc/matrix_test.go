@@ -479,3 +479,20 @@ func TestM4_Invertible(t *testing.T) {
 		t.Errorf("a.Invertible = true, want false")
 	}
 }
+
+func TestM4_Inverse(t *testing.T) {
+	tests := []struct {
+		name string
+		m    M4
+		want M4
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.m.Inverse(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("M4.Inverse() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

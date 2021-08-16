@@ -1,5 +1,7 @@
 package rtc
 
+import "log"
+
 // M4 is a 4x4 matrix.
 type M4 [4]Tuple
 
@@ -97,6 +99,25 @@ func (m M4) Determinant() float64 {
 // Invertible returns the invertibility of the 4x4 matrix.
 func (m M4) Invertible() bool {
 	return m.Determinant() != 0
+}
+
+// Inverse calculates the inverse of the 4x4 matrix.
+func (m M4) Inverse() M4 {
+	d := m.Determinant()
+	if d == 0 {
+		log.Fatalf("can not take inverse of non-invertible matrix: %v", m)
+	}
+
+	v := func(row, col int) float64 {
+		return m.Cofactor(col, row) / d // transpose happens here: row,col=>col,row
+	}
+
+	return M4{
+		Tuple{v(0, 0), v(0, 1), v(0, 2), v(0, 3)},
+		Tuple{v(1, 0), v(1, 1), v(1, 2), v(1, 3)},
+		Tuple{v(2, 0), v(2, 1), v(2, 2), v(2, 3)},
+		Tuple{v(3, 0), v(3, 1), v(3, 2), v(3, 3)},
+	}
 }
 
 // Column returns a column of the matrix as a Tuple.
