@@ -85,3 +85,35 @@ func TestHit(t *testing.T) {
 		})
 	}
 }
+
+func TestIntersectionT_PrepareComputations(t *testing.T) {
+	r := Ray(Point(0, 0, -5), Vector(0, 0, 1))
+	shape := Sphere()
+	i := Intersection(4, shape)
+
+	comps := i.PrepareComputations(r)
+
+	if got, want := comps.T, i.T; got != want {
+		t.Errorf("comps.T = %v, want %v", got, want)
+	}
+
+	if got, want := comps.Object, i.Object; got != want {
+		t.Errorf("comps.Object = %v, want %v", got, want)
+	}
+
+	if got, want := comps.Point, Point(0, 0, -1); got != want {
+		t.Errorf("comps.Point = %v, want %v", got, want)
+	}
+
+	if got, want := comps.EyeVector, Vector(0, 0, -1); got != want {
+		t.Errorf("comps.EyeVector = %v, want %v", got, want)
+	}
+
+	if got, want := comps.NormalVector, Vector(0, 0, -1); got != want {
+		t.Errorf("comps.NormalVector = %v, want %v", got, want)
+	}
+
+	if got, want := comps.Inside, false; got != want {
+		t.Errorf("comps.Inside = %v, want %v", got, want)
+	}
+}
