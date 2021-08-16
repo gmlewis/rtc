@@ -136,3 +136,35 @@ func TestShearing(t *testing.T) {
 		t.Errorf("transform.MultTuple(p) = %v, want %v", got, want)
 	}
 }
+
+func TestTransformation_Sequence(t *testing.T) {
+	p := Point(1, 0, 1)
+	a := RotationX(math.Pi / 2)
+	b := Scaling(5, 5, 5)
+	c := Translation(10, 5, 7)
+
+	p2 := a.MultTuple(p)
+	if want := Point(1, -1, 0); !p2.Equal(want) {
+		t.Errorf("a.MultTuple(p) = %v, want %v", p2, want)
+	}
+
+	p3 := b.MultTuple(p2)
+	if want := Point(5, -5, 0); !p3.Equal(want) {
+		t.Errorf("b.MultTuple(p2) = %v, want %v", p3, want)
+	}
+
+	p4 := c.MultTuple(p3)
+	if want := Point(15, 0, 7); !p4.Equal(want) {
+		t.Errorf("c.MultTuple(p3) = %v, want %v", p4, want)
+	}
+
+	tx := c.Mult(b.Mult(a))
+	if got, want := tx.MultTuple(p), Point(15, 0, 7); !got.Equal(want) {
+		t.Errorf("tx.MultTuple(p) = %v, want %v", got, want)
+	}
+
+	tx2 := M4Identity().RotateX(math.Pi/2).Scale(5, 5, 5).Translate(10, 5, 7)
+	if got, want := tx2.MultTuple(p), Point(15, 0, 7); !got.Equal(want) {
+		t.Errorf("tx2.MultTuple(p) = %v, want %v", got, want)
+	}
+}
