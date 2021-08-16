@@ -1,5 +1,7 @@
 package rtc
 
+import "log"
+
 // WorldT represents the world to be rendered.
 type WorldT struct {
 	Objects []Object
@@ -62,4 +64,26 @@ func (w *WorldT) ColorAt(ray RayT) Tuple {
 
 	comps := hit.PrepareComputations(ray)
 	return w.ShadeHit(comps)
+}
+
+// ViewTransform creates a camera transformation matrix.
+// from and to are Points, and up is a Vector.
+func ViewTransform(from, to, up Tuple) M4 {
+	log.Printf("from=%v, to=%v, up=%v", from, to, up)
+	forward := to.Sub(from).Normalize()
+	log.Printf("forward=%v", forward)
+	upn := up.Normalize()
+	log.Printf("upn=%v", upn)
+	left := forward.Cross(upn)
+	log.Printf("left=%v", left)
+	trueUp := left.Cross(forward)
+	log.Printf("trueUp=%v", trueUp)
+	orientation := M4{
+		Tuple{left.X(), left.Y(), left.Z(), 0},
+		Tuple{trueUp.X(), trueUp.Y(), trueUp.Z(), 0},
+		Tuple{-forward.X(), -forward.Y(), -forward.Z(), 0},
+		Tuple{0, 0, 0, 1},
+	}
+	log.Printf("orientation=%v", orientation)
+	return orientation.Mult(Translation(-from.X(), -from.Y(), -from.Z()))
 }
