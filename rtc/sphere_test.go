@@ -75,14 +75,14 @@ func TestSphereT_Transform(t *testing.T) {
 func TestSphereT_Material(t *testing.T) {
 	s := Sphere()
 
-	if got, want := s.Material(), Material(); !cmp.Equal(got, want) {
+	if got, want := s.Material(), Material(); !cmp.Equal(got, &want) {
 		t.Errorf("Sphere default material = %v, want %v", got, want)
 	}
 
 	m := Material()
 	m.Ambient = 1
 	s.SetMaterial(m)
-	if got, want := s.Material(), m; !cmp.Equal(got, want) {
+	if got, want := s.Material(), m; !cmp.Equal(got, &want) {
 		t.Errorf("Sphere modified material = %v, want %v", got, want)
 	}
 }
