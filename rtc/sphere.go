@@ -46,6 +46,11 @@ func (s *SphereT) SetTransform(m M4) {
 }
 
 // NormalAt returns the normal vector at the given point of intersection with the object.
-func (s *SphereT) NormalAt(point Tuple) Tuple {
-	return point.Sub(Point(0, 0, 0)).Normalize()
+func (s *SphereT) NormalAt(worldPoint Tuple) Tuple {
+	inv := s.transform.Inverse()
+	objectPoint := inv.MultTuple(worldPoint)
+	objectNormal := objectPoint.Sub(Point(0, 0, 0))
+	worldNormal := inv.Transpose().MultTuple(objectNormal)
+	worldNormal[3] = 0 // W
+	return worldNormal.Normalize()
 }

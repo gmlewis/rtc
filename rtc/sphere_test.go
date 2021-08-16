@@ -160,3 +160,43 @@ func TestSphereT_NormalAt(t *testing.T) {
 		})
 	}
 }
+
+func TestSphereT_NormalAt_WithTransform(t *testing.T) {
+	sq2 := math.Sqrt(2) / 2
+
+	tests := []struct {
+		name      string
+		transform M4
+		point     Tuple
+		want      Tuple
+	}{
+		{
+			name:      "Computing the normal on a translated sphere",
+			transform: Translation(0, 1, 0),
+			point:     Point(0, 1.70711, -0.70711),
+			want:      Vector(0, 0.70711, -0.70711),
+		},
+		{
+			name:      "Computing the normal on a transformed sphere",
+			transform: Scaling(1, 0.5, 1).Mult(RotationZ(math.Pi / 5)),
+			point:     Point(0, sq2, -sq2),
+			want:      Vector(0, 0.97014, -0.24254),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := Sphere()
+			s.SetTransform(tt.transform)
+			got := s.NormalAt(tt.point)
+
+			if !cmp.Equal(got, tt.want) {
+				t.Errorf("SphereT.NormalAt() = %v, want %v", got, tt.want)
+			}
+
+			if want := got.Normalize(); !got.Equal(want) {
+				t.Errorf("got.Normalize = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

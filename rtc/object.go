@@ -13,7 +13,7 @@ type Object interface {
 	SetTransform(m M4)
 
 	// NormalAt returns the normal vector at the given point of intersection with the object.
-	NormalAt(point Tuple) Tuple
+	NormalAt(worldPoint Tuple) Tuple
 }
 
 // IntersectionT represents an intersection with an object.
