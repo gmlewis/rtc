@@ -31,7 +31,7 @@ func DefaultWorld() *WorldT {
 func (w *WorldT) IntersectWorld(ray RayT) []IntersectionT {
 	var result []IntersectionT
 	for _, obj := range w.Objects {
-		xs := obj.Intersect(ray)
+		xs := Intersect(obj, ray)
 		result = append(result, xs...)
 	}
 	return Intersections(result...) // Sorts them.

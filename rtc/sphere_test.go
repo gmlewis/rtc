@@ -44,7 +44,7 @@ func TestSphere_Intersect(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := s.Intersect(tt.ray)
+			got := Intersect(s, tt.ray)
 			if len(got) != len(tt.want) {
 				t.Fatalf("Sphere.Intersect() = %v, want %v", got, tt.want)
 			}
@@ -112,7 +112,7 @@ func TestSphere_Ray_Transform(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			s := Sphere()
 			s.SetTransform(tt.m)
-			xs := s.Intersect(tt.ray)
+			xs := Intersect(s, tt.ray)
 
 			if len(xs) != len(tt.want) {
 				t.Fatalf("len(xs) = %v, want %v", len(xs), len(tt.want))

@@ -2,8 +2,9 @@ package rtc
 
 // Object is an interface that represents an object in the scene.
 type Object interface {
-	// Intersect returns a slice of IntersectionT values where the ray intersects the object.
-	Intersect(ray RayT) []IntersectionT
+	// LocalIntersect returns a slice of IntersectionT values where the
+	// transformed (object space) ray intersects the object.
+	LocalIntersect(ray RayT) []IntersectionT
 
 	// Transform returns the object's transform 4x4 matrix.
 	Transform() M4
@@ -17,4 +18,10 @@ type Object interface {
 
 	// NormalAt returns the normal vector at the given point of intersection with the object.
 	NormalAt(worldPoint Tuple) Tuple
+}
+
+// Intersect returns a slice of IntersectionT values where the ray intersects the object.
+func Intersect(object Object, ray RayT) []IntersectionT {
+	localRay := ray.Transform(object.Transform().Inverse())
+	return object.LocalIntersect(localRay)
 }

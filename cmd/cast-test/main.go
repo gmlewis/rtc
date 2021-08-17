@@ -53,7 +53,7 @@ func main() {
 			worldX := -half + pixelSize*float64(x)
 			position := rtc.Point(worldX, worldY, *wallZ)
 			r := rtc.Ray(rayOrigin, position.Sub(rayOrigin).Normalize())
-			xs := shape.Intersect(r)
+			xs := rtc.Intersect(shape, r)
 			if hit := rtc.Hit(xs); hit != nil {
 				point := r.Position(hit.T)
 				normal := hit.Object.NormalAt(point)
