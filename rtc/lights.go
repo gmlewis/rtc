@@ -18,7 +18,7 @@ func PointLight(position Tuple, intensity Tuple) *PointLightT {
 func Lighting(material *MaterialT, light *PointLightT, point Tuple, eyeVector Tuple, normalVector Tuple, inShadow bool) Tuple {
 	color := material.Color
 	if material.Pattern != nil {
-		color = material.Pattern.PatternAt(point)
+		color = material.Pattern.LocalPatternAt(point)
 	}
 
 	effectiveColor := color.HadamardProduct(light.intensity)

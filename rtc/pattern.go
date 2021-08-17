@@ -2,8 +2,8 @@ package rtc
 
 // Pattern represents a color pattern.
 type Pattern interface {
-	// PatternAt returns a color at a local point.
-	PatternAt(localPoint Tuple) Tuple
+	// LocalPatternAt returns a color at a local point.
+	LocalPatternAt(localPoint Tuple) Tuple
 }
 
 // BasePattern represents the common functionality for all patterns.

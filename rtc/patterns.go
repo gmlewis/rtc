@@ -21,8 +21,8 @@ func StripePattern(a, b Tuple) *StripePatternT {
 
 var _ Pattern = &StripePatternT{}
 
-// PatternAt returns a color at a local point.
-func (s *StripePatternT) PatternAt(localPoint Tuple) Tuple {
+// LocalPatternAt returns a color at a local point.
+func (s *StripePatternT) LocalPatternAt(localPoint Tuple) Tuple {
 	if int(math.Floor(localPoint.X()))%2 == 0 {
 		return s.a
 	}

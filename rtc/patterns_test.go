@@ -19,7 +19,7 @@ func TestStripePattern(t *testing.T) {
 	}
 }
 
-func TestStripePatternT_PatternAt(t *testing.T) {
+func TestStripePatternT_LocalPatternAt(t *testing.T) {
 	black := Color(0, 0, 0)
 	white := Color(1, 1, 1)
 
@@ -83,7 +83,7 @@ func TestStripePatternT_PatternAt(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := pattern.PatternAt(tt.p); !got.Equal(tt.want) {
+			if got := pattern.LocalPatternAt(tt.p); !got.Equal(tt.want) {
 				t.Errorf("StripePatternT.PatternAt(%v) = %v, want %v", tt.p, got, tt.want)
 			}
 		})
