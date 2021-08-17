@@ -186,3 +186,42 @@ func TestViewTransform(t *testing.T) {
 		})
 	}
 }
+
+func TestWorldT_IsShadowed(t *testing.T) {
+	w := DefaultWorld()
+
+	tests := []struct {
+		name  string
+		point Tuple
+		want  bool
+	}{
+		{
+			name:  "There is no shadow when nothing is collinear with point and light",
+			point: Point(0, 10, 0),
+			want:  false,
+		},
+		{
+			name:  "The shadow when an object is between the point and the light",
+			point: Point(10, -10, 10),
+			want:  true,
+		},
+		{
+			name:  "There is no shadow when an object is behind the light",
+			point: Point(-20, 20, -20),
+			want:  false,
+		},
+		{
+			name:  "There is no shadow when an object is behind the point",
+			point: Point(-2, 2, -2),
+			want:  false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := w.IsShadowed(tt.point, w.Lights[0]); got != tt.want {
+				t.Errorf("WorldT.IsShadowed() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

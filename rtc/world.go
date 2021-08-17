@@ -80,3 +80,18 @@ func ViewTransform(from, to, up Tuple) M4 {
 	}
 	return orientation.Mult(Translation(-from.X(), -from.Y(), -from.Z()))
 }
+
+// IsShadowed determines if the provided point is in a shadow for the given light.
+func (w *WorldT) IsShadowed(point Tuple, light *PointLightT) bool {
+	v := light.position.Sub(point)
+	distance := v.Magnitude()
+	direction := v.Normalize()
+
+	r := Ray(point, direction)
+
+	intersections := w.IntersectWorld(r)
+
+	h := Hit(intersections)
+
+	return h != nil && h.T < distance
+}
