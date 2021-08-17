@@ -46,6 +46,7 @@ type Comps struct {
 	EyeVector    Tuple
 	NormalVector Tuple
 	Inside       bool
+	OverPoint    Tuple // For shadow testing - slightly above surface of object.
 }
 
 // PrepareComputations returns a new data structure encapsulating information
@@ -59,6 +60,7 @@ func (i IntersectionT) PrepareComputations(ray RayT) *Comps {
 		inside = true
 		normalVector = normalVector.Negate()
 	}
+	overPoint := point.Add(normalVector.MultScalar(epsilon))
 
 	return &Comps{
 		T:            i.T,
@@ -67,5 +69,6 @@ func (i IntersectionT) PrepareComputations(ray RayT) *Comps {
 		EyeVector:    eyeVector,
 		NormalVector: normalVector,
 		Inside:       inside,
+		OverPoint:    overPoint,
 	}
 }

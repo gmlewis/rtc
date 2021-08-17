@@ -41,12 +41,13 @@ func (w *WorldT) IntersectWorld(ray RayT) []IntersectionT {
 func (w *WorldT) ShadeHit(comps *Comps) Tuple {
 	var result Tuple
 	for _, light := range w.Lights {
+		isShadowed := w.IsShadowed(comps.OverPoint, light)
 		color := Lighting(comps.Object.Material(),
 			light,
 			comps.Point,
 			comps.EyeVector,
 			comps.NormalVector,
-			false,
+			isShadowed,
 		)
 		result = result.Add(color)
 	}

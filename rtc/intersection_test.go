@@ -107,6 +107,7 @@ func TestIntersectionT_PrepareComputations(t *testing.T) {
 				EyeVector:    Vector(0, 0, -1),
 				NormalVector: Vector(0, 0, -1),
 				Inside:       false,
+				OverPoint:    Point(0, 0, -1.0001),
 			},
 		},
 		{
@@ -120,6 +121,7 @@ func TestIntersectionT_PrepareComputations(t *testing.T) {
 				EyeVector:    Vector(0, 0, -1),
 				NormalVector: Vector(0, 0, -1),
 				Inside:       true,
+				OverPoint:    Point(0, 0, 0.9999),
 			},
 		},
 	}
@@ -131,5 +133,22 @@ func TestIntersectionT_PrepareComputations(t *testing.T) {
 				t.Errorf("IntersectionT.PrepareComputations() = %v, want %v", got, tt.want)
 			}
 		})
+	}
+}
+
+func TestIntersectionT_PrepareComputations_OverPoint(t *testing.T) {
+	r := Ray(Point(0, 0, -5), Vector(0, 0, 1))
+
+	shape := Sphere()
+	shape.SetTransform(Translation(0, 0, 1))
+	i := Intersection(5, shape)
+
+	comps := i.PrepareComputations(r)
+	if comps.OverPoint.Z() >= -epsilon/2 {
+		t.Errorf("comps.OverPoint.Z = %v, want >= %v", comps.OverPoint.Z(), -epsilon/2)
+	}
+
+	if comps.Point.Z() <= comps.OverPoint.Z() {
+		t.Errorf("comps.Point.Z = %v, want <= %v", comps.Point.Z(), comps.OverPoint.Z())
 	}
 }
