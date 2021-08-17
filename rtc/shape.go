@@ -26,13 +26,3 @@ func (s *Shape) Material() *MaterialT {
 func (s *Shape) SetMaterial(material MaterialT) {
 	s.material = material
 }
-
-// NormalAt returns the normal vector at the given point of intersection with the object.
-func (s *Shape) NormalAt(worldPoint Tuple) Tuple {
-	inv := s.transform.Inverse()
-	objectPoint := inv.MultTuple(worldPoint)
-	objectNormal := objectPoint.Sub(Point(0, 0, 0))
-	worldNormal := inv.Transpose().MultTuple(objectNormal)
-	worldNormal[3] = 0 // W
-	return worldNormal.Normalize()
-}

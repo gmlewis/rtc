@@ -163,7 +163,7 @@ func TestSphereT_NormalAt(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := s.NormalAt(tt.point)
+			got := NormalAt(s, tt.point)
 
 			if !cmp.Equal(got, tt.want) {
 				t.Errorf("SphereT.NormalAt() = %v, want %v", got, tt.want)
@@ -203,7 +203,7 @@ func TestSphereT_NormalAt_WithTransform(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			s := Sphere()
 			s.SetTransform(tt.transform)
-			got := s.NormalAt(tt.point)
+			got := NormalAt(s, tt.point)
 
 			if !cmp.Equal(got, tt.want) {
 				t.Errorf("SphereT.NormalAt() = %v, want %v", got, tt.want)

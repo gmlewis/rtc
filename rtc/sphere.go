@@ -35,12 +35,8 @@ func (s *SphereT) LocalIntersect(ray RayT) []IntersectionT {
 	return []IntersectionT{Intersection(t1, s), Intersection(t2, s)}
 }
 
-// NormalAt returns the normal vector at the given point of intersection with the object.
-func (s *SphereT) NormalAt(worldPoint Tuple) Tuple {
-	inv := s.transform.Inverse()
-	objectPoint := inv.MultTuple(worldPoint)
-	objectNormal := objectPoint.Sub(Point(0, 0, 0))
-	worldNormal := inv.Transpose().MultTuple(objectNormal)
-	worldNormal[3] = 0 // W
-	return worldNormal.Normalize()
+// LocalNormalAt returns the normal vector at the given point of intersection
+// (transformed to object space) with the object.
+func (s *SphereT) LocalNormalAt(objectPoint Tuple) Tuple {
+	return objectPoint.Sub(Point(0, 0, 0))
 }

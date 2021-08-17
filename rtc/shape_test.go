@@ -20,12 +20,18 @@ func testShape() *testShapeT {
 }
 
 // This is a global test function to save the ray.
-var testFunc func(ray RayT)
+var testFuncSaveRay func(ray RayT)
 
 // LocalIntersect is for testing the testShape only.
 func (s *Shape) LocalIntersect(ray RayT) []IntersectionT {
-	testFunc(ray)
+	testFuncSaveRay(ray)
 	return nil
+}
+
+// LocalNormalAt returns the normal vector at the given point of intersection
+// (transformed to object space) with the object.
+func (s *Shape) LocalNormalAt(objectPoint Tuple) Tuple {
+	return Tuple{}
 }
 
 func TestShape_NewTestShape(t *testing.T) {
@@ -90,7 +96,7 @@ func TestShape_Ray_Transform(t *testing.T) {
 			ts := testShape()
 			s := ts.shape
 			s.SetTransform(tt.m)
-			testFunc = func(ray RayT) { ts.savedRay = ray }
+			testFuncSaveRay = func(ray RayT) { ts.savedRay = ray }
 			Intersect(s, tt.ray)
 
 			if got, want := ts.savedRay.Origin, tt.wantOrigin; !cmp.Equal(got, want) {

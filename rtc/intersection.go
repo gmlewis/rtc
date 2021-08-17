@@ -54,7 +54,7 @@ type Comps struct {
 func (i IntersectionT) PrepareComputations(ray RayT) *Comps {
 	point := ray.Position(i.T)
 	eyeVector := ray.Direction.Negate()
-	normalVector := i.Object.NormalAt(point)
+	normalVector := NormalAt(i.Object, point)
 	var inside bool
 	if normalVector.Dot(eyeVector) < 0 {
 		inside = true
