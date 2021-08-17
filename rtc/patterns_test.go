@@ -81,6 +81,7 @@ func TestStripePatternT_LocalPatternAt(t *testing.T) {
 			want: white,
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := pattern.LocalPatternAt(tt.p); !got.Equal(tt.want) {
@@ -133,6 +134,53 @@ func TestStripePatternAt(t *testing.T) {
 
 			if got := PatternAt(pattern, object, tt.point); !got.Equal(tt.want) {
 				t.Errorf("PatternAt() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestGradientPatternT_LocalPatternAt(t *testing.T) {
+	black := Color(0, 0, 0)
+	white := Color(1, 1, 1)
+
+	pattern := GradientPattern(white, black)
+
+	tests := []struct {
+		name string
+		p    Tuple
+		want Tuple
+	}{
+		{
+			name: "A gradient linearly interpolates between colors",
+			p:    Point(0, 0, 0),
+			want: white,
+		},
+		{
+			name: "A gradient linearly interpolates between colors",
+			p:    Point(0.25, 0, 0),
+			want: Color(0.75, 0.75, 0.75),
+		},
+		{
+			name: "A gradient linearly interpolates between colors",
+			p:    Point(0.5, 0, 0),
+			want: Color(0.5, 0.5, 0.5),
+		},
+		{
+			name: "A gradient linearly interpolates between colors",
+			p:    Point(0.75, 0, 0),
+			want: Color(0.25, 0.25, 0.25),
+		},
+		{
+			name: "A gradient linearly interpolates between colors",
+			p:    Point(0.9999, 0, 0),
+			want: black,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := pattern.LocalPatternAt(tt.p); !got.Equal(tt.want) {
+				t.Errorf("GradientPatternT.PatternAt(%v) = %v, want %v", tt.p, got, tt.want)
 			}
 		})
 	}
