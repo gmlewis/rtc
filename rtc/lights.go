@@ -15,10 +15,10 @@ func PointLight(position Tuple, intensity Tuple) *PointLightT {
 }
 
 // Lighting calculates the lighting on an object and returns the color as a Tuple.
-func Lighting(material *MaterialT, light *PointLightT, point Tuple, eyeVector Tuple, normalVector Tuple, inShadow bool) Tuple {
+func Lighting(material *MaterialT, object Object, light *PointLightT, point Tuple, eyeVector Tuple, normalVector Tuple, inShadow bool) Tuple {
 	color := material.Color
 	if material.Pattern != nil {
-		color = material.Pattern.LocalPatternAt(point)
+		color = PatternAt(material.Pattern, object, point)
 	}
 
 	effectiveColor := color.HadamardProduct(light.intensity)

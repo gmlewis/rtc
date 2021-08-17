@@ -43,6 +43,7 @@ func (w *WorldT) ShadeHit(comps *Comps) Tuple {
 	for _, light := range w.Lights {
 		isShadowed := w.IsShadowed(comps.OverPoint, light)
 		color := Lighting(comps.Object.Material(),
+			comps.Object,
 			light,
 			comps.Point,
 			comps.EyeVector,

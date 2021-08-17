@@ -92,7 +92,7 @@ func TestLighting(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Lighting(&m, tt.light, position, tt.eyeVector, tt.normalVector, tt.inShadow); !cmp.Equal(got, tt.want) {
+			if got := Lighting(&m, nil, tt.light, position, tt.eyeVector, tt.normalVector, tt.inShadow); !cmp.Equal(got, tt.want) {
 				t.Errorf("Lighting() = %v, want %v", got, tt.want)
 			}
 		})
@@ -100,6 +100,7 @@ func TestLighting(t *testing.T) {
 }
 
 func TestLighting_WithPattern(t *testing.T) {
+	s := Sphere()
 	m := Material()
 	m.Pattern = StripePattern(Color(1, 1, 1), Color(0, 0, 0))
 	m.Ambient = 1
@@ -109,12 +110,12 @@ func TestLighting_WithPattern(t *testing.T) {
 	normalVector := Vector(0, 0, -1)
 	light := PointLight(Point(0, 0, -10), Color(1, 1, 1))
 
-	c1 := Lighting(&m, light, Point(0.9, 0, 0), eyeVector, normalVector, false)
+	c1 := Lighting(&m, s, light, Point(0.9, 0, 0), eyeVector, normalVector, false)
 	if got, want := c1, Color(1, 1, 1); !got.Equal(want) {
 		t.Errorf("c1 Lighting = %v, want %v", got, want)
 	}
 
-	c2 := Lighting(&m, light, Point(1.1, 0, 0), eyeVector, normalVector, false)
+	c2 := Lighting(&m, s, light, Point(1.1, 0, 0), eyeVector, normalVector, false)
 	if got, want := c2, Color(0, 0, 0); !got.Equal(want) {
 		t.Errorf("c2 Lighting = %v, want %v", got, want)
 	}
