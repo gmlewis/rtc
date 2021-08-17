@@ -1,7 +1,6 @@
 package rtc
 
 // Shape represents the common functionality for all shapes.
-// It embeds the Object interface.
 type Shape struct {
 	transform M4
 	material  MaterialT
