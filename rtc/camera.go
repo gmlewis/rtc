@@ -40,6 +40,23 @@ func Camera(hsize, vsize int, fov float64) *CameraT {
 }
 
 // RayForPixel returns a ray for the camera at the given pixel.
-func (c *CameraT) RayForPixel(x, y int) RayT {
-	return RayT{}
+func (c *CameraT) RayForPixel(px, py int) RayT {
+	// The offset from the edge of the canvas to the pixel's center
+	xoffset := (float64(px) + 0.5) * c.PixelSize
+	yoffset := (float64(py) + 0.5) * c.PixelSize
+
+	// The untransformed coordinates of the pixel in world space.
+	// The camera looks toward -Z, so +X is to the *left*.
+	worldX := c.HalfWidth - xoffset
+	worldY := c.HalfHeight - yoffset
+
+	// Using the camera matrix, transform the canvas point and the origin
+	// and then compute the ray's direction vector.
+	// The canvas is at Z = -1.
+	inv := c.Transform.Inverse()
+	pixel := inv.MultTuple(Point(worldX, worldY, -1))
+	origin := inv.MultTuple(Point(0, 0, 0))
+	direction := pixel.Sub(origin).Normalize()
+
+	return Ray(origin, direction)
 }

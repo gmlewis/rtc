@@ -78,6 +78,7 @@ func TestCameraT_RayForPixel(t *testing.T) {
 			hsize:         201,
 			vsize:         101,
 			fov:           math.Pi / 2,
+			transform:     M4Identity(),
 			x:             100,
 			y:             50,
 			wantOrigin:    Point(0, 0, 0),
@@ -88,6 +89,7 @@ func TestCameraT_RayForPixel(t *testing.T) {
 			hsize:         201,
 			vsize:         101,
 			fov:           math.Pi / 2,
+			transform:     M4Identity(),
 			x:             0,
 			y:             0,
 			wantOrigin:    Point(0, 0, 0),
@@ -109,13 +111,14 @@ func TestCameraT_RayForPixel(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			c := Camera(tt.hsize, tt.vsize, tt.fov)
+			c.Transform = tt.transform
 			r := c.RayForPixel(tt.x, tt.y)
 
-			if r.Origin != tt.wantOrigin {
+			if !r.Origin.Equal(tt.wantOrigin) {
 				t.Errorf("Origin = %v, want %v", r.Origin, tt.wantOrigin)
 			}
 
-			if r.Direction != tt.wantDirection {
+			if !r.Direction.Equal(tt.wantDirection) {
 				t.Errorf("Direction = %v, want %v", r.Direction, tt.wantDirection)
 			}
 		})
