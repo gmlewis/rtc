@@ -58,7 +58,7 @@ func main() {
 				point := r.Position(hit.T)
 				normal := hit.Object.NormalAt(point)
 				eye := r.Direction.Negate()
-				color := rtc.Lighting(hit.Object.Material(), light, point, eye, normal)
+				color := rtc.Lighting(hit.Object.Material(), light, point, eye, normal, false)
 				canvas.WritePixel(x, y, color)
 			}
 		}

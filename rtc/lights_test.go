@@ -39,6 +39,7 @@ func TestLighting(t *testing.T) {
 		light        *PointLightT
 		eyeVector    Tuple
 		normalVector Tuple
+		inShadow     bool
 		want         Tuple
 	}{
 		{
@@ -76,6 +77,14 @@ func TestLighting(t *testing.T) {
 			light:        PointLight(Point(0, 0, 10), Color(1, 1, 1)),
 			want:         Color(0.1, 0.1, 0.1),
 		},
+		{
+			name:         "Lighting with the surface in shadow",
+			eyeVector:    Vector(0, 0, -1),
+			normalVector: Vector(0, 0, -1),
+			light:        PointLight(Point(0, 0, -10), Color(1, 1, 1)),
+			inShadow:     true,
+			want:         Color(0.1, 0.1, 0.1),
+		},
 	}
 
 	m := Material()
@@ -83,7 +92,7 @@ func TestLighting(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Lighting(&m, tt.light, position, tt.eyeVector, tt.normalVector); !cmp.Equal(got, tt.want) {
+			if got := Lighting(&m, tt.light, position, tt.eyeVector, tt.normalVector, tt.inShadow); !cmp.Equal(got, tt.want) {
 				t.Errorf("Lighting() = %v, want %v", got, tt.want)
 			}
 		})

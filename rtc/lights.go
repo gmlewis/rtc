@@ -15,12 +15,16 @@ func PointLight(position Tuple, intensity Tuple) *PointLightT {
 }
 
 // Lighting calculates the lighting on an object and returns the color as a Tuple.
-func Lighting(material *MaterialT, light *PointLightT, point Tuple, eyeVector Tuple, normalVector Tuple) Tuple {
+func Lighting(material *MaterialT, light *PointLightT, point Tuple, eyeVector Tuple, normalVector Tuple, inShadow bool) Tuple {
 	effectiveColor := material.Color.HadamardProduct(light.intensity)
 
 	lightV := light.position.Sub(point).Normalize()
 
 	ambient := effectiveColor.MultScalar(material.Ambient)
+
+	if inShadow {
+		return ambient
+	}
 
 	lightDotNormal := lightV.Dot(normalVector)
 

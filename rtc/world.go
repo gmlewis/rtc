@@ -46,6 +46,7 @@ func (w *WorldT) ShadeHit(comps *Comps) Tuple {
 			comps.Point,
 			comps.EyeVector,
 			comps.NormalVector,
+			false,
 		)
 		result = result.Add(color)
 	}
