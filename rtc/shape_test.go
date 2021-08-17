@@ -1,6 +1,7 @@
 package rtc
 
 import (
+	"math"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -28,10 +29,9 @@ func (s *Shape) LocalIntersect(ray RayT) []IntersectionT {
 	return nil
 }
 
-// LocalNormalAt returns the normal vector at the given point of intersection
-// (transformed to object space) with the object.
-func (s *Shape) LocalNormalAt(objectPoint Tuple) Tuple {
-	return Tuple{}
+// LocalNormalAt is for testing the testShape only.
+func (s *Shape) LocalNormalAt(localPoint Tuple) Tuple {
+	return Vector(localPoint.X(), localPoint.Y(), localPoint.Z())
 }
 
 func TestShape_NewTestShape(t *testing.T) {
@@ -105,6 +105,43 @@ func TestShape_Ray_Transform(t *testing.T) {
 
 			if got, want := ts.savedRay.Direction, tt.wantDirection; !cmp.Equal(got, want) {
 				t.Errorf("ts.savedRay.Direction = %v, want %v", got, want)
+			}
+		})
+	}
+}
+
+func TestShape_NormalAt_WithTransform(t *testing.T) {
+	sq2 := math.Sqrt(2) / 2
+
+	tests := []struct {
+		name      string
+		transform M4
+		point     Tuple
+		want      Tuple
+	}{
+		{
+			name:      "Computing the normal on a translated shape",
+			transform: Translation(0, 1, 0),
+			point:     Point(0, 1.70711, -0.70711),
+			want:      Vector(0, 0.70711, -0.70711),
+		},
+		{
+			name:      "Computing the normal on a transformed shape",
+			transform: Scaling(1, 0.5, 1).Mult(RotationZ(math.Pi / 5)),
+			point:     Point(0, sq2, -sq2),
+			want:      Vector(0, 0.97014, -0.24254),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ts := testShape()
+			s := ts.shape
+			s.SetTransform(tt.transform)
+			got := NormalAt(s, tt.point)
+
+			if !got.Equal(tt.want) {
+				t.Errorf("NormalAt = %v, want %v", got, tt.want)
 			}
 		})
 	}
