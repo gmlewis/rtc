@@ -124,3 +124,17 @@ func TestCameraT_RayForPixel(t *testing.T) {
 		})
 	}
 }
+
+func TestCameraT_Render(t *testing.T) {
+	w := DefaultWorld()
+	c := Camera(11, 11, math.Pi/2)
+	from := Point(0, 0, -5)
+	to := Point(0, 0, 0)
+	up := Point(0, 1, 0)
+	c.Transform = ViewTransform(from, to, up)
+	canvas := c.Render(w)
+
+	if got, want := canvas.PixelAt(5, 5), Color(0.38066, 0.47583, 0.2855); !got.Equal(want) {
+		t.Errorf("canvas.PixelAt(5,5) = %v, want %v", got, want)
+	}
+}

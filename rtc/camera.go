@@ -60,3 +60,18 @@ func (c *CameraT) RayForPixel(px, py int) RayT {
 
 	return Ray(origin, direction)
 }
+
+// Render renders the world with the camera and returns an image.
+func (c *CameraT) Render(world *WorldT) *Canvas {
+	canvas := NewCanvas(c.HSize, c.VSize)
+
+	for y := 0; y < c.VSize; y++ {
+		for x := 0; x < c.HSize; x++ {
+			ray := c.RayForPixel(x, y)
+			color := world.ColorAt(ray)
+			canvas.WritePixel(x, y, color)
+		}
+	}
+
+	return canvas
+}
