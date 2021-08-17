@@ -56,3 +56,30 @@ func (s *GradientPatternT) LocalPatternAt(localPoint Tuple) Tuple {
 	t := localPoint.X() - math.Floor(localPoint.X())
 	return s.a.Add(s.distance.MultScalar(t))
 }
+
+// RingPatternT is a pattern that draws rings.
+// It implements the Pattern interface.
+type RingPatternT struct {
+	BasePattern
+	a Tuple
+	b Tuple
+}
+
+var _ Pattern = &RingPatternT{}
+
+// RingPattern returns a RingPatternT.
+func RingPattern(a, b Tuple) *RingPatternT {
+	return &RingPatternT{
+		BasePattern: BasePattern{transform: M4Identity()},
+		a:           a,
+		b:           b,
+	}
+}
+
+// LocalPatternAt returns a color at a local point.
+func (s *RingPatternT) LocalPatternAt(localPoint Tuple) Tuple {
+	if int(math.Floor(math.Sqrt(localPoint.X()*localPoint.X()+localPoint.Z()*localPoint.Z())))%2 == 0 {
+		return s.a
+	}
+	return s.b
+}

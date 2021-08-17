@@ -185,3 +185,45 @@ func TestGradientPatternT_LocalPatternAt(t *testing.T) {
 		})
 	}
 }
+
+func TestRingPatternT_LocalPatternAt(t *testing.T) {
+	black := Color(0, 0, 0)
+	white := Color(1, 1, 1)
+
+	pattern := RingPattern(white, black)
+
+	tests := []struct {
+		name string
+		p    Tuple
+		want Tuple
+	}{
+		{
+			name: "A ring should extend in both x and z",
+			p:    Point(0, 0, 0),
+			want: white,
+		},
+		{
+			name: "A ring should extend in both x and z",
+			p:    Point(1, 0, 0),
+			want: black,
+		},
+		{
+			name: "A ring should extend in both x and z",
+			p:    Point(0, 0, 1),
+			want: black,
+		},
+		{
+			name: "A ring should extend in both x and z",
+			p:    Point(0.708, 0, 0.708),
+			want: black,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := pattern.LocalPatternAt(tt.p); !got.Equal(tt.want) {
+				t.Errorf("RingPatternT.PatternAt(%v) = %v, want %v", tt.p, got, tt.want)
+			}
+		})
+	}
+}
