@@ -98,3 +98,24 @@ func TestLighting(t *testing.T) {
 		})
 	}
 }
+
+func TestLighting_WithPattern(t *testing.T) {
+	m := Material()
+	m.Pattern = StripePattern(Color(1, 1, 1), Color(0, 0, 0))
+	m.Ambient = 1
+	m.Diffuse = 0
+	m.Specular = 0
+	eyeVector := Vector(0, 0, -1)
+	normalVector := Vector(0, 0, -1)
+	light := PointLight(Point(0, 0, -10), Color(1, 1, 1))
+
+	c1 := Lighting(&m, light, Point(0.9, 0, 0), eyeVector, normalVector, false)
+	if got, want := c1, Color(1, 1, 1); !got.Equal(want) {
+		t.Errorf("c1 Lighting = %v, want %v", got, want)
+	}
+
+	c2 := Lighting(&m, light, Point(1.1, 0, 0), eyeVector, normalVector, false)
+	if got, want := c2, Color(0, 0, 0); !got.Equal(want) {
+		t.Errorf("c2 Lighting = %v, want %v", got, want)
+	}
+}
