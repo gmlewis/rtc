@@ -7,6 +7,7 @@ type MaterialT struct {
 	Diffuse   float64
 	Specular  float64
 	Shininess float64
+	Pattern   Pattern
 }
 
 // Material returns a default material.

@@ -70,11 +70,21 @@ func TestStripePatternT_PatternAt(t *testing.T) {
 			p:    Point(1.9, 0, 0),
 			want: black,
 		},
+		{
+			name: "A stripe pattern alternates in x",
+			p:    Point(-1, 0, 0),
+			want: black,
+		},
+		{
+			name: "A stripe pattern alternates in x",
+			p:    Point(-1.1, 0, 0),
+			want: white,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := pattern.PatternAt(tt.p); !got.Equal(tt.want) {
-				t.Errorf("StripePatternT.PatternAt() = %v, want %v", got, tt.want)
+				t.Errorf("StripePatternT.PatternAt(%v) = %v, want %v", tt.p, got, tt.want)
 			}
 		})
 	}
