@@ -91,6 +91,10 @@ func genWorld() *rtc.WorldT {
 	left.Material().Specular = 0.3
 
 	w.Objects = []rtc.Object{floor, leftWall, rightWall, middle, right, left}
-	w.Lights = []*rtc.PointLightT{rtc.PointLight(rtc.Point(-10, 10, -10), rtc.Color(1, 1, 1))}
+	// w.Lights = []*rtc.PointLightT{rtc.PointLight(rtc.Point(-10, 10, -10), rtc.Color(1, 1, 1))}  // one light
+	w.Lights = []*rtc.PointLightT{ // two lights
+		rtc.PointLight(rtc.Point(-10, 10, -10), rtc.Color(1, 1, 1)),
+		rtc.PointLight(rtc.Point(50, 50, -50), rtc.Color(1, 0.9, 0.8)),
+	}
 	return w
 }
