@@ -2,6 +2,10 @@ package rtc
 
 import "math"
 
+const (
+	maxReflections = 4
+)
+
 // CameraT represents a camera.
 type CameraT struct {
 	HSize       int
@@ -68,7 +72,7 @@ func (c *CameraT) Render(world *WorldT) *Canvas {
 	for y := 0; y < c.VSize; y++ {
 		for x := 0; x < c.HSize; x++ {
 			ray := c.RayForPixel(x, y)
-			color := world.ColorAt(ray)
+			color := world.ColorAt(ray, maxReflections)
 			canvas.WritePixel(x, y, color)
 		}
 	}

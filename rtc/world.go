@@ -38,7 +38,7 @@ func (w *WorldT) IntersectWorld(ray RayT) []IntersectionT {
 }
 
 // ShadeHit returns the color (as a Tuple) for the precomputed intersection.
-func (w *WorldT) ShadeHit(comps *Comps) Tuple {
+func (w *WorldT) ShadeHit(comps *Comps, remaining int) Tuple {
 	var result Tuple
 	for _, light := range w.Lights {
 		shadowed := w.IsShadowed(comps.OverPoint, light)
@@ -50,14 +50,14 @@ func (w *WorldT) ShadeHit(comps *Comps) Tuple {
 			comps.NormalVector,
 			shadowed,
 		)
-		reflected := w.ReflectedColor(comps)
+		reflected := w.ReflectedColor(comps, remaining)
 		result = result.Add(surface).Add(reflected)
 	}
 	return result
 }
 
 // ColorAt returns the color (as a Tuple) when casting the given ray.
-func (w *WorldT) ColorAt(ray RayT) Tuple {
+func (w *WorldT) ColorAt(ray RayT, remaining int) Tuple {
 	xs := w.IntersectWorld(ray)
 	hit := Hit(xs)
 	if hit == nil {
@@ -65,7 +65,7 @@ func (w *WorldT) ColorAt(ray RayT) Tuple {
 	}
 
 	comps := hit.PrepareComputations(ray)
-	return w.ShadeHit(comps)
+	return w.ShadeHit(comps, remaining)
 }
 
 // ViewTransform creates a camera transformation matrix.
@@ -100,12 +100,12 @@ func (w *WorldT) IsShadowed(point Tuple, light *PointLightT) bool {
 }
 
 // ReflectedColor returns the reflected color for the precomputed intersection.
-func (w *WorldT) ReflectedColor(comps *Comps) Tuple {
-	if comps.Object.Material().Reflective == 0 {
+func (w *WorldT) ReflectedColor(comps *Comps, remaining int) Tuple {
+	if remaining < 1 || comps.Object.Material().Reflective == 0 {
 		return Color(0, 0, 0)
 	}
 
 	reflectRay := Ray(comps.OverPoint, comps.ReflectVector)
-	color := w.ColorAt(reflectRay)
+	color := w.ColorAt(reflectRay, remaining-1)
 	return color.MultScalar(comps.Object.Material().Reflective)
 }
