@@ -1,6 +1,9 @@
 package rtc
 
-import "math"
+import (
+	"math"
+	"sync"
+)
 
 const (
 	maxReflections = 4
@@ -15,6 +18,7 @@ type CameraT struct {
 	PixelSize   float64
 	HalfWidth   float64
 	HalfHeight  float64
+	NumWorkers  int
 }
 
 // Camera creates a new CameraT with the provided canvas size and
@@ -28,6 +32,7 @@ func Camera(hsize, vsize int, fov float64) *CameraT {
 		VSize:       vsize,
 		FieldOfView: fov,
 		Transform:   M4Identity(),
+		NumWorkers:  18, // sweet spot on my machine
 	}
 
 	if aspect >= 1 {
@@ -69,12 +74,35 @@ func (c *CameraT) RayForPixel(px, py int) RayT {
 func (c *CameraT) Render(world *WorldT) *Canvas {
 	canvas := NewCanvas(c.HSize, c.VSize)
 
+	f := func(x, y int) {
+		ray := c.RayForPixel(x, y)
+		color := world.ColorAt(ray, maxReflections)
+		canvas.WritePixel(x, y, color)
+	}
+
+	var wg sync.WaitGroup
+	if c.NumWorkers > 1 {
+		ch := make(chan struct{}, c.NumWorkers)
+		origF := f
+		f = func(x, y int) {
+			wg.Add(1)
+			ch <- struct{}{}
+			go func(x, y int) {
+				origF(x, y)
+				wg.Done()
+				<-ch
+			}(x, y)
+		}
+	}
+
 	for y := 0; y < c.VSize; y++ {
 		for x := 0; x < c.HSize; x++ {
-			ray := c.RayForPixel(x, y)
-			color := world.ColorAt(ray, maxReflections)
-			canvas.WritePixel(x, y, color)
+			f(x, y)
 		}
+	}
+
+	if c.NumWorkers > 1 {
+		wg.Wait()
 	}
 
 	return canvas

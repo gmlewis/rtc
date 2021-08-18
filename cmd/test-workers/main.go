@@ -1,20 +1,23 @@
-// test-scene2 implements the test scene in Chapter 7 but with planes.
+// test-workers benchmarks the use of goroutines to render the
+// scene from Chapter 7.
 package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"math"
+	"time"
 
 	"github.com/gmlewis/rtc/rtc"
 )
 
 var (
-	xsize = flag.Int("xsize", 100, "X size")
-	ysize = flag.Int("ysize", 50, "Y size")
+	xsize = flag.Int("xsize", 1280, "X size")
+	ysize = flag.Int("ysize", 1024, "Y size")
 
-	pngFile = flag.String("png", "test-scene.png", "Output PNG file")
-	ppmFile = flag.String("ppm", "test-scene.ppm", "Output PPM file")
+	pngFile = flag.String("png", "test-workers.png", "Output PNG file")
+	ppmFile = flag.String("ppm", "test-workers.ppm", "Output PPM file")
 )
 
 func main() {
@@ -27,6 +30,28 @@ func main() {
 		rtc.Point(0, 1.5, -5),
 		rtc.Point(0, 1, 0),
 		rtc.Vector(0, 1, 0))
+
+	workers := []int{
+		// 1, 2, 3, 4, 5, 6, 7, 8, 9,
+		10, 11, 12, 13, 14, 15, 16, 17, 18, 19, // sweet spot range on my machine.
+		// 10, 20, 30, 40, 50, 60, 70, 80, 90,
+		// 100, 200, 300, 400, 500, 600, 700, 800, 900,
+		// 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000,
+		// 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000,
+		// 100000, 200000, 300000, 400000, 500000, 600000, 700000, 800000, 900000,
+	}
+
+	fmt.Println("Workers,Seconds")
+	for _, num := range workers {
+		before := time.Now().Local()
+		benchmark(num, camera, world)
+		delta := time.Since(before)
+		fmt.Printf("%v,%v\n", num, delta.Seconds())
+	}
+}
+
+func benchmark(numWorkers int, camera *rtc.CameraT, world *rtc.WorldT) {
+	camera.NumWorkers = numWorkers
 	canvas := camera.Render(world)
 
 	if *pngFile != "" {
