@@ -278,3 +278,19 @@ func TestWorldT_ReflectedColor_WithReflectiveMaterial(t *testing.T) {
 		t.Errorf("w.ReflectedColor = %v, want %v", got, want)
 	}
 }
+
+func TestWorldT_ShadeHit_WithReflectiveMaterial(t *testing.T) {
+	sq2 := math.Sqrt2 / 2
+	w := DefaultWorld()
+	shape := Plane()
+	shape.Material().Reflective = 0.5
+	shape.SetTransform(Translation(0, -1, 0))
+	w.Objects = append(w.Objects, shape)
+	r := Ray(Point(0, 0, -3), Vector(0, -sq2, sq2))
+	i := Intersection(math.Sqrt2, shape)
+
+	comps := i.PrepareComputations(r)
+	if got, want := w.ShadeHit(comps), Color(0.87677, 0.92436, 0.82918); !got.Equal(want) {
+		t.Errorf("w.ShadeHit = %v, want %v", got, want)
+	}
+}
