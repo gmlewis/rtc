@@ -72,7 +72,7 @@ func TestWorldT_ShadeHit_From_Outside(t *testing.T) {
 	shape := w.Objects[0]
 	i := Intersection(4, shape)
 
-	comps := i.PrepareComputations(r)
+	comps := i.PrepareComputations(r, []IntersectionT{i})
 
 	if got, want := w.ShadeHit(comps, maxReflections), Color(0.38066, 0.47583, 0.2855); !got.Equal(want) {
 		t.Errorf("Shading an intersection from the outside: WorldT.ShadeHit() = %v, want %v", got, want)
@@ -87,7 +87,7 @@ func TestWorldT_ShadeHit_From_Inside(t *testing.T) {
 
 	i := Intersection(0.5, shape)
 
-	comps := i.PrepareComputations(r)
+	comps := i.PrepareComputations(r, []IntersectionT{i})
 
 	if got, want := w.ShadeHit(comps, maxReflections), Color(0.90498, 0.90498, 0.90498); !got.Equal(want) {
 		t.Errorf("Shading an intersection from the inside: WorldT.ShadeHit() = %v, want %v", got, want)
@@ -106,7 +106,7 @@ func TestWorldT_ShadeHit_In_Shadow(t *testing.T) {
 
 	i := Intersection(4, s2)
 
-	comps := i.PrepareComputations(r)
+	comps := i.PrepareComputations(r, []IntersectionT{i})
 
 	if got, want := w.ShadeHit(comps, maxReflections), Color(0.1, 0.1, 0.1); !got.Equal(want) {
 		t.Errorf("Shading an intersection in shadow: WorldT.ShadeHit() = %v, want %v", got, want)
@@ -256,7 +256,7 @@ func TestWorldT_ReflectedColor(t *testing.T) {
 	shape.Material().Ambient = 1
 	i := Intersection(1, shape)
 
-	comps := i.PrepareComputations(r)
+	comps := i.PrepareComputations(r, []IntersectionT{i})
 
 	if got, want := w.ReflectedColor(comps, maxReflections), Color(0, 0, 0); !got.Equal(want) {
 		t.Errorf("w.ReflectedColor = %v, want %v", got, want)
@@ -273,7 +273,7 @@ func TestWorldT_ReflectedColor_WithReflectiveMaterial(t *testing.T) {
 	r := Ray(Point(0, 0, -3), Vector(0, -sq2, sq2))
 	i := Intersection(math.Sqrt2, shape)
 
-	comps := i.PrepareComputations(r)
+	comps := i.PrepareComputations(r, []IntersectionT{i})
 	if got, want := w.ReflectedColor(comps, maxReflections), Color(0.19032, 0.2379, 0.14274); !got.Equal(want) {
 		t.Errorf("w.ReflectedColor = %v, want %v", got, want)
 	}
@@ -289,7 +289,7 @@ func TestWorldT_ShadeHit_WithReflectiveMaterial(t *testing.T) {
 	r := Ray(Point(0, 0, -3), Vector(0, -sq2, sq2))
 	i := Intersection(math.Sqrt2, shape)
 
-	comps := i.PrepareComputations(r)
+	comps := i.PrepareComputations(r, []IntersectionT{i})
 	if got, want := w.ShadeHit(comps, maxReflections), Color(0.87677, 0.92436, 0.82918); !got.Equal(want) {
 		t.Errorf("w.ShadeHit = %v, want %v", got, want)
 	}
@@ -322,7 +322,7 @@ func TestWorldT_ReflectedColor_WithMaximumRecursionDepth(t *testing.T) {
 	r := Ray(Point(0, 0, -3), Vector(0, -sq2, sq2))
 	i := Intersection(math.Sqrt2, shape)
 
-	comps := i.PrepareComputations(r)
+	comps := i.PrepareComputations(r, []IntersectionT{i})
 	if got, want := w.ReflectedColor(comps, 0), Color(0, 0, 0); !got.Equal(want) {
 		t.Errorf("w.ReflectedColor = %v, want %v", got, want)
 	}

@@ -47,13 +47,15 @@ type Comps struct {
 	NormalVector  Tuple
 	ReflectVector Tuple
 	Inside        bool
-	OverPoint     Tuple // For shadow testing - slightly above surface of object.
-	UnderPoint    Tuple // For transparency and index of refraction calculations.
+	OverPoint     Tuple   // For shadow testing - slightly above surface of object.
+	UnderPoint    Tuple   // For transparency and index of refraction calculations.
+	N1            float64 // Refractive index of material being exited.
+	N2            float64 // Refractive index of material being entered.
 }
 
 // PrepareComputations returns a new data structure encapsulating information
 // about the intersection.
-func (i IntersectionT) PrepareComputations(ray RayT) *Comps {
+func (i IntersectionT) PrepareComputations(ray RayT, xs []IntersectionT) *Comps {
 	point := ray.Position(i.T)
 	eyeVector := ray.Direction.Negate()
 	normalVector := NormalAt(i.Object, point)

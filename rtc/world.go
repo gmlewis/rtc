@@ -64,7 +64,7 @@ func (w *WorldT) ColorAt(ray RayT, remaining int) Tuple {
 		return Color(0, 0, 0)
 	}
 
-	comps := hit.PrepareComputations(ray)
+	comps := hit.PrepareComputations(ray, xs)
 	return w.ShadeHit(comps, remaining)
 }
 

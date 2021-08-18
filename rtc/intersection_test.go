@@ -1,6 +1,7 @@
 package rtc
 
 import (
+	"fmt"
 	"math"
 	"reflect"
 	"testing"
@@ -132,7 +133,7 @@ func TestIntersectionT_PrepareComputations(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 
-			if got := tt.i.PrepareComputations(tt.r); !reflect.DeepEqual(got, tt.want) {
+			if got := tt.i.PrepareComputations(tt.r, []IntersectionT{tt.i}); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("IntersectionT.PrepareComputations() = %#v, want %#v", got, tt.want)
 			}
 		})
@@ -146,7 +147,7 @@ func TestIntersectionT_PrepareComputations_OverPoint(t *testing.T) {
 	shape.SetTransform(Translation(0, 0, 1))
 	i := Intersection(5, shape)
 
-	comps := i.PrepareComputations(r)
+	comps := i.PrepareComputations(r, []IntersectionT{i})
 	if comps.OverPoint.Z() >= -epsilon/2 {
 		t.Errorf("comps.OverPoint.Z = %v, want >= %v", comps.OverPoint.Z(), -epsilon/2)
 	}
@@ -164,8 +165,49 @@ func TestIntersectionT_PrepareComputations_ReflectVector(t *testing.T) {
 	shape := Plane()
 	i := Intersection(sq2, shape)
 
-	comps := i.PrepareComputations(r)
+	comps := i.PrepareComputations(r, []IntersectionT{i})
 	if got, want := comps.ReflectVector, Vector(0, sq2, sq2); !got.Equal(want) {
 		t.Errorf("comps.ReflectVector = %v, want %v", got, want)
+	}
+}
+
+func TestIntersectionT_PrepareComputations_N1N2(t *testing.T) {
+	a := GlassSphere()
+	a.SetTransform(Scaling(2, 2, 2))
+	a.Material().RefractiveIndex = 1.5
+	b := GlassSphere()
+	b.SetTransform(Translation(0, 0, -0.25))
+	b.Material().RefractiveIndex = 2.0
+	c := GlassSphere()
+	c.SetTransform(Translation(0, 0, 0.25))
+	c.Material().RefractiveIndex = 2.5
+	r := Ray(Point(0, 0, -4), Vector(0, 0, 1))
+
+	xs := Intersections(Intersection(2, a), Intersection(2.75, b), Intersection(3.25, c), Intersection(4.75, b), Intersection(5.25, c), Intersection(6, a))
+
+	tests := []struct {
+		n1 float64
+		n2 float64
+	}{
+		{n1: 1.0, n2: 1.5},
+		{n1: 1.0, n2: 1.5},
+		{n1: 1.0, n2: 1.5},
+		{n1: 1.0, n2: 1.5},
+		{n1: 1.0, n2: 1.5},
+		{n1: 1.0, n2: 1.5},
+	}
+
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("xs[%v]", i), func(t *testing.T) {
+			comps := xs[1].PrepareComputations(r, xs)
+
+			if got, want := comps.N1, tt.n1; got != want {
+				t.Errorf("n1 = %#v, want %#v", got, want)
+			}
+
+			if got, want := comps.N2, tt.n2; got != want {
+				t.Errorf("n2 = %#v, want %#v", got, want)
+			}
+		})
 	}
 }
