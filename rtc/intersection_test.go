@@ -111,6 +111,7 @@ func TestIntersectionT_PrepareComputations(t *testing.T) {
 				ReflectVector: Vector(0, 0, -1),
 				Inside:        false,
 				OverPoint:     Point(0, 0, -1.0001),
+				UnderPoint:    Point(0, 0, -0.9999),
 				N1:            1,
 				N2:            1,
 			},
@@ -128,6 +129,7 @@ func TestIntersectionT_PrepareComputations(t *testing.T) {
 				ReflectVector: Vector(0, 0, -1),
 				Inside:        true,
 				OverPoint:     Point(0, 0, 0.9999),
+				UnderPoint:    Point(0, 0, 1.0001),
 				N1:            1,
 				N2:            1,
 			},
@@ -153,11 +155,28 @@ func TestIntersectionT_PrepareComputations_OverPoint(t *testing.T) {
 
 	comps := i.PrepareComputations(r, []IntersectionT{i})
 	if comps.OverPoint.Z() >= -epsilon/2 {
-		t.Errorf("comps.OverPoint.Z = %v, want >= %v", comps.OverPoint.Z(), -epsilon/2)
+		t.Errorf("comps.OverPoint.Z = %v, want < %v", comps.OverPoint.Z(), -epsilon/2)
 	}
 
 	if comps.Point.Z() <= comps.OverPoint.Z() {
-		t.Errorf("comps.Point.Z = %v, want <= %v", comps.Point.Z(), comps.OverPoint.Z())
+		t.Errorf("comps.Point.Z = %v, want > %v", comps.Point.Z(), comps.OverPoint.Z())
+	}
+}
+
+func TestIntersectionT_PrepareComputations_UnderPoint(t *testing.T) {
+	r := Ray(Point(0, 0, -5), Vector(0, 0, 1))
+
+	shape := GlassSphere()
+	shape.SetTransform(Translation(0, 0, 1))
+	i := Intersection(5, shape)
+
+	comps := i.PrepareComputations(r, []IntersectionT{i})
+	if comps.UnderPoint.Z() <= epsilon/2 {
+		t.Errorf("comps.UnderPoint.Z = %v, want > %v", comps.UnderPoint.Z(), epsilon/2)
+	}
+
+	if comps.Point.Z() >= comps.UnderPoint.Z() {
+		t.Errorf("comps.Point.Z = %v, want < %v", comps.Point.Z(), comps.UnderPoint.Z())
 	}
 }
 

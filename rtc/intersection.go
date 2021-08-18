@@ -67,7 +67,9 @@ func (i IntersectionT) PrepareComputations(ray RayT, xs []IntersectionT) *Comps 
 		normalVector = normalVector.Negate()
 	}
 	reflectVector := ray.Direction.Reflect(normalVector)
-	overPoint := point.Add(normalVector.MultScalar(epsilon))
+	eps := normalVector.MultScalar(epsilon)
+	overPoint := point.Add(eps)
+	underPoint := point.Sub(eps)
 
 	n1, n2 := 1.0, 1.0
 	var containers []Object
@@ -115,6 +117,7 @@ func (i IntersectionT) PrepareComputations(ray RayT, xs []IntersectionT) *Comps 
 		ReflectVector: reflectVector,
 		Inside:        inside,
 		OverPoint:     overPoint,
+		UnderPoint:    underPoint,
 		N1:            n1,
 		N2:            n2,
 	}
