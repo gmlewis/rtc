@@ -5,23 +5,6 @@ import (
 	"testing"
 )
 
-func TestPlane(t *testing.T) {
-	tests := []struct {
-		name string
-		want *PlaneT
-	}{
-		// TODO: Add test cases.
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := Plane(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Plane() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func TestPlaneT_LocalIntersect(t *testing.T) {
 	p := Plane()
 
