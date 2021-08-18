@@ -83,3 +83,31 @@ func (s *RingPatternT) LocalPatternAt(localPoint Tuple) Tuple {
 	}
 	return s.b
 }
+
+// CheckersPatternT is a pattern that draws checkerss.
+// It implements the Pattern interface.
+type CheckersPatternT struct {
+	BasePattern
+	a Tuple
+	b Tuple
+}
+
+var _ Pattern = &CheckersPatternT{}
+
+// CheckersPattern returns a CheckersPatternT.
+func CheckersPattern(a, b Tuple) *CheckersPatternT {
+	return &CheckersPatternT{
+		BasePattern: BasePattern{transform: M4Identity()},
+		a:           a,
+		b:           b,
+	}
+}
+
+// LocalPatternAt returns a color at a local point.
+func (s *CheckersPatternT) LocalPatternAt(localPoint Tuple) Tuple {
+	t := int(math.Floor(localPoint.X())) + int(math.Floor(localPoint.Y())) + int(math.Floor(localPoint.Z()))
+	if t%2 == 0 {
+		return s.a
+	}
+	return s.b
+}

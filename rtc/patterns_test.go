@@ -227,3 +227,60 @@ func TestRingPatternT_LocalPatternAt(t *testing.T) {
 		})
 	}
 }
+
+func TestCheckersPatternT_LocalPatternAt(t *testing.T) {
+	black := Color(0, 0, 0)
+	white := Color(1, 1, 1)
+
+	pattern := CheckersPattern(white, black)
+
+	tests := []struct {
+		name string
+		p    Tuple
+		want Tuple
+	}{
+		{
+			name: "Checkers should repeat in x",
+			p:    Point(0, 0, 0),
+			want: white,
+		},
+		{
+			name: "Checkers should repeat in x",
+			p:    Point(0.99, 0, 0),
+			want: white,
+		},
+		{
+			name: "Checkers should repeat in x",
+			p:    Point(1.01, 0, 0),
+			want: black,
+		},
+		{
+			name: "Checkers should repeat in y",
+			p:    Point(0, 0.99, 0),
+			want: white,
+		},
+		{
+			name: "Checkers should repeat in y",
+			p:    Point(0, 1.01, 0),
+			want: black,
+		},
+		{
+			name: "Checkers should repeat in z",
+			p:    Point(0, 0, 0.99),
+			want: white,
+		},
+		{
+			name: "Checkers should repeat in z",
+			p:    Point(0, 0, 1.01),
+			want: black,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := pattern.LocalPatternAt(tt.p); !got.Equal(tt.want) {
+				t.Errorf("CheckersPatternT.PatternAt(%v) = %v, want %v", tt.p, got, tt.want)
+			}
+		})
+	}
+}
