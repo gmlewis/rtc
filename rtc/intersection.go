@@ -1,6 +1,7 @@
 package rtc
 
 import (
+	"math"
 	"sort"
 )
 
@@ -134,7 +135,11 @@ func (c *Comps) Schlick() float64 {
 		if sin2t > 1 {
 			return 1
 		}
+
+		cos = math.Sqrt(1 - sin2t)
 	}
 
-	return 0
+	ratio := (c.N1 - c.N2) / (c.N1 + c.N2)
+	r0 := ratio * ratio
+	return r0 + (1-r0)*math.Pow(1-cos, 5)
 }

@@ -248,3 +248,29 @@ func TestComps_Schlick_WithTotalInternalReflection(t *testing.T) {
 		t.Errorf("Schlick = %v, want %v", got, want)
 	}
 }
+
+func TestComps_Schlick_WithPerpendicularRay(t *testing.T) {
+	shape := GlassSphere()
+
+	r := Ray(Point(0, 0, 0), Vector(0, 1, 0))
+	xs := Intersections(Intersection(-1, shape), Intersection(1, shape))
+
+	comps := xs[1].PrepareComputations(r, xs)
+
+	if got, want := comps.Schlick(), 0.04; math.Abs(got-want) > epsilon {
+		t.Errorf("Schlick = %v, want %v", got, want)
+	}
+}
+
+func TestComps_Schlick_WithSmallAngleAndN2Dominates(t *testing.T) {
+	shape := GlassSphere()
+
+	r := Ray(Point(0, 0.99, -2), Vector(0, 0, 1))
+	xs := Intersections(Intersection(1.8589, shape))
+
+	comps := xs[0].PrepareComputations(r, xs)
+
+	if got, want := comps.Schlick(), 0.48873; math.Abs(got-want) > epsilon {
+		t.Errorf("Schlick = %v, want %v", got, want)
+	}
+}

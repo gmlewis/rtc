@@ -52,8 +52,17 @@ func (w *WorldT) ShadeHit(comps *Comps, remaining int) Tuple {
 			comps.NormalVector,
 			shadowed,
 		)
+
 		reflected := w.ReflectedColor(comps, remaining)
-		result = result.Add(surface).Add(reflected)
+		refracted := w.RefractedColor(comps, remaining)
+
+		material := comps.Object.Material()
+		if material.Reflective > 0 && material.Transparency > 0 {
+			reflectance := comps.Schlick()
+			result = result.Add(surface).Add(reflected.MultScalar(reflectance)).Add(refracted.MultScalar(1 - reflectance))
+		} else {
+			result = result.Add(surface).Add(reflected).Add(refracted)
+		}
 	}
 	return result
 }
