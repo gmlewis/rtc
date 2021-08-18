@@ -1,5 +1,7 @@
 package rtc
 
+import "math"
+
 // WorldT represents the world to be rendered.
 type WorldT struct {
 	Objects []Object
@@ -108,4 +110,26 @@ func (w *WorldT) ReflectedColor(comps *Comps, remaining int) Tuple {
 	reflectRay := Ray(comps.OverPoint, comps.ReflectVector)
 	color := w.ColorAt(reflectRay, remaining-1)
 	return color.MultScalar(comps.Object.Material().Reflective)
+}
+
+// RefractedColor returns the refracted color for the precomputed intersection.
+func (w *WorldT) RefractedColor(comps *Comps, remaining int) Tuple {
+	if remaining < 1 || comps.Object.Material().Transparency == 0 {
+		return Color(0, 0, 0)
+	}
+
+	nRatio := comps.N1 / comps.N2                   // precompute?
+	cosI := comps.EyeVector.Dot(comps.NormalVector) // precompute?
+	sin2t := nRatio * nRatio * (1 - (cosI * cosI))
+
+	if sin2t > 1 {
+		return Color(0, 0, 0)
+	}
+
+	cosT := math.Sqrt(1 - sin2t)
+	direction := comps.NormalVector.MultScalar(nRatio*cosI - cosT).Sub(comps.EyeVector.MultScalar(nRatio))
+
+	refractedRay := Ray(comps.UnderPoint, direction)
+	color := w.ColorAt(refractedRay, remaining-1)
+	return color.MultScalar(comps.Object.Material().Transparency)
 }

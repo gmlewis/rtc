@@ -270,10 +270,12 @@ func TestWorldT_ReflectedColor_WithReflectiveMaterial(t *testing.T) {
 	shape.Material().Reflective = 0.5
 	shape.SetTransform(Translation(0, -1, 0))
 	w.Objects = append(w.Objects, shape)
+
 	r := Ray(Point(0, 0, -3), Vector(0, -sq2, sq2))
 	i := Intersection(math.Sqrt2, shape)
 
 	comps := i.PrepareComputations(r, []IntersectionT{i})
+
 	if got, want := w.ReflectedColor(comps, maxReflections), Color(0.19032, 0.2379, 0.14274); !got.Equal(want) {
 		t.Errorf("w.ReflectedColor = %v, want %v", got, want)
 	}
@@ -286,10 +288,12 @@ func TestWorldT_ShadeHit_WithReflectiveMaterial(t *testing.T) {
 	shape.Material().Reflective = 0.5
 	shape.SetTransform(Translation(0, -1, 0))
 	w.Objects = append(w.Objects, shape)
+
 	r := Ray(Point(0, 0, -3), Vector(0, -sq2, sq2))
 	i := Intersection(math.Sqrt2, shape)
 
 	comps := i.PrepareComputations(r, []IntersectionT{i})
+
 	if got, want := w.ShadeHit(comps, maxReflections), Color(0.87677, 0.92436, 0.82918); !got.Equal(want) {
 		t.Errorf("w.ShadeHit = %v, want %v", got, want)
 	}
@@ -305,6 +309,7 @@ func TestWorldT_ShadeHit_WithMutuallyReflectiveSurfaces(t *testing.T) {
 	upper.Material().Reflective = 1
 	upper.SetTransform(Translation(0, 1, 0))
 	w.Objects = append(w.Objects, lower, upper)
+
 	r := Ray(Point(0, 0, 0), Vector(0, 1, 0))
 
 	if got, notWant := w.ColorAt(r, maxReflections), Color(0, 0, 0); got.Equal(notWant) {
@@ -319,11 +324,80 @@ func TestWorldT_ReflectedColor_WithMaximumRecursionDepth(t *testing.T) {
 	shape.Material().Reflective = 0.5
 	shape.SetTransform(Translation(0, -1, 0))
 	w.Objects = append(w.Objects, shape)
+
 	r := Ray(Point(0, 0, -3), Vector(0, -sq2, sq2))
 	i := Intersection(math.Sqrt2, shape)
 
 	comps := i.PrepareComputations(r, []IntersectionT{i})
+
 	if got, want := w.ReflectedColor(comps, 0), Color(0, 0, 0); !got.Equal(want) {
 		t.Errorf("w.ReflectedColor = %v, want %v", got, want)
+	}
+}
+
+func TestWorldT_RefractedColor_WithOpaqueObject(t *testing.T) {
+	w := DefaultWorld()
+	shape := w.Objects[0]
+	shape.Material().Ambient = 1
+
+	r := Ray(Point(0, 0, -5), Vector(0, 0, 1))
+	xs := Intersections(Intersection(4, shape), Intersection(6, shape))
+
+	comps := xs[0].PrepareComputations(r, xs)
+
+	if got, want := w.RefractedColor(comps, maxReflections), Color(0, 0, 0); !got.Equal(want) {
+		t.Errorf("w.RefractedColor = %v, want %v", got, want)
+	}
+}
+
+func TestWorldT_RefractedColor_WithMaximumRecursionDepth(t *testing.T) {
+	w := DefaultWorld()
+	shape := w.Objects[0]
+	shape.Material().Transparency = 1
+	shape.Material().RefractiveIndex = 1.5
+
+	r := Ray(Point(0, 0, -5), Vector(0, 0, 1))
+	xs := Intersections(Intersection(4, shape), Intersection(6, shape))
+
+	comps := xs[0].PrepareComputations(r, xs)
+
+	if got, want := w.RefractedColor(comps, 0), Color(0, 0, 0); !got.Equal(want) {
+		t.Errorf("w.RefractedColor = %v, want %v", got, want)
+	}
+}
+
+func TestWorldT_RefractedColor_WithTotalInternalReflection(t *testing.T) {
+	sq2 := math.Sqrt2 / 2
+	w := DefaultWorld()
+	shape := w.Objects[0]
+	shape.Material().Transparency = 1
+	shape.Material().RefractiveIndex = 1.5
+
+	r := Ray(Point(0, 0, sq2), Vector(0, 1, 0))
+	xs := Intersections(Intersection(-sq2, shape), Intersection(sq2, shape))
+
+	comps := xs[1].PrepareComputations(r, xs) // Look at the second intersection here.
+
+	if got, want := w.RefractedColor(comps, 5), Color(0, 0, 0); !got.Equal(want) {
+		t.Errorf("w.RefractedColor = %v, want %v", got, want)
+	}
+}
+
+func TestWorldT_RefractedColor_WithRefractedColor(t *testing.T) {
+	w := DefaultWorld()
+	a := w.Objects[0]
+	a.Material().Ambient = 1
+	a.Material().Pattern = testPattern()
+	b := w.Objects[1]
+	b.Material().Transparency = 1
+	b.Material().RefractiveIndex = 1.5
+
+	r := Ray(Point(0, 0, 0.1), Vector(0, 1, 0))
+	xs := Intersections(Intersection(-0.9899, a), Intersection(-0.4899, b), Intersection(0.4899, b), Intersection(0.9899, a))
+
+	comps := xs[2].PrepareComputations(r, xs) // Look at the third intersection here.
+
+	if got, want := w.RefractedColor(comps, 5), Color(0, 0.99888, 0.04725); !got.Equal(want) {
+		t.Errorf("w.RefractedColor = %v, want %v", got, want)
 	}
 }
