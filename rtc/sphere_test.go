@@ -177,7 +177,7 @@ func TestSphereT_NormalAt(t *testing.T) {
 }
 
 func TestSphereT_NormalAt_WithTransform(t *testing.T) {
-	sq2 := math.Sqrt(2) / 2
+	sq2 := math.Sqrt2 / 2
 
 	tests := []struct {
 		name      string

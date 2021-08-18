@@ -40,13 +40,14 @@ func Hit(xs []IntersectionT) *IntersectionT {
 
 // Comps contains precomputed information about an intersection.
 type Comps struct {
-	T            float64
-	Object       Object
-	Point        Tuple
-	EyeVector    Tuple
-	NormalVector Tuple
-	Inside       bool
-	OverPoint    Tuple // For shadow testing - slightly above surface of object.
+	T             float64
+	Object        Object
+	Point         Tuple
+	EyeVector     Tuple
+	NormalVector  Tuple
+	ReflectVector Tuple
+	Inside        bool
+	OverPoint     Tuple // For shadow testing - slightly above surface of object.
 }
 
 // PrepareComputations returns a new data structure encapsulating information
@@ -55,6 +56,7 @@ func (i IntersectionT) PrepareComputations(ray RayT) *Comps {
 	point := ray.Position(i.T)
 	eyeVector := ray.Direction.Negate()
 	normalVector := NormalAt(i.Object, point)
+	reflectVector := ray.Direction.Reflect(normalVector)
 	var inside bool
 	if normalVector.Dot(eyeVector) < 0 {
 		inside = true
@@ -63,12 +65,13 @@ func (i IntersectionT) PrepareComputations(ray RayT) *Comps {
 	overPoint := point.Add(normalVector.MultScalar(epsilon))
 
 	return &Comps{
-		T:            i.T,
-		Object:       i.Object,
-		Point:        point,
-		EyeVector:    eyeVector,
-		NormalVector: normalVector,
-		Inside:       inside,
-		OverPoint:    overPoint,
+		T:             i.T,
+		Object:        i.Object,
+		Point:         point,
+		EyeVector:     eyeVector,
+		NormalVector:  normalVector,
+		ReflectVector: reflectVector,
+		Inside:        inside,
+		OverPoint:     overPoint,
 	}
 }

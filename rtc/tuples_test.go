@@ -392,7 +392,7 @@ func TestTuple_Cross(t *testing.T) {
 }
 
 func TestTuple_Reflect(t *testing.T) {
-	sq2 := math.Sqrt(2) / 2
+	sq2 := math.Sqrt2 / 2
 
 	tests := []struct {
 		name   string

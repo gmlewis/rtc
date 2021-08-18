@@ -53,7 +53,7 @@ func TestRotationX(t *testing.T) {
 	p := Point(0, 1, 0)
 	halfQuarter := RotationX(math.Pi / 4)
 
-	sq2 := math.Sqrt(2) / 2
+	sq2 := math.Sqrt2 / 2
 	if got, want := halfQuarter.MultTuple(p), Point(0, sq2, sq2); !got.Equal(want) {
 		t.Errorf("halfQuarter.MultTuple(p) = %v, want %v", got, want)
 	}
@@ -73,7 +73,7 @@ func TestRotationY(t *testing.T) {
 	p := Point(0, 0, 1)
 	halfQuarter := RotationY(math.Pi / 4)
 
-	sq2 := math.Sqrt(2) / 2
+	sq2 := math.Sqrt2 / 2
 	if got, want := halfQuarter.MultTuple(p), Point(sq2, 0, sq2); !got.Equal(want) {
 		t.Errorf("halfQuarter.MultTuple(p) = %v, want %v", got, want)
 	}
@@ -93,7 +93,7 @@ func TestRotationZ(t *testing.T) {
 	p := Point(0, 1, 0)
 	halfQuarter := RotationZ(math.Pi / 4)
 
-	sq2 := math.Sqrt(2) / 2
+	sq2 := math.Sqrt2 / 2
 	if got, want := halfQuarter.MultTuple(p), Point(-sq2, sq2, 0); !got.Equal(want) {
 		t.Errorf("halfQuarter.MultTuple(p) = %v, want %v", got, want)
 	}

@@ -111,7 +111,7 @@ func TestShape_Ray_Transform(t *testing.T) {
 }
 
 func TestShape_NormalAt_WithTransform(t *testing.T) {
-	sq2 := math.Sqrt(2) / 2
+	sq2 := math.Sqrt2 / 2
 
 	tests := []struct {
 		name      string

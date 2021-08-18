@@ -1,6 +1,7 @@
 package rtc
 
 import (
+	"math"
 	"reflect"
 	"testing"
 )
@@ -101,13 +102,14 @@ func TestIntersectionT_PrepareComputations(t *testing.T) {
 			r:    Ray(Point(0, 0, -5), Vector(0, 0, 1)),
 			i:    Intersection(4, shape),
 			want: &Comps{
-				T:            4,
-				Object:       shape,
-				Point:        Point(0, 0, -1),
-				EyeVector:    Vector(0, 0, -1),
-				NormalVector: Vector(0, 0, -1),
-				Inside:       false,
-				OverPoint:    Point(0, 0, -1.0001),
+				T:             4,
+				Object:        shape,
+				Point:         Point(0, 0, -1),
+				EyeVector:     Vector(0, 0, -1),
+				NormalVector:  Vector(0, 0, -1),
+				ReflectVector: Vector(0, 0, -1),
+				Inside:        false,
+				OverPoint:     Point(0, 0, -1.0001),
 			},
 		},
 		{
@@ -115,13 +117,14 @@ func TestIntersectionT_PrepareComputations(t *testing.T) {
 			r:    Ray(Point(0, 0, 0), Vector(0, 0, 1)),
 			i:    Intersection(1, shape),
 			want: &Comps{
-				T:            1,
-				Object:       shape,
-				Point:        Point(0, 0, 1),
-				EyeVector:    Vector(0, 0, -1),
-				NormalVector: Vector(0, 0, -1),
-				Inside:       true,
-				OverPoint:    Point(0, 0, 0.9999),
+				T:             1,
+				Object:        shape,
+				Point:         Point(0, 0, 1),
+				EyeVector:     Vector(0, 0, -1),
+				NormalVector:  Vector(0, 0, -1),
+				ReflectVector: Vector(0, 0, -1),
+				Inside:        true,
+				OverPoint:     Point(0, 0, 0.9999),
 			},
 		},
 	}
@@ -130,7 +133,7 @@ func TestIntersectionT_PrepareComputations(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 
 			if got := tt.i.PrepareComputations(tt.r); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("IntersectionT.PrepareComputations() = %v, want %v", got, tt.want)
+				t.Errorf("IntersectionT.PrepareComputations() = %#v, want %#v", got, tt.want)
 			}
 		})
 	}
@@ -150,5 +153,19 @@ func TestIntersectionT_PrepareComputations_OverPoint(t *testing.T) {
 
 	if comps.Point.Z() <= comps.OverPoint.Z() {
 		t.Errorf("comps.Point.Z = %v, want <= %v", comps.Point.Z(), comps.OverPoint.Z())
+	}
+}
+
+func TestIntersectionT_PrepareComputations_ReflectVector(t *testing.T) {
+	sq2 := math.Sqrt2 / 2
+
+	r := Ray(Point(0, 1, -1), Vector(0, -sq2, sq2))
+
+	shape := Plane()
+	i := Intersection(sq2, shape)
+
+	comps := i.PrepareComputations(r)
+	if got, want := comps.ReflectVector, Vector(0, sq2, sq2); !got.Equal(want) {
+		t.Errorf("comps.ReflectVector = %v, want %v", got, want)
 	}
 }
