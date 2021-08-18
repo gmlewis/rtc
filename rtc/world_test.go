@@ -1,6 +1,7 @@
 package rtc
 
 import (
+	"math"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -258,6 +259,22 @@ func TestWorldT_ReflectedColor(t *testing.T) {
 	comps := i.PrepareComputations(r)
 
 	if got, want := w.ReflectedColor(comps), Color(0, 0, 0); !got.Equal(want) {
+		t.Errorf("w.ReflectedColor = %v, want %v", got, want)
+	}
+}
+
+func TestWorldT_ReflectedColor_WithReflectiveMaterial(t *testing.T) {
+	sq2 := math.Sqrt2 / 2
+	w := DefaultWorld()
+	r := Ray(Point(0, 0, -3), Vector(0, -sq2, sq2))
+	shape := Plane()
+	shape.Material().Reflective = 0.5
+	shape.SetTransform(Translation(0, -1, 0))
+	w.Objects = append(w.Objects, shape)
+	i := Intersection(sq2, shape)
+
+	comps := i.PrepareComputations(r)
+	if got, want := w.ReflectedColor(comps), Color(0.19032, 0.2379, 0.14274); !got.Equal(want) {
 		t.Errorf("w.ReflectedColor = %v, want %v", got, want)
 	}
 }

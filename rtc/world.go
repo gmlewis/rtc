@@ -100,5 +100,11 @@ func (w *WorldT) IsShadowed(point Tuple, light *PointLightT) bool {
 
 // ReflectedColor returns the reflected color for the precomputed intersection.
 func (w *WorldT) ReflectedColor(comps *Comps) Tuple {
-	return Tuple{}
+	if comps.Object.Material().Reflective == 0 {
+		return Color(0, 0, 0)
+	}
+
+	reflectRay := Ray(comps.OverPoint, comps.ReflectVector)
+	color := w.ColorAt(reflectRay)
+	return color.MultScalar(comps.Object.Material().Reflective)
 }
