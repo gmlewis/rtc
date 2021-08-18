@@ -317,6 +317,30 @@ func TestWorldT_ShadeHit_WithMutuallyReflectiveSurfaces(t *testing.T) {
 	}
 }
 
+func TestWorldT_ShadeHit_WithTransparentMaterial(t *testing.T) {
+	sq2 := math.Sqrt2 / 2
+	w := World()
+	w.Lights = []*PointLightT{PointLight(Point(0, 0, 0), Color(1, 1, 1))}
+	floor := Plane()
+	floor.Material().Transparency = 1
+	floor.Material().RefractiveIndex = 1.5
+	floor.SetTransform(Translation(0, -1, 0))
+	ball := GlassSphere()
+	ball.Material().Color = Color(1, 0, 0)
+	ball.Material().Ambient = 0.5
+	ball.SetTransform(Translation(0, -3.5, -0.5))
+	w.Objects = append(w.Objects, floor, ball)
+
+	r := Ray(Point(0, 0, -3), Vector(0, -sq2, sq2))
+	xs := Intersections(Intersection(math.Sqrt2, floor))
+
+	comps := xs[0].PrepareComputations(r, xs)
+
+	if got, notWant := w.ShadeHit(comps, 5), Color(0.93642, 0.68642, 0.68642); got.Equal(notWant) {
+		t.Errorf("w.ShadeHit = %v, notWant %v", got, notWant)
+	}
+}
+
 func TestWorldT_ReflectedColor_WithMaximumRecursionDepth(t *testing.T) {
 	sq2 := math.Sqrt2 / 2
 	w := DefaultWorld()
