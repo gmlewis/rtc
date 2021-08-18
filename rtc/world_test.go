@@ -247,3 +247,17 @@ func TestWorldT_IsShadowed(t *testing.T) {
 		})
 	}
 }
+
+func TestWorldT_ReflectedColor(t *testing.T) {
+	w := DefaultWorld()
+	r := Ray(Point(0, 0, 0), Vector(0, 0, 1))
+	shape := w.Objects[1]
+	shape.Material().Ambient = 1
+	i := Intersection(1, shape)
+
+	comps := i.PrepareComputations(r)
+
+	if got, want := w.ReflectedColor(comps), Color(0, 0, 0); !got.Equal(want) {
+		t.Errorf("w.ReflectedColor = %v, want %v", got, want)
+	}
+}

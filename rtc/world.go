@@ -97,3 +97,8 @@ func (w *WorldT) IsShadowed(point Tuple, light *PointLightT) bool {
 
 	return h != nil && h.T < distance
 }
+
+// ReflectedColor returns the reflected color for the precomputed intersection.
+func (w *WorldT) ReflectedColor(comps *Comps) Tuple {
+	return Tuple{}
+}
