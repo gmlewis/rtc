@@ -56,12 +56,12 @@ func (i IntersectionT) PrepareComputations(ray RayT) *Comps {
 	point := ray.Position(i.T)
 	eyeVector := ray.Direction.Negate()
 	normalVector := NormalAt(i.Object, point)
-	reflectVector := ray.Direction.Reflect(normalVector)
 	var inside bool
 	if normalVector.Dot(eyeVector) < 0 {
 		inside = true
 		normalVector = normalVector.Negate()
 	}
+	reflectVector := ray.Direction.Reflect(normalVector)
 	overPoint := point.Add(normalVector.MultScalar(epsilon))
 
 	return &Comps{
