@@ -4,11 +4,8 @@ package main
 import (
 	"flag"
 	"fmt"
-	"image/png"
-	"io/ioutil"
 	"log"
 	"math"
-	"os"
 
 	"github.com/gmlewis/rtc/rtc"
 )
@@ -91,24 +88,13 @@ func main() {
 	}
 
 	if *pngFile != "" {
-		f, err := os.Create(*pngFile)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		if err := png.Encode(f, canvas); err != nil {
-			f.Close()
-			log.Fatal(err)
-		}
-
-		if err := f.Close(); err != nil {
+		if err := canvas.WritePNGFile(*pngFile); err != nil {
 			log.Fatal(err)
 		}
 	}
 
 	if *ppmFile != "" {
-		ppm := canvas.ToPPM()
-		if err := ioutil.WriteFile(*ppmFile, []byte(ppm), 0644); err != nil {
+		if err := canvas.WritePPMFile(*ppmFile); err != nil {
 			log.Fatal(err)
 		}
 	}

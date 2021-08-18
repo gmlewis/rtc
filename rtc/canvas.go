@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"image"
 	"image/color"
+	"image/png"
+	"io/ioutil"
 	"math"
+	"os"
 	"strings"
 )
 
@@ -114,4 +117,25 @@ func (c *Canvas) ToPPM() string {
 		lines = append(lines, line)
 	}
 	return fmt.Sprintf("%v\n%v\n", header, strings.Join(lines, "\n"))
+}
+
+// WritePNGFile writes a PNG file to the provided filename.
+func (c *Canvas) WritePNGFile(filename string) error {
+	f, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+
+	if err := png.Encode(f, c); err != nil {
+		f.Close()
+		return err
+	}
+
+	return f.Close()
+}
+
+// WritePPMFile writes a PPM file to the provided filename.
+func (c *Canvas) WritePPMFile(filename string) error {
+	ppm := c.ToPPM()
+	return ioutil.WriteFile(filename, []byte(ppm), 0644)
 }
