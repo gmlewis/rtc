@@ -234,3 +234,17 @@ func TestIntersectionT_PrepareComputations_N1N2(t *testing.T) {
 		})
 	}
 }
+
+func TestComps_Schlick_WithTotalInternalReflection(t *testing.T) {
+	sq2 := math.Sqrt2 / 2
+	shape := GlassSphere()
+
+	r := Ray(Point(0, 0, sq2), Vector(0, 1, 0))
+	xs := Intersections(Intersection(-sq2, shape), Intersection(sq2, shape))
+
+	comps := xs[1].PrepareComputations(r, xs)
+
+	if got, want := comps.Schlick(), 1.0; got != want {
+		t.Errorf("Schlick = %v, want %v", got, want)
+	}
+}

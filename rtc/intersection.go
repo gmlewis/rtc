@@ -122,3 +122,19 @@ func (i IntersectionT) PrepareComputations(ray RayT, xs []IntersectionT) *Comps 
 		N2:            n2,
 	}
 }
+
+// Schlick returns the reflectance of the intersection as an approximation
+// the Fresnel law, as developed by Christophe Shlick.
+func (c *Comps) Schlick() float64 {
+	cos := c.EyeVector.Dot(c.NormalVector)
+
+	if c.N1 > c.N2 {
+		n := c.N1 / c.N2
+		sin2t := n * n * (1 - (cos * cos))
+		if sin2t > 1 {
+			return 1
+		}
+	}
+
+	return 0
+}
