@@ -111,6 +111,8 @@ func TestIntersectionT_PrepareComputations(t *testing.T) {
 				ReflectVector: Vector(0, 0, -1),
 				Inside:        false,
 				OverPoint:     Point(0, 0, -1.0001),
+				N1:            1,
+				N2:            1,
 			},
 		},
 		{
@@ -126,6 +128,8 @@ func TestIntersectionT_PrepareComputations(t *testing.T) {
 				ReflectVector: Vector(0, 0, -1),
 				Inside:        true,
 				OverPoint:     Point(0, 0, 0.9999),
+				N1:            1,
+				N2:            1,
 			},
 		},
 	}
@@ -190,16 +194,16 @@ func TestIntersectionT_PrepareComputations_N1N2(t *testing.T) {
 		n2 float64
 	}{
 		{n1: 1.0, n2: 1.5},
-		{n1: 1.0, n2: 1.5},
-		{n1: 1.0, n2: 1.5},
-		{n1: 1.0, n2: 1.5},
-		{n1: 1.0, n2: 1.5},
-		{n1: 1.0, n2: 1.5},
+		{n1: 1.5, n2: 2.0},
+		{n1: 2.0, n2: 2.5},
+		{n1: 2.5, n2: 2.5},
+		{n1: 2.5, n2: 1.5},
+		{n1: 1.5, n2: 1.0},
 	}
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("xs[%v]", i), func(t *testing.T) {
-			comps := xs[1].PrepareComputations(r, xs)
+			comps := xs[i].PrepareComputations(r, xs)
 
 			if got, want := comps.N1, tt.n1; got != want {
 				t.Errorf("n1 = %#v, want %#v", got, want)

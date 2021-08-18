@@ -1,6 +1,8 @@
 package rtc
 
-import "sort"
+import (
+	"sort"
+)
 
 // IntersectionT represents an intersection with an object.
 type IntersectionT struct {
@@ -67,6 +69,43 @@ func (i IntersectionT) PrepareComputations(ray RayT, xs []IntersectionT) *Comps 
 	reflectVector := ray.Direction.Reflect(normalVector)
 	overPoint := point.Add(normalVector.MultScalar(epsilon))
 
+	n1, n2 := 1.0, 1.0
+	var containers []Object
+	indexOf := func(x Object) int {
+		for i, c := range containers {
+			if c == x {
+				return i
+			}
+		}
+		return -1
+	}
+
+	for _, x := range xs {
+		if x.T == i.T {
+			if len(containers) == 0 {
+				n1 = 1.0
+			} else {
+				n1 = containers[len(containers)-1].Material().RefractiveIndex
+			}
+		}
+
+		// removeOrAppend(x.Object)
+		if index := indexOf(x.Object); index >= 0 {
+			containers = append(containers[:index], containers[index+1:]...)
+		} else {
+			containers = append(containers, x.Object)
+		}
+
+		if x.T == i.T {
+			if len(containers) == 0 {
+				n2 = 1.0
+			} else {
+				n2 = containers[len(containers)-1].Material().RefractiveIndex
+			}
+			break
+		}
+	}
+
 	return &Comps{
 		T:             i.T,
 		Object:        i.Object,
@@ -76,5 +115,7 @@ func (i IntersectionT) PrepareComputations(ray RayT, xs []IntersectionT) *Comps 
 		ReflectVector: reflectVector,
 		Inside:        inside,
 		OverPoint:     overPoint,
+		N1:            n1,
+		N2:            n2,
 	}
 }
