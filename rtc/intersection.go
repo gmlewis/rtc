@@ -48,6 +48,7 @@ type Comps struct {
 	ReflectVector Tuple
 	Inside        bool
 	OverPoint     Tuple // For shadow testing - slightly above surface of object.
+	UnderPoint    Tuple // For transparency and index of refraction calculations.
 }
 
 // PrepareComputations returns a new data structure encapsulating information

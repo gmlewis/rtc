@@ -14,12 +14,14 @@ func TestMaterial(t *testing.T) {
 		{
 			name: "The default material",
 			want: MaterialT{
-				Color:      Color(1, 1, 1),
-				Ambient:    0.1,
-				Diffuse:    0.9,
-				Specular:   0.9,
-				Shininess:  200.0,
-				Reflective: 0,
+				Color:           Color(1, 1, 1),
+				Ambient:         0.1,
+				Diffuse:         0.9,
+				Specular:        0.9,
+				Shininess:       200.0,
+				Reflective:      0,
+				Transparency:    0,
+				RefractiveIndex: 1,
 			},
 		},
 	}
@@ -30,7 +32,9 @@ func TestMaterial(t *testing.T) {
 			a.Diffuse == b.Diffuse &&
 			a.Specular == b.Specular &&
 			a.Shininess == b.Shininess &&
-			a.Reflective == b.Reflective
+			a.Reflective == b.Reflective &&
+			a.Transparency == b.Transparency &&
+			a.RefractiveIndex == b.RefractiveIndex
 	})
 
 	for _, tt := range tests {

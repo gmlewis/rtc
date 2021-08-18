@@ -8,6 +8,15 @@ func Sphere() *SphereT {
 	return &SphereT{Shape{transform: M4Identity(), material: Material()}}
 }
 
+// GlassSphere creates a unit glass sphere at the origin.
+// It implements the Object interface.
+func GlassSphere() *SphereT {
+	m := Material()
+	m.Transparency = 1
+	m.RefractiveIndex = 1.5
+	return &SphereT{Shape{transform: M4Identity(), material: m}}
+}
+
 // SphereT represents a sphere.
 type SphereT struct {
 	Shape

@@ -215,3 +215,19 @@ func TestSphereT_NormalAt_WithTransform(t *testing.T) {
 		})
 	}
 }
+
+func TestGlassSphere(t *testing.T) {
+	s := GlassSphere()
+
+	if got, want := s.Transform(), M4Identity(); !got.Equal(want) {
+		t.Errorf("s.Transform = %v, want %v", got, want)
+	}
+
+	if got, want := s.Material().Transparency, 1.0; got != want {
+		t.Errorf("s.Material().Transparency = %v, want %v", got, want)
+	}
+
+	if got, want := s.Material().RefractiveIndex, 1.5; got != want {
+		t.Errorf("s.Material().RefractiveIndex = %v, want %v", got, want)
+	}
+}
