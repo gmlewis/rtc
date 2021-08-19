@@ -20,6 +20,27 @@ func testShape() *testShapeT {
 	}
 }
 
+// SetTransform sets the object's transform 4x4 matrix.
+// Only for testing!
+func (s *Shape) SetTransform(m M4) Object {
+	s.transform = m
+	return s
+}
+
+// SetMaterial sets the object's material.
+// Only for testing!
+func (s *Shape) SetMaterial(material MaterialT) Object {
+	s.material = material
+	return s
+}
+
+// SetParent sets the object's parent group.
+// Only for testing!
+func (s *Shape) SetParent(parent *GroupT) Object {
+	s.parent = parent
+	return s
+}
+
 // This is a global test function to save the ray.
 var testFuncSaveRay func(ray RayT)
 

@@ -25,6 +25,24 @@ type CylinderT struct {
 
 var _ Object = &CylinderT{}
 
+// SetTransform sets the object's transform 4x4 matrix.
+func (c *CylinderT) SetTransform(m M4) Object {
+	c.transform = m
+	return c
+}
+
+// SetMaterial sets the object's material.
+func (c *CylinderT) SetMaterial(material MaterialT) Object {
+	c.material = material
+	return c
+}
+
+// SetParent sets the object's parent group.
+func (c *CylinderT) SetParent(parent *GroupT) Object {
+	c.parent = parent
+	return c
+}
+
 func checkCap(ray RayT, t, radius float64) bool {
 	x := ray.Origin.X() + t*ray.Direction.X()
 	z := ray.Origin.Z() + t*ray.Direction.Z()

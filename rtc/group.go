@@ -25,14 +25,36 @@ type GroupT struct {
 
 var _ Object = &GroupT{}
 
+// SetTransform sets the object's transform 4x4 matrix.
+func (g *GroupT) SetTransform(m M4) Object {
+	g.transform = m
+	return g
+}
+
+// SetMaterial sets the object's material.
+func (g *GroupT) SetMaterial(material MaterialT) Object {
+	g.material = material
+	return g
+}
+
+// SetParent sets the object's parent group.
+func (g *GroupT) SetParent(parent *GroupT) Object {
+	g.parent = parent
+	return g
+}
+
 // LocalIntersect returns a slice of IntersectionT values where the
 // transformed (object space) ray intersects the object.
-func (s *GroupT) LocalIntersect(ray RayT) []IntersectionT {
-	return nil
+func (g *GroupT) LocalIntersect(ray RayT) []IntersectionT {
+	var xs []IntersectionT
+	for _, child := range g.Children {
+		xs = append(xs, child.LocalIntersect(ray)...)
+	}
+	return Intersections(xs...) // sort them
 }
 
 // LocalNormalAt returns the normal vector at the given point of intersection
 // (transformed to object space) with the object.
-func (s *GroupT) LocalNormalAt(objectPoint Tuple) Tuple {
+func (g *GroupT) LocalNormalAt(objectPoint Tuple) Tuple {
 	return Tuple{}
 }

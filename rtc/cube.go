@@ -15,6 +15,24 @@ type CubeT struct {
 
 var _ Object = &CubeT{}
 
+// SetTransform sets the object's transform 4x4 matrix.
+func (c *CubeT) SetTransform(m M4) Object {
+	c.transform = m
+	return c
+}
+
+// SetMaterial sets the object's material.
+func (c *CubeT) SetMaterial(material MaterialT) Object {
+	c.material = material
+	return c
+}
+
+// SetParent sets the object's parent group.
+func (c *CubeT) SetParent(parent *GroupT) Object {
+	c.parent = parent
+	return c
+}
+
 func checkAxis(origin, direction float64) (tmin float64, tmax float64) {
 	const infinity = 1e100
 	tminNumerator := -1 - origin

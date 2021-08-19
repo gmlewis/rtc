@@ -25,6 +25,24 @@ type ConeT struct {
 
 var _ Object = &ConeT{}
 
+// SetTransform sets the object's transform 4x4 matrix.
+func (c *ConeT) SetTransform(m M4) Object {
+	c.transform = m
+	return c
+}
+
+// SetMaterial sets the object's material.
+func (c *ConeT) SetMaterial(material MaterialT) Object {
+	c.material = material
+	return c
+}
+
+// SetParent sets the object's parent group.
+func (c *ConeT) SetParent(parent *GroupT) Object {
+	c.parent = parent
+	return c
+}
+
 func (c *ConeT) intersectCaps(ray RayT, xs []IntersectionT) []IntersectionT {
 	if !c.Closed || math.Abs(ray.Direction.Y()) < epsilon {
 		return xs

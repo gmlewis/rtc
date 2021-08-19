@@ -24,6 +24,24 @@ type SphereT struct {
 
 var _ Object = &SphereT{}
 
+// SetTransform sets the object's transform 4x4 matrix.
+func (s *SphereT) SetTransform(m M4) Object {
+	s.transform = m
+	return s
+}
+
+// SetMaterial sets the object's material.
+func (s *SphereT) SetMaterial(material MaterialT) Object {
+	s.material = material
+	return s
+}
+
+// SetParent sets the object's parent group.
+func (s *SphereT) SetParent(parent *GroupT) Object {
+	s.parent = parent
+	return s
+}
+
 // LocalIntersect returns a slice of IntersectionT values where the
 // transformed (object space) ray intersects the object.
 func (s *SphereT) LocalIntersect(ray RayT) []IntersectionT {
