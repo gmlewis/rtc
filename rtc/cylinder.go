@@ -4,15 +4,21 @@ import (
 	"math"
 )
 
-// Cylinder creates a cylinder at the origin ranging from -1 to 1 on each axis.
+// Cylinder creates a cylinder at the origin with its axis on the Y axis.
 // It implements the Object interface.
 func Cylinder() *CylinderT {
-	return &CylinderT{Shape{transform: M4Identity(), material: Material()}}
+	return &CylinderT{
+		Shape:   Shape{transform: M4Identity(), material: Material()},
+		Minimum: math.Inf(-1),
+		Maximum: math.Inf(1),
+	}
 }
 
 // CylinderT represents a Cylinder.
 type CylinderT struct {
 	Shape
+	Minimum float64
+	Maximum float64
 }
 
 var _ Object = &CylinderT{}
@@ -36,7 +42,22 @@ func (c *CylinderT) LocalIntersect(ray RayT) []IntersectionT {
 	sr := math.Sqrt(discriminant)
 	t1 := (-b - sr) / (2 * a)
 	t2 := (-b + sr) / (2 * a)
-	return []IntersectionT{Intersection(t1, c), Intersection(t2, c)}
+
+	if t1 > t2 {
+		t1, t2 = t2, t1
+	}
+	y1 := ray.Origin.Y() + t1*ray.Direction.Y()
+	y2 := ray.Origin.Y() + t2*ray.Direction.Y()
+
+	var xs []IntersectionT
+	if c.Minimum < y1 && y1 < c.Maximum {
+		xs = append(xs, Intersection(t1, c))
+	}
+	if c.Minimum < y2 && y2 < c.Maximum {
+		xs = append(xs, Intersection(t2, c))
+	}
+
+	return xs
 }
 
 // LocalNormalAt returns the normal vector at the given point of intersection

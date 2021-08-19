@@ -1,9 +1,22 @@
 package rtc
 
 import (
+	"fmt"
 	"math"
 	"testing"
 )
+
+func TestCylinder(t *testing.T) {
+	c := Cylinder()
+
+	if got, want := c.Minimum, math.Inf(-1); got != want {
+		t.Errorf("Cylinder.minimum = %v, want %v", got, want)
+	}
+
+	if got, want := c.Maximum, math.Inf(1); got != want {
+		t.Errorf("Cylinder.maximum = %v, want %v", got, want)
+	}
+}
 
 func TestCylinderT_LocalIntersect(t *testing.T) {
 	c := Cylinder()
@@ -103,6 +116,37 @@ func TestCylinderT_LocalNormalAt(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := p.LocalNormalAt(tt.objectPoint); !got.Equal(tt.want) {
 				t.Errorf("CylinderT.LocalNormalAt() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestCylinder_IntersectContrainedCylinder(t *testing.T) {
+	c := Cylinder()
+	c.Minimum = 1
+	c.Maximum = 2
+
+	tests := []struct {
+		point Tuple
+		dir   Tuple
+		want  int
+	}{
+		{point: Point(0, 1.5, 0), dir: Vector(0.1, 1, 1), want: 0},
+		{point: Point(0, 3, -5), dir: Vector(0, 0, 1), want: 0},
+		{point: Point(0, 0, -5), dir: Vector(0, 0, 1), want: 0},
+		{point: Point(0, 2, -5), dir: Vector(0, 0, 1), want: 0},
+		{point: Point(0, 1, -5), dir: Vector(0, 0, 1), want: 0},
+		{point: Point(0, 1.5, -2), dir: Vector(0, 0, 1), want: 2},
+	}
+
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("%v", i+1), func(t *testing.T) {
+			dir := tt.dir.Normalize()
+			r := Ray(tt.point, dir)
+			xs := c.LocalIntersect(r)
+
+			if got := len(xs); got != tt.want {
+				t.Errorf("Cylinder.intersections = %v, want %v", got, tt.want)
 			}
 		})
 	}
