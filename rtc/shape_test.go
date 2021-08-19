@@ -41,6 +41,16 @@ func (s *Shape) SetParent(parent *GroupT) Object {
 	return s
 }
 
+// Bounds returns the minimum bounding box of the object in object
+// (untransformed) space.
+// Only for testing!
+func (s *Shape) Bounds() *BoundsT {
+	return &BoundsT{
+		Min: Point(math.Inf(-1), 0, math.Inf(-1)),
+		Max: Point(math.Inf(1), 0, math.Inf(1)),
+	}
+}
+
 // This is a global test function to save the ray.
 var testFuncSaveRay func(ray RayT)
 

@@ -43,6 +43,15 @@ func (c *ConeT) SetParent(parent *GroupT) Object {
 	return c
 }
 
+// Bounds returns the minimum bounding box of the object in object
+// (untransformed) space.
+func (c *ConeT) Bounds() *BoundsT {
+	return &BoundsT{
+		Min: Point(c.Minimum, c.Minimum, c.Minimum),
+		Max: Point(c.Maximum, c.Maximum, c.Maximum),
+	}
+}
+
 func (c *ConeT) intersectCaps(ray RayT, xs []IntersectionT) []IntersectionT {
 	if !c.Closed || math.Abs(ray.Direction.Y()) < epsilon {
 		return xs

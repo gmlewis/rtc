@@ -24,6 +24,10 @@ type Object interface {
 	// LocalNormalAt returns the normal vector at the given point of intersection
 	// (transformed to object space) with the object.
 	LocalNormalAt(localPoint Tuple) Tuple
+
+	// Bounds returns the minimum bounding box of the object in object
+	// (untransformed) space.
+	Bounds() *BoundsT
 }
 
 // Intersect returns a slice of IntersectionT values where the ray intersects the object.

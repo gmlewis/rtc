@@ -42,6 +42,15 @@ func (s *SphereT) SetParent(parent *GroupT) Object {
 	return s
 }
 
+// Bounds returns the minimum bounding box of the object in object
+// (untransformed) space.
+func (s *SphereT) Bounds() *BoundsT {
+	return &BoundsT{
+		Min: Point(-1, -1, -1),
+		Max: Point(1, 1, 1),
+	}
+}
+
 // LocalIntersect returns a slice of IntersectionT values where the
 // transformed (object space) ray intersects the object.
 func (s *SphereT) LocalIntersect(ray RayT) []IntersectionT {

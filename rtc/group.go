@@ -1,6 +1,9 @@
 package rtc
 
-import "log"
+import (
+	"log"
+	"math"
+)
 
 // Group creates a group of objects at the origin.
 // It implements the Object interface.
@@ -43,6 +46,50 @@ func (g *GroupT) SetMaterial(material MaterialT) Object {
 func (g *GroupT) SetParent(parent *GroupT) Object {
 	g.parent = parent
 	return g
+}
+
+// Bounds returns the minimum bounding box of the object in object
+// (untransformed) space.
+func (g *GroupT) Bounds() *BoundsT {
+	b := &BoundsT{
+		Min: Point(math.Inf(1), math.Inf(1), math.Inf(1)),
+		Max: Point(math.Inf(-1), math.Inf(-1), math.Inf(-1)),
+	}
+
+	f := func(p Tuple) {
+		if p.X() < b.Min.X() {
+			b.Min[0] = p.X()
+		}
+		if p.Y() < b.Min.Y() {
+			b.Min[1] = p.Y()
+		}
+		if p.Z() < b.Min.Z() {
+			b.Min[2] = p.Z()
+		}
+		if p.X() > b.Max.X() {
+			b.Max[0] = p.X()
+		}
+		if p.Y() > b.Max.Y() {
+			b.Max[1] = p.Y()
+		}
+		if p.Z() > b.Max.Z() {
+			b.Max[2] = p.Z()
+		}
+	}
+
+	for _, child := range g.Children {
+		bc := child.Bounds()
+		f(child.Transform().MultTuple(Point(bc.Min.X(), bc.Min.Y(), bc.Min.Z())))
+		f(child.Transform().MultTuple(Point(bc.Max.X(), bc.Min.Y(), bc.Min.Z())))
+		f(child.Transform().MultTuple(Point(bc.Max.X(), bc.Max.Y(), bc.Min.Z())))
+		f(child.Transform().MultTuple(Point(bc.Min.X(), bc.Max.Y(), bc.Min.Z())))
+		f(child.Transform().MultTuple(Point(bc.Min.X(), bc.Min.Y(), bc.Max.Z())))
+		f(child.Transform().MultTuple(Point(bc.Max.X(), bc.Min.Y(), bc.Max.Z())))
+		f(child.Transform().MultTuple(Point(bc.Max.X(), bc.Max.Y(), bc.Max.Z())))
+		f(child.Transform().MultTuple(Point(bc.Min.X(), bc.Max.Y(), bc.Max.Z())))
+	}
+
+	return b
 }
 
 // LocalIntersect returns a slice of IntersectionT values where the

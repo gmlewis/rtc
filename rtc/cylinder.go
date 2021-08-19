@@ -43,6 +43,15 @@ func (c *CylinderT) SetParent(parent *GroupT) Object {
 	return c
 }
 
+// Bounds returns the minimum bounding box of the object in object
+// (untransformed) space.
+func (c *CylinderT) Bounds() *BoundsT {
+	return &BoundsT{
+		Min: Point(-1, c.Minimum, -1),
+		Max: Point(1, c.Maximum, 1),
+	}
+}
+
 func checkCap(ray RayT, t, radius float64) bool {
 	x := ray.Origin.X() + t*ray.Direction.X()
 	z := ray.Origin.Z() + t*ray.Direction.Z()

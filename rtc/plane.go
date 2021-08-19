@@ -33,6 +33,15 @@ func (p *PlaneT) SetParent(parent *GroupT) Object {
 	return p
 }
 
+// Bounds returns the minimum bounding box of the object in object
+// (untransformed) space.
+func (p *PlaneT) Bounds() *BoundsT {
+	return &BoundsT{
+		Min: Point(math.Inf(-1), 0, math.Inf(-1)),
+		Max: Point(math.Inf(1), 0, math.Inf(1)),
+	}
+}
+
 // LocalIntersect returns a slice of IntersectionT values where the
 // transformed (object space) ray intersects the object.
 func (p *PlaneT) LocalIntersect(ray RayT) []IntersectionT {

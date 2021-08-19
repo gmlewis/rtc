@@ -1,6 +1,7 @@
 package rtc
 
 import (
+	"math"
 	"testing"
 )
 
@@ -81,5 +82,22 @@ func TestGroupT_LocalIntersect_TransformedGroup(t *testing.T) {
 
 	if got, want := len(xs), 2; got != want {
 		t.Fatalf("len(xs) = %v, want %v\nxs = %#v", got, want, xs)
+	}
+}
+
+func TestGroupT_Bounds_OnRotatedChildCube(t *testing.T) {
+	c := Cube().SetTransform(RotationY(math.Pi / 4))
+	g := Group(c)
+
+	want := &BoundsT{
+		Min: Point(-math.Sqrt2, -1, -math.Sqrt2),
+		Max: Point(math.Sqrt2, 1, math.Sqrt2),
+	}
+	got := g.Bounds()
+	if !got.Min.Equal(want.Min) {
+		t.Errorf("g.Bounds().Min = %v, want %v", got, want)
+	}
+	if !got.Max.Equal(want.Max) {
+		t.Errorf("g.Bounds().Max = %v, want %v", got, want)
 	}
 }

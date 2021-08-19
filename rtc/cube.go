@@ -33,6 +33,15 @@ func (c *CubeT) SetParent(parent *GroupT) Object {
 	return c
 }
 
+// Bounds returns the minimum bounding box of the object in object
+// (untransformed) space.
+func (c *CubeT) Bounds() *BoundsT {
+	return &BoundsT{
+		Min: Point(-1, -1, -1),
+		Max: Point(1, 1, 1),
+	}
+}
+
 func checkAxis(origin, direction float64) (tmin float64, tmax float64) {
 	const infinity = 1e100
 	tminNumerator := -1 - origin
