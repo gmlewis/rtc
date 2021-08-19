@@ -72,3 +72,14 @@ func TestGroupT_LocalIntersect_NonEmptyGroup(t *testing.T) {
 		t.Errorf("xs[3].Object = %v, want %v", got, want)
 	}
 }
+
+func TestGroupT_LocalIntersect_TransformedGroup(t *testing.T) {
+	s := Sphere().SetTransform(Translation(5, 0, 0))
+	g := Group(s).SetTransform(Scaling(2, 2, 2))
+	r := Ray(Point(10, 0, -10), Vector(0, 0, 1))
+	xs := Intersect(g, r)
+
+	if got, want := len(xs), 2; got != want {
+		t.Fatalf("len(xs) = %v, want %v\nxs = %#v", got, want, xs)
+	}
+}
