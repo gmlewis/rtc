@@ -40,6 +40,11 @@ func TestShape_NewTestShape(t *testing.T) {
 	if !s.Transform().Equal(M4Identity()) {
 		t.Errorf("testShape default transform should be 4x4 identity matrix, got %v", s.Transform())
 	}
+
+	var want *GroupT
+	if got := s.Parent(); got != want {
+		t.Errorf("testShape parent = %v, want %v", got, want)
+	}
 }
 
 func TestShape_SetTransform(t *testing.T) {
