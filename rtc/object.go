@@ -6,6 +6,11 @@ type Object interface {
 	// transformed (object space) ray intersects the object.
 	LocalIntersect(ray RayT) []IntersectionT
 
+	// Parent returns the object's parent group.
+	Parent() *GroupT
+	// SetParent sets the object's parent group.
+	SetParent(o *GroupT)
+
 	// Transform returns the object's transform 4x4 matrix.
 	Transform() M4
 	// SetTransform sets the object's transform 4x4 matrix.
