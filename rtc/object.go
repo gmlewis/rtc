@@ -34,10 +34,7 @@ func Intersect(object Object, ray RayT) []IntersectionT {
 
 // NormalAt returns the normal vector at the given point of intersection with the object.
 func NormalAt(object Object, worldPoint Tuple) Tuple {
-	inv := object.Transform().Inverse()
-	objectPoint := inv.MultTuple(worldPoint)
-	objectNormal := object.LocalNormalAt(objectPoint)
-	worldNormal := inv.Transpose().MultTuple(objectNormal)
-	worldNormal[3] = 0 // W
-	return worldNormal.Normalize()
+	localPoint := WorldToObject(object, worldPoint)
+	localNormal := object.LocalNormalAt(localPoint)
+	return NormalToWorld(object, localNormal)
 }
