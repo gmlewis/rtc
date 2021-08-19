@@ -146,34 +146,25 @@ func TestConeT_LocalNormalAt(t *testing.T) {
 	c := Cone()
 
 	tests := []struct {
-		name        string
 		objectPoint Tuple
 		want        Tuple
 	}{
 		{
-			name:        "+x",
-			objectPoint: Point(1, 0, 0),
-			want:        Vector(1, 0, 0),
+			objectPoint: Point(0, 0, 0),
+			want:        Vector(0, 0, 0),
 		},
 		{
-			name:        "-x",
-			objectPoint: Point(0, 5, -1),
-			want:        Vector(0, 0, -1),
+			objectPoint: Point(1, 1, 1),
+			want:        Vector(1, -math.Sqrt2, 1),
 		},
 		{
-			name:        "+z",
-			objectPoint: Point(0, -2, 1),
-			want:        Vector(0, 0, 1),
-		},
-		{
-			name:        "-z",
-			objectPoint: Point(-1, 1, 0),
-			want:        Vector(-1, 0, 0),
+			objectPoint: Point(-1, -1, 0),
+			want:        Vector(-1, 1, 0),
 		},
 	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("%v", i+1), func(t *testing.T) {
 			if got := c.LocalNormalAt(tt.objectPoint); !got.Equal(tt.want) {
 				t.Errorf("ConeT.LocalNormalAt() = %v, want %v", got, tt.want)
 			}

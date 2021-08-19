@@ -97,5 +97,10 @@ func (c *ConeT) LocalNormalAt(objectPoint Tuple) Tuple {
 		return Vector(0, -1, 0)
 	}
 
-	return Vector(objectPoint.X(), 0, objectPoint.Z())
+	y := math.Sqrt(objectPoint.X()*objectPoint.X() + objectPoint.Z()*objectPoint.Z())
+	if objectPoint.Y() > 0 {
+		y = -y
+	}
+
+	return Vector(objectPoint.X(), y, objectPoint.Z())
 }
