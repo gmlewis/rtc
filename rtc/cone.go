@@ -4,10 +4,10 @@ import (
 	"math"
 )
 
-// Cylinder creates a cylinder at the origin with its axis on the Y axis.
+// Cone creates a cone at the origin with its axis on the Y axis.
 // It implements the Object interface.
-func Cylinder() *CylinderT {
-	return &CylinderT{
+func Cone() *ConeT {
+	return &ConeT{
 		Shape:   Shape{transform: M4Identity(), material: Material()},
 		Minimum: math.Inf(-1),
 		Maximum: math.Inf(1),
@@ -15,34 +15,28 @@ func Cylinder() *CylinderT {
 	}
 }
 
-// CylinderT represents a Cylinder.
-type CylinderT struct {
+// ConeT represents a Cone.
+type ConeT struct {
 	Shape
 	Minimum float64
 	Maximum float64
 	Closed  bool
 }
 
-var _ Object = &CylinderT{}
+var _ Object = &ConeT{}
 
-func checkCap(ray RayT, t, radius float64) bool {
-	x := ray.Origin.X() + t*ray.Direction.X()
-	z := ray.Origin.Z() + t*ray.Direction.Z()
-	return x*x+z*z <= radius*radius
-}
-
-func (c *CylinderT) intersectCaps(ray RayT, xs []IntersectionT) []IntersectionT {
+func (c *ConeT) intersectCaps(ray RayT, xs []IntersectionT) []IntersectionT {
 	if !c.Closed || math.Abs(ray.Direction.Y()) < epsilon {
 		return xs
 	}
 
 	t := (c.Minimum - ray.Origin.Y()) / ray.Direction.Y()
-	if checkCap(ray, t, 1) {
+	if checkCap(ray, t, c.Minimum) { // Abs not necessary for radius here.
 		xs = append(xs, Intersection(t, c))
 	}
 
 	t = (c.Maximum - ray.Origin.Y()) / ray.Direction.Y()
-	if checkCap(ray, t, 1) {
+	if checkCap(ray, t, c.Maximum) { // Abs not necessary for radius here.
 		xs = append(xs, Intersection(t, c))
 	}
 
@@ -51,14 +45,19 @@ func (c *CylinderT) intersectCaps(ray RayT, xs []IntersectionT) []IntersectionT 
 
 // LocalIntersect returns a slice of IntersectionT values where the
 // transformed (object space) ray intersects the object.
-func (c *CylinderT) LocalIntersect(ray RayT) []IntersectionT {
-	a := ray.Direction.X()*ray.Direction.X() + ray.Direction.Z()*ray.Direction.Z()
-	if math.Abs(a) < epsilon {
+func (c *ConeT) LocalIntersect(ray RayT) []IntersectionT {
+	a := ray.Direction.X()*ray.Direction.X() - ray.Direction.Y()*ray.Direction.Y() + ray.Direction.Z()*ray.Direction.Z()
+	b := 2*ray.Origin.X()*ray.Direction.X() - 2*ray.Origin.Y()*ray.Direction.Y() + 2*ray.Origin.Z()*ray.Direction.Z()
+	if math.Abs(a) < epsilon && math.Abs(b) < epsilon {
 		return c.intersectCaps(ray, nil)
 	}
 
-	b := 2*ray.Origin.X()*ray.Direction.X() + 2*ray.Origin.Z()*ray.Direction.Z()
-	c2 := ray.Origin.X()*ray.Origin.X() + ray.Origin.Z()*ray.Origin.Z() - 1
+	c2 := ray.Origin.X()*ray.Origin.X() - ray.Origin.Y()*ray.Origin.Y() + ray.Origin.Z()*ray.Origin.Z()
+	if math.Abs(a) < epsilon {
+		t := -c2 / (2 * b)
+		return c.intersectCaps(ray, []IntersectionT{Intersection(t, c)})
+	}
+
 	discriminant := b*b - 4*a*c2
 
 	if discriminant < 0 {
@@ -89,7 +88,7 @@ func (c *CylinderT) LocalIntersect(ray RayT) []IntersectionT {
 
 // LocalNormalAt returns the normal vector at the given point of intersection
 // (transformed to object space) with the object.
-func (c *CylinderT) LocalNormalAt(objectPoint Tuple) Tuple {
+func (c *ConeT) LocalNormalAt(objectPoint Tuple) Tuple {
 	dist := objectPoint.X()*objectPoint.X() + objectPoint.Z()*objectPoint.Z()
 	if dist < 1 && objectPoint.Y() >= c.Maximum-epsilon {
 		return Vector(0, 1, 0)
