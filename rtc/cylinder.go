@@ -11,6 +11,7 @@ func Cylinder() *CylinderT {
 		Shape:   Shape{transform: M4Identity(), material: Material()},
 		Minimum: math.Inf(-1),
 		Maximum: math.Inf(1),
+		Closed:  false,
 	}
 }
 
@@ -19,16 +20,41 @@ type CylinderT struct {
 	Shape
 	Minimum float64
 	Maximum float64
+	Closed  bool
 }
 
 var _ Object = &CylinderT{}
+
+func checkCap(ray RayT, t float64) bool {
+	x := ray.Origin.X() + t*ray.Direction.X()
+	z := ray.Origin.Z() + t*ray.Direction.Z()
+	return x*x+z*z <= 1
+}
+
+func (c *CylinderT) intersectCaps(ray RayT, xs []IntersectionT) []IntersectionT {
+	if !c.Closed || math.Abs(ray.Direction.Y()) < epsilon {
+		return xs
+	}
+
+	t := (c.Minimum - ray.Origin.Y()) / ray.Direction.Y()
+	if checkCap(ray, t) {
+		xs = append(xs, Intersection(t, c))
+	}
+
+	t = (c.Maximum - ray.Origin.Y()) / ray.Direction.Y()
+	if checkCap(ray, t) {
+		xs = append(xs, Intersection(t, c))
+	}
+
+	return xs
+}
 
 // LocalIntersect returns a slice of IntersectionT values where the
 // transformed (object space) ray intersects the object.
 func (c *CylinderT) LocalIntersect(ray RayT) []IntersectionT {
 	a := ray.Direction.X()*ray.Direction.X() + ray.Direction.Z()*ray.Direction.Z()
 	if math.Abs(a) < epsilon {
-		return nil
+		return c.intersectCaps(ray, nil)
 	}
 
 	b := 2*ray.Origin.X()*ray.Direction.X() + 2*ray.Origin.Z()*ray.Direction.Z()
@@ -36,7 +62,7 @@ func (c *CylinderT) LocalIntersect(ray RayT) []IntersectionT {
 	discriminant := b*b - 4*a*c2
 
 	if discriminant < 0 {
-		return nil
+		return c.intersectCaps(ray, nil)
 	}
 
 	sr := math.Sqrt(discriminant)
@@ -56,6 +82,7 @@ func (c *CylinderT) LocalIntersect(ray RayT) []IntersectionT {
 	if c.Minimum < y2 && y2 < c.Maximum {
 		xs = append(xs, Intersection(t2, c))
 	}
+	xs = c.intersectCaps(ray, xs)
 
 	return xs
 }

@@ -10,11 +10,15 @@ func TestCylinder(t *testing.T) {
 	c := Cylinder()
 
 	if got, want := c.Minimum, math.Inf(-1); got != want {
-		t.Errorf("Cylinder.minimum = %v, want %v", got, want)
+		t.Errorf("Cylinder.Minimum = %v, want %v", got, want)
 	}
 
 	if got, want := c.Maximum, math.Inf(1); got != want {
-		t.Errorf("Cylinder.maximum = %v, want %v", got, want)
+		t.Errorf("Cylinder.Maximum = %v, want %v", got, want)
+	}
+
+	if got, want := c.Closed, false; got != want {
+		t.Errorf("Cylinder.Closed = %v, want %v", got, want)
 	}
 }
 
@@ -137,6 +141,37 @@ func TestCylinder_IntersectContrainedCylinder(t *testing.T) {
 		{point: Point(0, 2, -5), dir: Vector(0, 0, 1), want: 0},
 		{point: Point(0, 1, -5), dir: Vector(0, 0, 1), want: 0},
 		{point: Point(0, 1.5, -2), dir: Vector(0, 0, 1), want: 2},
+	}
+
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("%v", i+1), func(t *testing.T) {
+			dir := tt.dir.Normalize()
+			r := Ray(tt.point, dir)
+			xs := c.LocalIntersect(r)
+
+			if got := len(xs); got != tt.want {
+				t.Errorf("Cylinder.intersections = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestCylinder_IntersectCapsOfClosedCylinder(t *testing.T) {
+	c := Cylinder()
+	c.Minimum = 1
+	c.Maximum = 2
+	c.Closed = true
+
+	tests := []struct {
+		point Tuple
+		dir   Tuple
+		want  int
+	}{
+		{point: Point(0, 3, 0), dir: Vector(0, -1, 0), want: 2},
+		{point: Point(0, 3, -2), dir: Vector(0, -1, 2), want: 2},
+		{point: Point(0, 4, -2), dir: Vector(0, -1, 1), want: 2},
+		{point: Point(0, 0, -2), dir: Vector(0, 1, 2), want: 2},
+		{point: Point(0, -1, -2), dir: Vector(0, 1, 1), want: 2},
 	}
 
 	for i, tt := range tests {
