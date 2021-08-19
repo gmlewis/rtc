@@ -459,3 +459,14 @@ func TestWorldToObject(t *testing.T) {
 		t.Errorf("WorldToObject(s, Point(-2,0,-10)) = %v, want %v", got, want)
 	}
 }
+
+func TestNormalToWorld(t *testing.T) {
+	sq3 := math.Sqrt(3) / 3
+	s := Sphere().SetTransform(Translation(5, 0, 0))
+	g2 := Group(s).SetTransform(Scaling(1, 2, 3))
+	Group(g2).SetTransform(RotationY(math.Pi / 2))
+
+	if got, want := NormalToWorld(s, Point(sq3, sq3, sq3)), Vector(0.2857, 0.4286, -0.8571); !got.Equal(want) {
+		t.Errorf("NormalToWorld(s, Point(sq3,sq3,sq3)) = %v, want %v", got, want)
+	}
+}

@@ -151,3 +151,17 @@ func WorldToObject(object Object, point Tuple) Tuple {
 	}
 	return object.Transform().Inverse().MultTuple(point)
 }
+
+// NormalToWorld converts an object-space normal to world space, taking into
+// account all the parents of the object.
+func NormalToWorld(object Object, normal Tuple) Tuple {
+	inv := object.Transform().Inverse()
+	worldNormal := inv.Transpose().MultTuple(normal)
+	worldNormal[3] = 0 // W
+	normal = worldNormal.Normalize()
+
+	if p := object.Parent(); p != nil {
+		normal = NormalToWorld(p, normal)
+	}
+	return normal
+}
