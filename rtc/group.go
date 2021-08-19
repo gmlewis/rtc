@@ -48,7 +48,7 @@ func (g *GroupT) SetParent(parent *GroupT) Object {
 func (g *GroupT) LocalIntersect(ray RayT) []IntersectionT {
 	var xs []IntersectionT
 	for _, child := range g.Children {
-		xs = append(xs, child.LocalIntersect(ray)...)
+		xs = append(xs, Intersect(child, ray)...)
 	}
 	return Intersections(xs...) // sort them
 }

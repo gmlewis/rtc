@@ -53,7 +53,7 @@ func TestGroupT_LocalIntersect_NonEmptyGroup(t *testing.T) {
 	xs := g.LocalIntersect(r)
 
 	if got, want := len(xs), 4; got != want {
-		t.Fatalf("len(xs) = %v, want %v", got, want)
+		t.Fatalf("len(xs) = %v, want %v\nxs = %#v", got, want, xs)
 	}
 
 	if got, want := xs[0].Object, s2; got != want {
