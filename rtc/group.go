@@ -1,5 +1,7 @@
 package rtc
 
+import "log"
+
 // Group creates a group of objects at the origin.
 // It implements the Object interface.
 func Group(shapes ...Object) *GroupT {
@@ -56,5 +58,6 @@ func (g *GroupT) LocalIntersect(ray RayT) []IntersectionT {
 // LocalNormalAt returns the normal vector at the given point of intersection
 // (transformed to object space) with the object.
 func (g *GroupT) LocalNormalAt(objectPoint Tuple) Tuple {
+	log.Fatalf("programming error - groups are abstract and do not have normals")
 	return Tuple{}
 }
