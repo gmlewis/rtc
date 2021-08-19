@@ -28,8 +28,7 @@ func (s *BasePattern) SetTransform(m M4) {
 
 // PatternAt returns the pattern at the given point of intersection with the object.
 func PatternAt(pattern Pattern, object Object, worldPoint Tuple) Tuple {
-	inv := object.Transform().Inverse()
-	objectPoint := inv.MultTuple(worldPoint)
-	patternPoint := pattern.Transform().Inverse().MultTuple(objectPoint)
+	localPoint := WorldToObject(object, worldPoint)
+	patternPoint := pattern.Transform().Inverse().MultTuple(localPoint)
 	return pattern.LocalPatternAt(patternPoint)
 }
