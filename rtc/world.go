@@ -142,3 +142,12 @@ func (w *WorldT) RefractedColor(comps *Comps, remaining int) Tuple {
 	color := w.ColorAt(refractedRay, remaining-1)
 	return color.MultScalar(comps.Object.Material().Transparency)
 }
+
+// WorldToObject converts a world-space point to object space, taking into
+// account all the parents of the object.
+func WorldToObject(object Object, point Tuple) Tuple {
+	if p := object.Parent(); p != nil {
+		point = WorldToObject(p, point)
+	}
+	return object.Transform().Inverse().MultTuple(point)
+}

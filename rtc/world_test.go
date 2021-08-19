@@ -449,3 +449,13 @@ func TestWorldT_RefractedColor_WithRefractedColor(t *testing.T) {
 		t.Errorf("w.RefractedColor = %v, want %v", got, want)
 	}
 }
+
+func TestWorldToObject(t *testing.T) {
+	s := Sphere().SetTransform(Translation(5, 0, 0))
+	g2 := Group(s).SetTransform(Scaling(2, 2, 2))
+	Group(g2).SetTransform(RotationY(math.Pi / 2))
+
+	if got, want := WorldToObject(s, Point(-2, 0, -10)), Point(0, 0, -1); !got.Equal(want) {
+		t.Errorf("WorldToObject(s, Point(-2,0,-10)) = %v, want %v", got, want)
+	}
+}
