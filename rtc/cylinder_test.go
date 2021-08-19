@@ -78,43 +78,23 @@ func TestCylinderT_LocalNormalAt(t *testing.T) {
 		want        Tuple
 	}{
 		{
-			name:        "1, 0.5, -0.8",
-			objectPoint: Point(1, 0.5, -0.8),
+			name:        "+x",
+			objectPoint: Point(1, 0, 0),
 			want:        Vector(1, 0, 0),
 		},
 		{
-			name:        "-1, -0.2, 0.9",
-			objectPoint: Point(-1, -0.2, 0.9),
-			want:        Vector(-1, 0, 0),
-		},
-		{
-			name:        "-0.4, 1, -0.1",
-			objectPoint: Point(-0.4, 1, -0.1),
-			want:        Vector(0, 1, 0),
-		},
-		{
-			name:        "0.3, -1, -0.7",
-			objectPoint: Point(0.3, -1, -0.7),
-			want:        Vector(0, -1, 0),
-		},
-		{
-			name:        "-0.6, 0.3, 1",
-			objectPoint: Point(-0.6, 0.3, 1),
-			want:        Vector(0, 0, 1),
-		},
-		{
-			name:        "0.4, 0.4, -1",
-			objectPoint: Point(0.4, 0.4, -1),
+			name:        "-x",
+			objectPoint: Point(0, 5, -1),
 			want:        Vector(0, 0, -1),
 		},
 		{
-			name:        "1, 1, 1",
-			objectPoint: Point(1, 1, 1),
-			want:        Vector(1, 0, 0),
+			name:        "+z",
+			objectPoint: Point(0, -2, 1),
+			want:        Vector(0, 0, 1),
 		},
 		{
-			name:        "-1, -1, -1",
-			objectPoint: Point(-1, -1, -1),
+			name:        "-z",
+			objectPoint: Point(-1, 1, 0),
 			want:        Vector(-1, 0, 0),
 		},
 	}

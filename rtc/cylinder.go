@@ -1,7 +1,6 @@
 package rtc
 
 import (
-	"log"
 	"math"
 )
 
@@ -37,22 +36,11 @@ func (c *CylinderT) LocalIntersect(ray RayT) []IntersectionT {
 	sr := math.Sqrt(discriminant)
 	t1 := (-b - sr) / (2 * a)
 	t2 := (-b + sr) / (2 * a)
-	log.Printf("%v: a=%v, b=%v, c=%v, d=%v, sr=%v, t1=%v, t2=%v", ray, a, b, c2, discriminant, sr, t1, t2)
 	return []IntersectionT{Intersection(t1, c), Intersection(t2, c)}
 }
 
 // LocalNormalAt returns the normal vector at the given point of intersection
 // (transformed to object space) with the object.
 func (c *CylinderT) LocalNormalAt(objectPoint Tuple) Tuple {
-	absX := math.Abs(objectPoint.X())
-	absY := math.Abs(objectPoint.Y())
-	maxc := math.Max(absX, math.Max(absY, math.Abs(objectPoint.Z())))
-
-	if maxc == absX {
-		return Vector(objectPoint.X(), 0, 0)
-	}
-	if maxc == absY {
-		return Vector(0, objectPoint.Y(), 0)
-	}
-	return Vector(0, 0, objectPoint.Z())
+	return Vector(objectPoint.X(), 0, objectPoint.Z())
 }

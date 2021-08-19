@@ -105,7 +105,7 @@ func (m M4) Invertible() bool {
 func (m M4) Inverse() M4 {
 	d := m.Determinant()
 	if d == 0 {
-		log.Fatalf("can not take inverse of non-invertible matrix: %v", m)
+		log.Fatalf("cannot take inverse of non-invertible matrix: %v", m)
 	}
 
 	v := func(row, col int) float64 {
