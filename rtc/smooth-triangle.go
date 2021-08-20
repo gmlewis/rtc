@@ -76,6 +76,6 @@ func (s *SmoothTriangleT) LocalIntersect(ray RayT) []IntersectionT {
 
 // LocalNormalAt returns the normal vector at the given point of intersection
 // (transformed to object space) with the object.
-func (s *SmoothTriangleT) LocalNormalAt(objectPoint Tuple, xs *IntersectionT) Tuple {
-	return s.Normal
+func (s *SmoothTriangleT) LocalNormalAt(objectPoint Tuple, hit *IntersectionT) Tuple {
+	return s.N2.MultScalar(hit.U).Add(s.N3.MultScalar(hit.V).Add(s.N1.MultScalar(1 - hit.U - hit.V)))
 }
