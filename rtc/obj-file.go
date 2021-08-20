@@ -14,7 +14,9 @@ func ParseObjFile(r io.Reader) (*ObjFile, error) {
 	obj := &ObjFile{
 		DefaultGroup: Group(),
 		Vertices:     []Tuple{Point(0, 0, 0)}, // Vertex 0 is unused.
+		NamedGroups:  map[string]*GroupT{},
 	}
+	lastGroup := obj.DefaultGroup
 
 	addVertex := func(v ...float64) {
 		if len(v) != 3 {
@@ -27,7 +29,7 @@ func ParseObjFile(r io.Reader) (*ObjFile, error) {
 			log.Fatalf("expect 3 or more faces, got %#v", v)
 		}
 		for i := 2; i < len(v); i++ {
-			obj.DefaultGroup.AddChild(Triangle(obj.Vertices[int(v[0])], obj.Vertices[int(v[i-1])], obj.Vertices[int(v[i])]))
+			lastGroup.AddChild(Triangle(obj.Vertices[int(v[0])], obj.Vertices[int(v[i-1])], obj.Vertices[int(v[i])]))
 		}
 	}
 
@@ -45,6 +47,10 @@ func ParseObjFile(r io.Reader) (*ObjFile, error) {
 			parseTriplet(line[2:], addVertex)
 		case strings.HasPrefix(line, "f "):
 			parseTriplet(line[2:], addTriangle)
+		case strings.HasPrefix(line, "g "):
+			groupName := strings.TrimSpace(line[2:])
+			lastGroup = Group()
+			obj.NamedGroups[groupName] = lastGroup
 		default:
 			obj.IgnoredLines++
 		}
@@ -61,7 +67,8 @@ type ObjFile struct {
 	DefaultGroup *GroupT
 	IgnoredLines int
 
-	Vertices []Tuple
+	Vertices    []Tuple
+	NamedGroups map[string]*GroupT
 }
 
 func parseTriplet(s string, f func(args ...float64)) {
