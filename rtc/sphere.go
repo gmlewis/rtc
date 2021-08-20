@@ -36,8 +36,8 @@ func (s *SphereT) SetMaterial(material MaterialT) Object {
 	return s
 }
 
-// SetParent sets the object's parent group.
-func (s *SphereT) SetParent(parent *GroupT) Object {
+// SetParent sets the object's parent object.
+func (s *SphereT) SetParent(parent Object) Object {
 	s.parent = parent
 	return s
 }

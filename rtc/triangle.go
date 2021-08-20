@@ -57,8 +57,8 @@ func (t *TriangleT) SetMaterial(material MaterialT) Object {
 	return t
 }
 
-// SetParent sets the object's parent group.
-func (t *TriangleT) SetParent(parent *GroupT) Object {
+// SetParent sets the object's parent object.
+func (t *TriangleT) SetParent(parent Object) Object {
 	t.parent = parent
 	return t
 }

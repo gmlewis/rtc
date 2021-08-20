@@ -4,7 +4,7 @@ package rtc
 type Shape struct {
 	transform M4
 	material  MaterialT
-	parent    *GroupT
+	parent    Object
 }
 
 // Transform returns the object's transform 4x4 matrix.
@@ -17,7 +17,7 @@ func (s *Shape) Material() *MaterialT {
 	return &s.material
 }
 
-// Parent returns the object's parent group.
-func (s *Shape) Parent() *GroupT {
+// Parent returns the object's parent object.
+func (s *Shape) Parent() Object {
 	return s.parent
 }

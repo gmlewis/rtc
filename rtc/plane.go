@@ -27,8 +27,8 @@ func (p *PlaneT) SetMaterial(material MaterialT) Object {
 	return p
 }
 
-// SetParent sets the object's parent group.
-func (p *PlaneT) SetParent(parent *GroupT) Object {
+// SetParent sets the object's parent object.
+func (p *PlaneT) SetParent(parent Object) Object {
 	p.parent = parent
 	return p
 }

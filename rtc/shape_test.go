@@ -34,9 +34,9 @@ func (s *Shape) SetMaterial(material MaterialT) Object {
 	return s
 }
 
-// SetParent sets the object's parent group.
+// SetParent sets the object's parent object.
 // Only for testing!
-func (s *Shape) SetParent(parent *GroupT) Object {
+func (s *Shape) SetParent(parent Object) Object {
 	s.parent = parent
 	return s
 }
@@ -72,7 +72,7 @@ func TestShape_NewTestShape(t *testing.T) {
 		t.Errorf("testShape default transform should be 4x4 identity matrix, got %v", s.Transform())
 	}
 
-	var want *GroupT
+	var want Object
 	if got := s.Parent(); got != want {
 		t.Errorf("testShape parent = %v, want %v", got, want)
 	}

@@ -37,8 +37,8 @@ func (c *ConeT) SetMaterial(material MaterialT) Object {
 	return c
 }
 
-// SetParent sets the object's parent group.
-func (c *ConeT) SetParent(parent *GroupT) Object {
+// SetParent sets the object's parent object.
+func (c *ConeT) SetParent(parent Object) Object {
 	c.parent = parent
 	return c
 }

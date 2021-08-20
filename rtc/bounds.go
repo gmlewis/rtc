@@ -20,7 +20,7 @@ func (b *BoundsT) String() string {
 
 // LocalIntersect returns a slice of IntersectionT values where the
 // transformed (object space) ray intersects the object.
-func (b *BoundsT) LocalIntersect(ray RayT, group *GroupT) []IntersectionT {
+func (b *BoundsT) LocalIntersect(ray RayT, object Object) []IntersectionT {
 	xtmin, xtmax := checkAxis(ray.Origin.X(), ray.Direction.X(), b.Min.X(), b.Max.X())
 	ytmin, ytmax := checkAxis(ray.Origin.Y(), ray.Direction.Y(), b.Min.Y(), b.Max.Y())
 	ztmin, ztmax := checkAxis(ray.Origin.Z(), ray.Direction.Z(), b.Min.Z(), b.Max.Z())
@@ -32,7 +32,7 @@ func (b *BoundsT) LocalIntersect(ray RayT, group *GroupT) []IntersectionT {
 		return nil
 	}
 
-	return []IntersectionT{Intersection(tmin, group), Intersection(tmax, group)}
+	return []IntersectionT{Intersection(tmin, object), Intersection(tmax, object)}
 }
 
 // Bounds returns an empty bounding box.

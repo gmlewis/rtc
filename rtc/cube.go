@@ -27,8 +27,8 @@ func (c *CubeT) SetMaterial(material MaterialT) Object {
 	return c
 }
 
-// SetParent sets the object's parent group.
-func (c *CubeT) SetParent(parent *GroupT) Object {
+// SetParent sets the object's parent object.
+func (c *CubeT) SetParent(parent Object) Object {
 	c.parent = parent
 	return c
 }

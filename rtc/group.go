@@ -44,8 +44,8 @@ func (g *GroupT) SetMaterial(material MaterialT) Object {
 	return g
 }
 
-// SetParent sets the object's parent group.
-func (g *GroupT) SetParent(parent *GroupT) Object {
+// SetParent sets the object's parent object.
+func (g *GroupT) SetParent(parent Object) Object {
 	g.parent = parent
 	return g
 }
@@ -59,7 +59,7 @@ func (g *GroupT) Bounds() *BoundsT {
 // LocalIntersect returns a slice of IntersectionT values where the
 // transformed (object space) ray intersects the object.
 func (g *GroupT) LocalIntersect(ray RayT) []IntersectionT {
-	b := g.Bounds() // consider cacheing bounds!
+	b := g.Bounds()
 	if xs := b.LocalIntersect(ray, g); len(xs) == 0 {
 		return nil
 	}

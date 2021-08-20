@@ -37,8 +37,8 @@ func (c *CylinderT) SetMaterial(material MaterialT) Object {
 	return c
 }
 
-// SetParent sets the object's parent group.
-func (c *CylinderT) SetParent(parent *GroupT) Object {
+// SetParent sets the object's parent object.
+func (c *CylinderT) SetParent(parent Object) Object {
 	c.parent = parent
 	return c
 }
