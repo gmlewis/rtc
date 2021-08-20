@@ -8,6 +8,11 @@ func Triangle(p1, p2, p3 Tuple) *TriangleT {
 	e2 := p3.Sub(p1)
 	normal := e2.Cross(e1).Normalize()
 
+	bounds := Bounds()
+	bounds.UpdateBounds(p1)
+	bounds.UpdateBounds(p2)
+	bounds.UpdateBounds(p3)
+
 	return &TriangleT{
 		Shape:  Shape{transform: M4Identity(), material: Material()},
 		P1:     p1,
@@ -16,6 +21,7 @@ func Triangle(p1, p2, p3 Tuple) *TriangleT {
 		E1:     e1,
 		E2:     e2,
 		Normal: normal,
+		bounds: bounds,
 	}
 }
 
@@ -29,6 +35,8 @@ type TriangleT struct {
 	E1     Tuple
 	E2     Tuple
 	Normal Tuple
+
+	bounds *BoundsT
 }
 
 var _ Object = &TriangleT{}
@@ -54,10 +62,7 @@ func (t *TriangleT) SetParent(parent *GroupT) Object {
 // Bounds returns the minimum bounding box of the object in object
 // (untransformed) space.
 func (t *TriangleT) Bounds() *BoundsT {
-	return &BoundsT{
-		Min: Point(-1, -1, -1),
-		Max: Point(1, 1, 1),
-	}
+	return t.bounds
 }
 
 // LocalIntersect returns a slice of IntersectionT values where the

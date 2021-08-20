@@ -84,3 +84,17 @@ func parseTriplet(s string, f func(args ...float64)) {
 	}
 	f(args...)
 }
+
+// ToGroup returns a GroupT representing the parsed Wavefront OBJ file.
+func (o *ObjFile) ToGroup() *GroupT {
+	g := Group()
+	if len(o.DefaultGroup.Children) > 0 {
+		g.AddChild(o.DefaultGroup)
+	}
+	for _, group := range o.NamedGroups {
+		if len(group.Children) > 0 {
+			g.AddChild(group)
+		}
+	}
+	return g
+}
