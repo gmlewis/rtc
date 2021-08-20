@@ -16,11 +16,19 @@ func ParseObjFile(r io.Reader) (*ObjFile, error) {
 		Vertices:     []Tuple{Point(0, 0, 0)}, // Vertex 0 is unused.
 	}
 
-	addVertex := func(x, y, z float64) {
-		obj.Vertices = append(obj.Vertices, Point(x, y, z))
+	addVertex := func(v ...float64) {
+		if len(v) != 3 {
+			log.Fatalf("expect 3 vertices, got %#v", v)
+		}
+		obj.Vertices = append(obj.Vertices, Point(v[0], v[1], v[2]))
 	}
-	addTriangle := func(x, y, z float64) {
-		obj.DefaultGroup.AddChild(Triangle(obj.Vertices[int(x)], obj.Vertices[int(y)], obj.Vertices[int(z)]))
+	addTriangle := func(v ...float64) {
+		if len(v) < 3 {
+			log.Fatalf("expect 3 or more faces, got %#v", v)
+		}
+		for i := 2; i < len(v); i++ {
+			obj.DefaultGroup.AddChild(Triangle(obj.Vertices[int(v[0])], obj.Vertices[int(v[i-1])], obj.Vertices[int(v[i])]))
+		}
 	}
 
 	b := bufio.NewReader(r)
@@ -56,18 +64,16 @@ type ObjFile struct {
 	Vertices []Tuple
 }
 
-func atof(s string) float64 {
-	v, err := strconv.ParseFloat(s, 64)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return v
-}
-
-func parseTriplet(s string, f func(x, y, z float64)) {
+func parseTriplet(s string, f func(args ...float64)) {
 	parts := strings.Split(strings.TrimSpace(s), " ")
-	x := atof(parts[0])
-	y := atof(parts[1])
-	z := atof(parts[2])
-	f(x, y, z)
+	var args []float64
+	for _, arg := range parts {
+		v, err := strconv.ParseFloat(arg, 64)
+		if err != nil {
+			log.Printf("WARNING: parsing error on line %q, ignored.", s)
+			break
+		}
+		args = append(args, v)
+	}
+	f(args...)
 }
