@@ -55,6 +55,6 @@ func (p *PlaneT) LocalIntersect(ray RayT) []IntersectionT {
 
 // LocalNormalAt returns the normal vector at the given point of intersection
 // (transformed to object space) with the object.
-func (p *PlaneT) LocalNormalAt(objectPoint Tuple, xs *IntersectionT) Tuple {
+func (p *PlaneT) LocalNormalAt(objectPoint Tuple, hit *IntersectionT) Tuple {
 	return Vector(0, 1, 0)
 }

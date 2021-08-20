@@ -159,8 +159,8 @@ func (c *Comps) Schlick() float64 {
 }
 
 // NormalAt returns the normal vector at the given point of intersection with the object.
-func (xs *IntersectionT) NormalAt(worldPoint Tuple) Tuple {
-	localPoint := WorldToObject(xs.Object, worldPoint)
-	localNormal := xs.Object.LocalNormalAt(localPoint, xs)
-	return NormalToWorld(xs.Object, localNormal)
+func (hit *IntersectionT) NormalAt(worldPoint Tuple) Tuple {
+	localPoint := WorldToObject(hit.Object, worldPoint)
+	localNormal := hit.Object.LocalNormalAt(localPoint, hit)
+	return NormalToWorld(hit.Object, localNormal)
 }

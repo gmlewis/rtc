@@ -97,6 +97,6 @@ func (t *TriangleT) LocalIntersect(ray RayT) []IntersectionT {
 
 // LocalNormalAt returns the normal vector at the given point of intersection
 // (transformed to object space) with the object.
-func (t *TriangleT) LocalNormalAt(objectPoint Tuple, xs *IntersectionT) Tuple {
+func (t *TriangleT) LocalNormalAt(objectPoint Tuple, hit *IntersectionT) Tuple {
 	return t.Normal
 }

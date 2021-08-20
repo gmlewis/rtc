@@ -82,7 +82,7 @@ func (g *GroupT) LocalIntersect(ray RayT) []IntersectionT {
 
 // LocalNormalAt returns the normal vector at the given point of intersection
 // (transformed to object space) with the object.
-func (g *GroupT) LocalNormalAt(objectPoint Tuple, xs *IntersectionT) Tuple {
+func (g *GroupT) LocalNormalAt(objectPoint Tuple, hit *IntersectionT) Tuple {
 	log.Fatalf("programming error - groups are abstract and do not have normals")
 	return Tuple{}
 }

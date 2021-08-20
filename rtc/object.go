@@ -23,7 +23,7 @@ type Object interface {
 
 	// LocalNormalAt returns the normal vector at the given point of intersection
 	// (transformed to object space) with the object.
-	LocalNormalAt(localPoint Tuple, xs *IntersectionT) Tuple
+	LocalNormalAt(localPoint Tuple, hit *IntersectionT) Tuple
 
 	// Bounds returns the minimum bounding box of the object in object
 	// (untransformed) space.

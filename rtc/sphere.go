@@ -73,6 +73,6 @@ func (s *SphereT) LocalIntersect(ray RayT) []IntersectionT {
 
 // LocalNormalAt returns the normal vector at the given point of intersection
 // (transformed to object space) with the object.
-func (s *SphereT) LocalNormalAt(objectPoint Tuple, xs *IntersectionT) Tuple {
+func (s *SphereT) LocalNormalAt(objectPoint Tuple, hit *IntersectionT) Tuple {
 	return objectPoint.Sub(Point(0, 0, 0))
 }
