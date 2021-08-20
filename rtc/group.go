@@ -7,7 +7,7 @@ import (
 // Group creates a group of objects at the origin.
 // It implements the Object interface.
 func Group(shapes ...Object) *GroupT {
-	g := &GroupT{Shape: Shape{transform: M4Identity(), material: Material()}}
+	g := &GroupT{Shape: Shape{transform: M4Identity(), material: Material()}, bounds: Bounds()}
 	g.AddChild(shapes...)
 	return g
 }
@@ -15,8 +15,18 @@ func Group(shapes ...Object) *GroupT {
 // AddChild adds shape(s) to a group.
 func (g *GroupT) AddChild(shapes ...Object) {
 	g.Children = append(g.Children, shapes...)
-	for _, shape := range shapes {
-		shape.SetParent(g)
+	for _, child := range shapes {
+		child.SetParent(g)
+
+		bc := child.Bounds()
+		g.bounds.UpdateBounds(child.Transform().MultTuple(Point(bc.Min.X(), bc.Min.Y(), bc.Min.Z())))
+		g.bounds.UpdateBounds(child.Transform().MultTuple(Point(bc.Max.X(), bc.Min.Y(), bc.Min.Z())))
+		g.bounds.UpdateBounds(child.Transform().MultTuple(Point(bc.Max.X(), bc.Max.Y(), bc.Min.Z())))
+		g.bounds.UpdateBounds(child.Transform().MultTuple(Point(bc.Min.X(), bc.Max.Y(), bc.Min.Z())))
+		g.bounds.UpdateBounds(child.Transform().MultTuple(Point(bc.Min.X(), bc.Min.Y(), bc.Max.Z())))
+		g.bounds.UpdateBounds(child.Transform().MultTuple(Point(bc.Max.X(), bc.Min.Y(), bc.Max.Z())))
+		g.bounds.UpdateBounds(child.Transform().MultTuple(Point(bc.Max.X(), bc.Max.Y(), bc.Max.Z())))
+		g.bounds.UpdateBounds(child.Transform().MultTuple(Point(bc.Min.X(), bc.Max.Y(), bc.Max.Z())))
 	}
 }
 
@@ -25,6 +35,8 @@ func (g *GroupT) AddChild(shapes ...Object) {
 type GroupT struct {
 	Shape
 	Children []Object
+
+	bounds *BoundsT
 }
 
 var _ Object = &GroupT{}
@@ -50,21 +62,7 @@ func (g *GroupT) SetParent(parent *GroupT) Object {
 // Bounds returns the minimum bounding box of the object in object
 // (untransformed) space.
 func (g *GroupT) Bounds() *BoundsT {
-	b := Bounds()
-
-	for _, child := range g.Children {
-		bc := child.Bounds()
-		b.UpdateBounds(child.Transform().MultTuple(Point(bc.Min.X(), bc.Min.Y(), bc.Min.Z())))
-		b.UpdateBounds(child.Transform().MultTuple(Point(bc.Max.X(), bc.Min.Y(), bc.Min.Z())))
-		b.UpdateBounds(child.Transform().MultTuple(Point(bc.Max.X(), bc.Max.Y(), bc.Min.Z())))
-		b.UpdateBounds(child.Transform().MultTuple(Point(bc.Min.X(), bc.Max.Y(), bc.Min.Z())))
-		b.UpdateBounds(child.Transform().MultTuple(Point(bc.Min.X(), bc.Min.Y(), bc.Max.Z())))
-		b.UpdateBounds(child.Transform().MultTuple(Point(bc.Max.X(), bc.Min.Y(), bc.Max.Z())))
-		b.UpdateBounds(child.Transform().MultTuple(Point(bc.Max.X(), bc.Max.Y(), bc.Max.Z())))
-		b.UpdateBounds(child.Transform().MultTuple(Point(bc.Min.X(), bc.Max.Y(), bc.Max.Z())))
-	}
-
-	return b
+	return g.bounds
 }
 
 // LocalIntersect returns a slice of IntersectionT values where the
