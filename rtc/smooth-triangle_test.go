@@ -64,3 +64,16 @@ func TestSmoothTriangle_NormalAt(t *testing.T) {
 		t.Errorf("n = %v, want %v", got, want)
 	}
 }
+
+func TestSmoothTriangle_PrepareComputations(t *testing.T) {
+	tri := testTri(t)
+	hit := IntersectionWithUV(1, tri, 0.45, 0.25)
+	r := Ray(Point(-0.2, 0.3, -2), Vector(0, 0, 1))
+	xs := Intersections(hit)
+
+	comps := hit.PrepareComputations(r, xs)
+
+	if got, want := comps.NormalVector, Vector(-0.5547, 0.83205, 0); !got.Equal(want) {
+		t.Errorf("n = %v, want %v", got, want)
+	}
+}
