@@ -5,7 +5,6 @@ import (
 	"flag"
 	"log"
 	"math"
-	"os"
 
 	"github.com/gmlewis/rtc/rtc"
 )
@@ -13,6 +12,10 @@ import (
 var (
 	xsize = flag.Int("xsize", 1280, "X size")
 	ysize = flag.Int("ysize", 1024, "Y size")
+
+	scale      = flag.Float64("s", 1, "Scale object factor")
+	yTranslate = flag.Float64("y", 0, "Y translate object")
+	yRotate    = flag.Float64("r", 0, "Y rotate object (in degrees)")
 
 	pngFile = flag.String("png", "test-obj.png", "Output PNG file")
 	ppmFile = flag.String("ppm", "test-obj.ppm", "Output PPM file")
@@ -24,21 +27,15 @@ func main() {
 	world := genWorld()
 
 	for _, arg := range flag.Args() {
-		f, err := os.Open(arg)
+		obj, err := rtc.ParseObjFile(arg)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		obj, err := rtc.ParseObjFile(f)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		if err := f.Close(); err != nil {
-			log.Fatal(err)
-		}
-
-		world.Objects = append(world.Objects, obj.ToGroup())
+		g := obj.ToGroup()
+		g.SetTransform(rtc.RotationY(*yRotate * math.Pi / 180).Mult(rtc.Scaling(*scale, *scale, *scale).Mult(rtc.Translation(0, *yTranslate, 0))))
+		log.Printf("%q bounds: %v", arg, g.Bounds())
+		world.Objects = append(world.Objects, g)
 	}
 
 	camera := rtc.Camera(*xsize, *ysize, math.Pi/3)

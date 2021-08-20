@@ -4,13 +4,32 @@ import (
 	"bufio"
 	"io"
 	"log"
+	"os"
 	"strconv"
 	"strings"
 )
 
-// ParseObjFile parses a Wavefront OBJ file and returns an Object
-// and the number of lines that were ignored.
-func ParseObjFile(r io.Reader) (*ObjFile, error) {
+// ParseObjFile parses a Wavefront OBJ file and returns an ObjFile.
+func ParseObjFile(filename string) (*ObjFile, error) {
+	f, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+
+	obj, err := ParseObj(f)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := f.Close(); err != nil {
+		return nil, err
+	}
+
+	return obj, nil
+}
+
+// ParseObj parse a Wavefront OBJ and returns an ObjFile.
+func ParseObj(r io.Reader) (*ObjFile, error) {
 	obj := &ObjFile{
 		DefaultGroup: Group(),
 		Vertices:     []Tuple{Point(0, 0, 0)}, // Vertex 0 is unused.

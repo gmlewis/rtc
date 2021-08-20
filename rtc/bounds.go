@@ -1,11 +1,21 @@
 package rtc
 
-import "math"
+import (
+	"fmt"
+	"math"
+)
 
 // BoundsT represents a minimum bounding box of an object.
 type BoundsT struct {
 	Min Tuple
 	Max Tuple
+}
+
+func (b *BoundsT) String() string {
+	return fmt.Sprintf("(%v,%v,%v)-(%v,%v,%v)",
+		b.Min.X(), b.Min.Y(), b.Min.Z(),
+		b.Max.X(), b.Max.Y(), b.Max.Z(),
+	)
 }
 
 // LocalIntersect returns a slice of IntersectionT values where the
