@@ -17,16 +17,7 @@ func (g *GroupT) AddChild(shapes ...Object) {
 	g.Children = append(g.Children, shapes...)
 	for _, child := range shapes {
 		child.SetParent(g)
-
-		bc := child.Bounds()
-		g.bounds.UpdateBounds(child.Transform().MultTuple(Point(bc.Min.X(), bc.Min.Y(), bc.Min.Z())))
-		g.bounds.UpdateBounds(child.Transform().MultTuple(Point(bc.Max.X(), bc.Min.Y(), bc.Min.Z())))
-		g.bounds.UpdateBounds(child.Transform().MultTuple(Point(bc.Max.X(), bc.Max.Y(), bc.Min.Z())))
-		g.bounds.UpdateBounds(child.Transform().MultTuple(Point(bc.Min.X(), bc.Max.Y(), bc.Min.Z())))
-		g.bounds.UpdateBounds(child.Transform().MultTuple(Point(bc.Min.X(), bc.Min.Y(), bc.Max.Z())))
-		g.bounds.UpdateBounds(child.Transform().MultTuple(Point(bc.Max.X(), bc.Min.Y(), bc.Max.Z())))
-		g.bounds.UpdateBounds(child.Transform().MultTuple(Point(bc.Max.X(), bc.Max.Y(), bc.Max.Z())))
-		g.bounds.UpdateBounds(child.Transform().MultTuple(Point(bc.Min.X(), bc.Max.Y(), bc.Max.Z())))
+		UpdateTransformedBounds(child, g.bounds)
 	}
 }
 

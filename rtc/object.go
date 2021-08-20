@@ -35,3 +35,25 @@ func Intersect(object Object, ray RayT) []IntersectionT {
 	localRay := ray.Transform(object.Transform().Inverse())
 	return object.LocalIntersect(localRay)
 }
+
+// UpdateTransformedBounds returns the updated bounding box of an object, taking
+// into account its own transformation.
+// If a starting bounding box is supplied, it is updated (expanded), otherwise a new
+// one is returned.
+func UpdateTransformedBounds(object Object, boundingBox *BoundsT) *BoundsT {
+	if boundingBox == nil {
+		boundingBox = Bounds()
+	}
+
+	bc := object.Bounds()
+	boundingBox.UpdateBounds(object.Transform().MultTuple(Point(bc.Min.X(), bc.Min.Y(), bc.Min.Z())))
+	boundingBox.UpdateBounds(object.Transform().MultTuple(Point(bc.Max.X(), bc.Min.Y(), bc.Min.Z())))
+	boundingBox.UpdateBounds(object.Transform().MultTuple(Point(bc.Max.X(), bc.Max.Y(), bc.Min.Z())))
+	boundingBox.UpdateBounds(object.Transform().MultTuple(Point(bc.Min.X(), bc.Max.Y(), bc.Min.Z())))
+	boundingBox.UpdateBounds(object.Transform().MultTuple(Point(bc.Min.X(), bc.Min.Y(), bc.Max.Z())))
+	boundingBox.UpdateBounds(object.Transform().MultTuple(Point(bc.Max.X(), bc.Min.Y(), bc.Max.Z())))
+	boundingBox.UpdateBounds(object.Transform().MultTuple(Point(bc.Max.X(), bc.Max.Y(), bc.Max.Z())))
+	boundingBox.UpdateBounds(object.Transform().MultTuple(Point(bc.Min.X(), bc.Max.Y(), bc.Max.Z())))
+
+	return boundingBox
+}

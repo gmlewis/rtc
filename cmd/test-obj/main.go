@@ -10,8 +10,8 @@ import (
 )
 
 var (
-	xsize = flag.Int("xsize", 1280, "X size")
-	ysize = flag.Int("ysize", 1024, "Y size")
+	xsize = flag.Int("xsize", 128, "X size")
+	ysize = flag.Int("ysize", 102, "Y size")
 
 	autoFit    = flag.Bool("f", true, "Auto-fit on load")
 	scale      = flag.Float64("s", 1, "Scale object factor")
@@ -44,7 +44,7 @@ func main() {
 
 		if *autoFit {
 			tx := -0.5 * (b.Min.X() + b.Max.X())
-			ty := -b.Min.Y()
+			ty := -0.5 * (b.Min.Y() + b.Max.Y())
 			tz := -0.5 * (b.Min.Z() + b.Max.Z())
 			maxDim := b.Max.X() - b.Min.X()
 			if v := b.Max.Y() - b.Min.Y(); v > maxDim {
@@ -53,13 +53,14 @@ func main() {
 			if v := b.Max.Z() - b.Min.Z(); v > maxDim {
 				maxDim = v
 			}
-			sf := 3.0 / maxDim
-			log.Printf("auto-fit: translate=(%v,%v,%v), scale=%v", tx, ty, tz, sf)
-			g.SetTransform(rtc.M4Identity().Translate(tx, ty, tz).Scale(sf, sf, sf))
+			sf := *scale * 3.0 / maxDim
+			log.Printf("auto-fit: center=(%v,%v,%v), scale=%v", tx, ty, tz, sf)
+			xfm := rtc.M4Identity().Translate(tx, ty, tz).RotateY(toRad(*yRotate)).RotateX(toRad(*xRotate)).Translate(0, *yTranslate-b.Min.Y(), 0).Scale(sf, sf, sf)
+			g.SetTransform(xfm)
+		} else {
+			xfm := rtc.M4Identity().RotateY(toRad(*yRotate)).RotateX(toRad(*xRotate)).Translate(0, *yTranslate, 0).Scale(*scale, *scale, *scale)
+			g.SetTransform(xfm)
 		}
-
-		xfm := g.Transform().Translate(0, *yTranslate, 0).Scale(*scale, *scale, *scale).RotateY(toRad(*yRotate)).RotateX(toRad(*xRotate))
-		g.SetTransform(xfm)
 
 		world.Objects = append(world.Objects, g)
 	}
