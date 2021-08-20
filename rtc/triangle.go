@@ -2,15 +2,6 @@ package rtc
 
 import "math"
 
-// SmoothTriangle returns a new smooth TriangleT.
-func SmoothTriangle(p1, p2, p3, n1, n2, n3 Tuple) *TriangleT {
-	t := Triangle(p1, p2, p3)
-	t.N1 = n1
-	t.N2 = n2
-	t.N3 = n3
-	return t
-}
-
 // Triangle returns a new TriangleT.
 func Triangle(p1, p2, p3 Tuple) *TriangleT {
 	e1 := p2.Sub(p1)
@@ -106,6 +97,6 @@ func (t *TriangleT) LocalIntersect(ray RayT) []IntersectionT {
 
 // LocalNormalAt returns the normal vector at the given point of intersection
 // (transformed to object space) with the object.
-func (t *TriangleT) LocalNormalAt(objectPoint Tuple) Tuple {
+func (t *TriangleT) LocalNormalAt(objectPoint Tuple, xs *IntersectionT) Tuple {
 	return t.Normal
 }

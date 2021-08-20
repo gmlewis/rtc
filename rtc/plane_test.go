@@ -71,7 +71,7 @@ func TestPlaneT_LocalNormalAt(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := p.LocalNormalAt(tt.objectPoint); !got.Equal(tt.want) {
+			if got := p.LocalNormalAt(tt.objectPoint, nil); !got.Equal(tt.want) {
 				t.Errorf("PlaneT.LocalNormalAt() = %v, want %v", got, tt.want)
 			}
 		})

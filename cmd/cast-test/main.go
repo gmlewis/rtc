@@ -53,7 +53,7 @@ func main() {
 			xs := rtc.Intersect(shape, r)
 			if hit := rtc.Hit(xs); hit != nil {
 				point := r.Position(hit.T)
-				normal := rtc.NormalAt(hit.Object, point)
+				normal := hit.NormalAt(point)
 				eye := r.Direction.Negate()
 				color := rtc.Lighting(hit.Object.Material(), hit.Object, light, point, eye, normal, false)
 				canvas.WritePixel(x, y, color)

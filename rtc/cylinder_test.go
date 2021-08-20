@@ -180,7 +180,7 @@ func TestCylinderT_LocalNormalAt(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := c.LocalNormalAt(tt.objectPoint); !got.Equal(tt.want) {
+			if got := c.LocalNormalAt(tt.objectPoint, nil); !got.Equal(tt.want) {
 				t.Errorf("CylinderT.LocalNormalAt() = %v, want %v", got, tt.want)
 			}
 		})
@@ -225,7 +225,7 @@ func TestCylinderT_LocalNormalAtWithEndCaps(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("%v", i), func(t *testing.T) {
-			if got := c.LocalNormalAt(tt.objectPoint); !got.Equal(tt.want) {
+			if got := c.LocalNormalAt(tt.objectPoint, nil); !got.Equal(tt.want) {
 				t.Errorf("CylinderT.LocalNormalAt() = %v, want %v", got, tt.want)
 			}
 		})

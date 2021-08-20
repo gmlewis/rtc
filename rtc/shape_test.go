@@ -61,7 +61,7 @@ func (s *Shape) LocalIntersect(ray RayT) []IntersectionT {
 }
 
 // LocalNormalAt is for testing the testShape only.
-func (s *Shape) LocalNormalAt(localPoint Tuple) Tuple {
+func (s *Shape) LocalNormalAt(localPoint Tuple, xs *IntersectionT) Tuple {
 	return Vector(localPoint.X(), localPoint.Y(), localPoint.Z())
 }
 
@@ -174,7 +174,8 @@ func TestShape_NormalAt_WithTransform(t *testing.T) {
 			ts := testShape()
 			s := ts.shape
 			s.SetTransform(tt.transform)
-			got := NormalAt(s, tt.point)
+			xs := Intersection(0, s)
+			got := xs.NormalAt(tt.point)
 
 			if !got.Equal(tt.want) {
 				t.Errorf("NormalAt = %v, want %v", got, tt.want)

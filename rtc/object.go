@@ -23,7 +23,7 @@ type Object interface {
 
 	// LocalNormalAt returns the normal vector at the given point of intersection
 	// (transformed to object space) with the object.
-	LocalNormalAt(localPoint Tuple) Tuple
+	LocalNormalAt(localPoint Tuple, xs *IntersectionT) Tuple
 
 	// Bounds returns the minimum bounding box of the object in object
 	// (untransformed) space.
@@ -34,11 +34,4 @@ type Object interface {
 func Intersect(object Object, ray RayT) []IntersectionT {
 	localRay := ray.Transform(object.Transform().Inverse())
 	return object.LocalIntersect(localRay)
-}
-
-// NormalAt returns the normal vector at the given point of intersection with the object.
-func NormalAt(object Object, worldPoint Tuple) Tuple {
-	localPoint := WorldToObject(object, worldPoint)
-	localNormal := object.LocalNormalAt(localPoint)
-	return NormalToWorld(object, localNormal)
 }

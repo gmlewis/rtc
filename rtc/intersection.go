@@ -72,10 +72,10 @@ type Comps struct {
 
 // PrepareComputations returns a new data structure encapsulating information
 // about the intersection.
-func (i IntersectionT) PrepareComputations(ray RayT, xs []IntersectionT) *Comps {
+func (i *IntersectionT) PrepareComputations(ray RayT, xs []IntersectionT) *Comps {
 	point := ray.Position(i.T)
 	eyeVector := ray.Direction.Negate()
-	normalVector := NormalAt(i.Object, point)
+	normalVector := i.NormalAt(point)
 	var inside bool
 	if normalVector.Dot(eyeVector) < 0 {
 		inside = true
@@ -156,4 +156,11 @@ func (c *Comps) Schlick() float64 {
 	ratio := (c.N1 - c.N2) / (c.N1 + c.N2)
 	r0 := ratio * ratio
 	return r0 + (1-r0)*math.Pow(1-cos, 5)
+}
+
+// NormalAt returns the normal vector at the given point of intersection with the object.
+func (xs *IntersectionT) NormalAt(worldPoint Tuple) Tuple {
+	localPoint := WorldToObject(xs.Object, worldPoint)
+	localNormal := xs.Object.LocalNormalAt(localPoint, xs)
+	return NormalToWorld(xs.Object, localNormal)
 }

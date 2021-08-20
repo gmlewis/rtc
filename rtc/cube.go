@@ -79,7 +79,7 @@ func (c *CubeT) LocalIntersect(ray RayT) []IntersectionT {
 
 // LocalNormalAt returns the normal vector at the given point of intersection
 // (transformed to object space) with the object.
-func (c *CubeT) LocalNormalAt(objectPoint Tuple) Tuple {
+func (c *CubeT) LocalNormalAt(objectPoint Tuple, xs *IntersectionT) Tuple {
 	absX := math.Abs(objectPoint.X())
 	absY := math.Abs(objectPoint.Y())
 	maxc := math.Max(absX, math.Max(absY, math.Abs(objectPoint.Z())))

@@ -115,7 +115,7 @@ func (c *ConeT) LocalIntersect(ray RayT) []IntersectionT {
 
 // LocalNormalAt returns the normal vector at the given point of intersection
 // (transformed to object space) with the object.
-func (c *ConeT) LocalNormalAt(objectPoint Tuple) Tuple {
+func (c *ConeT) LocalNormalAt(objectPoint Tuple, xs *IntersectionT) Tuple {
 	dist := objectPoint.X()*objectPoint.X() + objectPoint.Z()*objectPoint.Z()
 	if dist < 1 && objectPoint.Y() >= c.Maximum-epsilon {
 		return Vector(0, 1, 0)
