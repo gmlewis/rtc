@@ -377,3 +377,97 @@ vn 1 2 3
 		t.Errorf("obj.Normals[3] = %v, want %v", got, want)
 	}
 }
+
+func TestParseObj_FacesWithNormals(t *testing.T) {
+	vertices := `
+v 0 1 0
+v -1 0 0
+v 1 0 0
+
+vn -1 0 0
+vn 1 0 0
+vn 0 1 0
+
+f 1//3 2//1 3//2
+f 1/0/3 2/102/1 3/14/2
+`
+	r := bytes.NewBufferString(vertices)
+	obj, err := ParseObj(r)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if got, want := obj.IgnoredLines, 0; got != want {
+		t.Errorf("obj.IgnoredLines = %v, want %v", got, want)
+	}
+
+	if got, want := len(obj.Vertices), 4; got != want {
+		t.Fatalf("len(obj.Vertices) = %v, want %v", got, want)
+	}
+
+	if got, want := len(obj.Normals), 4; got != want {
+		t.Fatalf("len(obj.Normals) = %v, want %v", got, want)
+	}
+
+	if got, want := len(obj.DefaultGroup.Children), 2; got != want {
+		t.Fatalf("len(obj.DefaultGroup.Children) = %v, want %v", got, want)
+	}
+
+	t1, ok := obj.DefaultGroup.Children[0].(*SmoothTriangleT)
+	if !ok {
+		t.Fatalf("obj.DefaultGroup.Children[0] = %T, want *SmoothTriangleT", obj.DefaultGroup.Children[0])
+	}
+
+	t2, ok := obj.DefaultGroup.Children[1].(*SmoothTriangleT)
+	if !ok {
+		t.Fatalf("obj.DefaultGroup.Children[1] = %T, want *SmoothTriangleT", obj.DefaultGroup.Children[1])
+	}
+
+	if got, want := t1.P1, obj.Vertices[1]; got != want {
+		t.Errorf("t1.P1 = %v, want %v", got, want)
+	}
+
+	if got, want := t1.P2, obj.Vertices[2]; got != want {
+		t.Errorf("t1.P2 = %v, want %v", got, want)
+	}
+
+	if got, want := t1.P3, obj.Vertices[3]; got != want {
+		t.Errorf("t1.P3 = %v, want %v", got, want)
+	}
+
+	if got, want := t1.N1, obj.Normals[3]; got != want {
+		t.Errorf("t1.N1 = %v, want %v", got, want)
+	}
+
+	if got, want := t1.N2, obj.Normals[1]; got != want {
+		t.Errorf("t1.N2 = %v, want %v", got, want)
+	}
+
+	if got, want := t1.N3, obj.Normals[2]; got != want {
+		t.Errorf("t1.N3 = %v, want %v", got, want)
+	}
+
+	if got, want := t2.P1, obj.Vertices[1]; got != want {
+		t.Errorf("t2.P1 = %v, want %v", got, want)
+	}
+
+	if got, want := t2.P2, obj.Vertices[2]; got != want {
+		t.Errorf("t2.P2 = %v, want %v", got, want)
+	}
+
+	if got, want := t2.P3, obj.Vertices[3]; got != want {
+		t.Errorf("t2.P3 = %v, want %v", got, want)
+	}
+
+	if got, want := t2.N1, obj.Normals[3]; got != want {
+		t.Errorf("t2.N1 = %v, want %v", got, want)
+	}
+
+	if got, want := t2.N2, obj.Normals[1]; got != want {
+		t.Errorf("t2.N2 = %v, want %v", got, want)
+	}
+
+	if got, want := t2.N3, obj.Normals[2]; got != want {
+		t.Errorf("t2.N3 = %v, want %v", got, want)
+	}
+}

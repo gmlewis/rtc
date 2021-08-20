@@ -98,7 +98,6 @@ func ParseObj(r io.Reader) (*ObjFile, error) {
 		}
 
 		line = strings.TrimSpace(line)
-		log.Printf("line=%v", line)
 		switch {
 		case line == "": // silently ignore
 		case strings.HasPrefix(line, "v "):
@@ -143,7 +142,6 @@ func parseArgs(s, sep string, f func(args ...interface{})) {
 			args = append(args, arg)
 		}
 	}
-	log.Printf("args=%#v", args)
 	f(args...)
 }
 
