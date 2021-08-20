@@ -1,6 +1,7 @@
 package rtc
 
 import (
+	"math"
 	"testing"
 )
 
@@ -49,5 +50,59 @@ func TestTriangleT_LocalNormalAt(t *testing.T) {
 	}
 	if got, want := n3, tri.Normal; got != want {
 		t.Errorf("n3 = %v, want %v", got, want)
+	}
+}
+
+func TestTriangleT_LocalIntersect_ParallelRay(t *testing.T) {
+	tri := Triangle(Point(0, 1, 0), Point(-1, 0, 0), Point(1, 0, 0))
+	r := Ray(Point(0, -1, -2), Vector(0, 1, 0))
+	xs := tri.LocalIntersect(r)
+
+	if got, want := len(xs), 0; got != want {
+		t.Errorf("len(xs) = %v, want %v", got, want)
+	}
+}
+
+func TestTriangleT_LocalIntersect_RayMissOnE2(t *testing.T) {
+	tri := Triangle(Point(0, 1, 0), Point(-1, 0, 0), Point(1, 0, 0))
+	r := Ray(Point(1, 1, -2), Vector(0, 0, 1))
+	xs := tri.LocalIntersect(r)
+
+	if got, want := len(xs), 0; got != want {
+		t.Errorf("len(xs) = %v, want %v", got, want)
+	}
+}
+
+func TestTriangleT_LocalIntersect_RayMissOnE1(t *testing.T) {
+	tri := Triangle(Point(0, 1, 0), Point(-1, 0, 0), Point(1, 0, 0))
+	r := Ray(Point(-1, 1, -2), Vector(0, 0, 1))
+	xs := tri.LocalIntersect(r)
+
+	if got, want := len(xs), 0; got != want {
+		t.Errorf("len(xs) = %v, want %v", got, want)
+	}
+}
+
+func TestTriangleT_LocalIntersect_RayMissOnE3(t *testing.T) {
+	tri := Triangle(Point(0, 1, 0), Point(-1, 0, 0), Point(1, 0, 0))
+	r := Ray(Point(0, -1, -2), Vector(0, 0, 1))
+	xs := tri.LocalIntersect(r)
+
+	if got, want := len(xs), 0; got != want {
+		t.Errorf("len(xs) = %v, want %v", got, want)
+	}
+}
+
+func TestTriangleT_LocalIntersect_RayHits(t *testing.T) {
+	tri := Triangle(Point(0, 1, 0), Point(-1, 0, 0), Point(1, 0, 0))
+	r := Ray(Point(0, 0.5, -2), Vector(0, 0, 1))
+	xs := tri.LocalIntersect(r)
+
+	if got, want := len(xs), 1; got != want {
+		t.Errorf("len(xs) = %v, want %v", got, want)
+	}
+
+	if got, want := xs[0].T, 2.0; math.Abs(got-want) > epsilon {
+		t.Errorf("xs[0].T = %v, want %v", got, want)
 	}
 }

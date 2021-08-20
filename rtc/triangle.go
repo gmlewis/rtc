@@ -1,5 +1,7 @@
 package rtc
 
+import "math"
+
 // Triangle returns a new TriangleT.
 func Triangle(p1, p2, p3 Tuple) *TriangleT {
 	e1 := p2.Sub(p1)
@@ -61,7 +63,27 @@ func (t *TriangleT) Bounds() *BoundsT {
 // LocalIntersect returns a slice of IntersectionT values where the
 // transformed (object space) ray intersects the object.
 func (t *TriangleT) LocalIntersect(ray RayT) []IntersectionT {
-	return nil
+	dirCrossE2 := ray.Direction.Cross(t.E2)
+	det := t.E1.Dot(dirCrossE2)
+	if math.Abs(det) < epsilon {
+		return nil
+	}
+
+	f := 1 / det
+	p1ToOrigin := ray.Origin.Sub(t.P1)
+	u := f * p1ToOrigin.Dot(dirCrossE2)
+	if u < 0 || u > 1 {
+		return nil
+	}
+
+	originCrossE1 := p1ToOrigin.Cross(t.E1)
+	v := f * ray.Direction.Dot(originCrossE1)
+	if v < 0 || u+v > 1 {
+		return nil
+	}
+
+	tv := f * t.E2.Dot(originCrossE1)
+	return Intersections(Intersection(tv, t))
 }
 
 // LocalNormalAt returns the normal vector at the given point of intersection
