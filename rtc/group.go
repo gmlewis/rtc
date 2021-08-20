@@ -95,6 +95,11 @@ func (g *GroupT) Bounds() *BoundsT {
 // LocalIntersect returns a slice of IntersectionT values where the
 // transformed (object space) ray intersects the object.
 func (g *GroupT) LocalIntersect(ray RayT) []IntersectionT {
+	b := g.Bounds() // consider cacheing bounds!
+	if xs := b.LocalIntersect(ray, g); len(xs) == 0 {
+		return nil
+	}
+
 	var xs []IntersectionT
 	for _, child := range g.Children {
 		xs = append(xs, Intersect(child, ray)...)

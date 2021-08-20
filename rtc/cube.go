@@ -42,17 +42,16 @@ func (c *CubeT) Bounds() *BoundsT {
 	}
 }
 
-func checkAxis(origin, direction float64) (tmin float64, tmax float64) {
-	const infinity = 1e100
-	tminNumerator := -1 - origin
-	tmaxNumerator := 1 - origin
+func checkAxis(origin, direction, min, max float64) (tmin float64, tmax float64) {
+	tminNumerator := min - origin
+	tmaxNumerator := max - origin
 
 	if math.Abs(direction) >= epsilon {
 		tmin = tminNumerator / direction
 		tmax = tmaxNumerator / direction
 	} else {
-		tmin = tminNumerator * infinity
-		tmax = tmaxNumerator * infinity
+		tmin = tminNumerator * math.Inf(1)
+		tmax = tmaxNumerator * math.Inf(1)
 	}
 
 	if tmin > tmax {
@@ -64,9 +63,9 @@ func checkAxis(origin, direction float64) (tmin float64, tmax float64) {
 // LocalIntersect returns a slice of IntersectionT values where the
 // transformed (object space) ray intersects the object.
 func (c *CubeT) LocalIntersect(ray RayT) []IntersectionT {
-	xtmin, xtmax := checkAxis(ray.Origin.X(), ray.Direction.X())
-	ytmin, ytmax := checkAxis(ray.Origin.Y(), ray.Direction.Y())
-	ztmin, ztmax := checkAxis(ray.Origin.Z(), ray.Direction.Z())
+	xtmin, xtmax := checkAxis(ray.Origin.X(), ray.Direction.X(), -1, 1)
+	ytmin, ytmax := checkAxis(ray.Origin.Y(), ray.Direction.Y(), -1, 1)
+	ztmin, ztmax := checkAxis(ray.Origin.Z(), ray.Direction.Z(), -1, 1)
 
 	tmin := math.Max(xtmin, math.Max(ytmin, ztmin))
 	tmax := math.Min(xtmax, math.Min(ytmax, ztmax))
