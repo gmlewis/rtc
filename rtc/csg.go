@@ -83,3 +83,19 @@ func (c *CSGT) LocalNormalAt(objectPoint Tuple, hit *IntersectionT) Tuple {
 	log.Fatalf("programming error - groups are abstract and do not have normals")
 	return Tuple{}
 }
+
+func intersectionAllowed(op CSGOperation, leftHit, inLeft, inRight bool) bool {
+	if op == CSGUnion {
+		return (leftHit && !inRight) || (!leftHit && !inLeft)
+	}
+
+	if op == CSGIntersection {
+		return (leftHit && inRight) || (!leftHit && inLeft)
+	}
+
+	if op != CSGDifference {
+		log.Fatalf("unknown CSG operation: %v", op)
+	}
+
+	return (leftHit && !inRight) || (!leftHit && inLeft)
+}
