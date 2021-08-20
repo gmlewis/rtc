@@ -9,6 +9,9 @@ import (
 type IntersectionT struct {
 	T      float64
 	Object Object
+
+	U float64
+	V float64
 }
 
 // Intersection returns an IntersectionT.
@@ -16,6 +19,17 @@ func Intersection(t float64, object Object) IntersectionT {
 	return IntersectionT{
 		T:      t,
 		Object: object,
+	}
+}
+
+// IntersectionWithUV returns an IntersectionT with U and V values
+// for triangles.
+func IntersectionWithUV(t float64, object Object, u, v float64) IntersectionT {
+	return IntersectionT{
+		T:      t,
+		Object: object,
+		U:      u,
+		V:      v,
 	}
 }
 

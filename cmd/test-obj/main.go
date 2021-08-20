@@ -14,8 +14,9 @@ var (
 	ysize = flag.Int("ysize", 1024, "Y size")
 
 	scale      = flag.Float64("s", 1, "Scale object factor")
-	yTranslate = flag.Float64("y", 0, "Y translate object")
-	yRotate    = flag.Float64("r", 0, "Y rotate object (in degrees)")
+	yTranslate = flag.Float64("ty", 0, "Y translate object")
+	xRotate    = flag.Float64("rx", 0, "X rotate object (in degrees)")
+	yRotate    = flag.Float64("ry", 0, "Y rotate object (in degrees)")
 
 	pngFile = flag.String("png", "test-obj.png", "Output PNG file")
 	ppmFile = flag.String("ppm", "test-obj.ppm", "Output PPM file")
@@ -32,8 +33,12 @@ func main() {
 			log.Fatal(err)
 		}
 
+		toRad := func(deg float64) float64 {
+			return deg * math.Pi / 180
+		}
+
 		g := obj.ToGroup()
-		g.SetTransform(rtc.RotationY(*yRotate * math.Pi / 180).Mult(rtc.Scaling(*scale, *scale, *scale).Mult(rtc.Translation(0, *yTranslate, 0))))
+		g.SetTransform(rtc.M4Identity().Translate(0, *yTranslate, 0).Scale(*scale, *scale, *scale).RotateY(toRad(*yRotate)).RotateX(toRad(*xRotate)))
 		log.Printf("%q bounds: %v", arg, g.Bounds())
 		world.Objects = append(world.Objects, g)
 	}

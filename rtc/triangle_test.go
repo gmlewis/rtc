@@ -141,3 +141,7 @@ func testTri(t *testing.T) *TriangleT {
 func TestSmoothTriangle(t *testing.T) {
 	testTri(t)
 }
+
+func TestTriangle_WithUV(t *testing.T) {
+	Triangle(Point(0, 1, 0), Point(-1, 0, 0), Point(1, 0, 0))
+}
