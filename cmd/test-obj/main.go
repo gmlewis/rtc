@@ -13,10 +13,11 @@ var (
 	xsize = flag.Int("xsize", 1280, "X size")
 	ysize = flag.Int("ysize", 1024, "Y size")
 
+	autoFit    = flag.Bool("f", true, "Auto-fit on load")
 	scale      = flag.Float64("s", 1, "Scale object factor")
 	yTranslate = flag.Float64("ty", 0, "Y translate object")
 	xRotate    = flag.Float64("rx", 0, "X rotate object (in degrees)")
-	yRotate    = flag.Float64("ry", 0, "Y rotate object (in degrees)")
+	yRotate    = flag.Float64("ry", 180, "Y rotate object (in degrees)")
 
 	pngFile = flag.String("png", "test-obj.png", "Output PNG file")
 	ppmFile = flag.String("ppm", "test-obj.ppm", "Output PPM file")
@@ -38,8 +39,28 @@ func main() {
 		}
 
 		g := obj.ToGroup()
-		g.SetTransform(rtc.M4Identity().Translate(0, *yTranslate, 0).Scale(*scale, *scale, *scale).RotateY(toRad(*yRotate)).RotateX(toRad(*xRotate)))
-		log.Printf("%q bounds: %v", arg, g.Bounds())
+		b := g.Bounds()
+		log.Printf("Processed file %q, %v lines ignored. Bounds: %v", arg, obj.IgnoredLines, b)
+
+		if *autoFit {
+			tx := -0.5 * (b.Min.X() + b.Max.X())
+			ty := -b.Min.Y()
+			tz := -0.5 * (b.Min.Z() + b.Max.Z())
+			maxDim := b.Max.X() - b.Min.X()
+			if v := b.Max.Y() - b.Min.Y(); v > maxDim {
+				maxDim = v
+			}
+			if v := b.Max.Z() - b.Min.Z(); v > maxDim {
+				maxDim = v
+			}
+			sf := 3.0 / maxDim
+			log.Printf("auto-fit: translate=(%v,%v,%v), scale=%v", tx, ty, tz, sf)
+			g.SetTransform(rtc.M4Identity().Translate(tx, ty, tz).Scale(sf, sf, sf))
+		}
+
+		xfm := g.Transform().Translate(0, *yTranslate, 0).Scale(*scale, *scale, *scale).RotateY(toRad(*yRotate)).RotateX(toRad(*xRotate))
+		g.SetTransform(xfm)
+
 		world.Objects = append(world.Objects, g)
 	}
 
