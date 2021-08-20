@@ -142,6 +142,33 @@ func TestSmoothTriangle(t *testing.T) {
 	testTri(t)
 }
 
-func TestTriangle_WithUV(t *testing.T) {
-	Triangle(Point(0, 1, 0), Point(-1, 0, 0), Point(1, 0, 0))
+func TestTriangle_IntersectionWithUV(t *testing.T) {
+	s := Triangle(Point(0, 1, 0), Point(-1, 0, 0), Point(1, 0, 0))
+	i := IntersectionWithUV(3.5, s, 0.2, 0.4)
+
+	if got, want := i.U, 0.2; got != want {
+		t.Errorf("i.U = %v, want %v", got, want)
+	}
+
+	if got, want := i.V, 0.4; got != want {
+		t.Errorf("i.V = %v, want %v", got, want)
+	}
+}
+
+func TestTriangle_LocalIntersect_WithUV(t *testing.T) {
+	tri := testTri(t)
+	r := Ray(Point(-0.2, 0.3, -2), Vector(0, 0, 1))
+	xs := tri.LocalIntersect(r)
+
+	if got, want := len(xs), 1; got != want {
+		t.Fatalf("len(xs) = %v, want %v", got, want)
+	}
+
+	if got, want := xs[0].U, 0.45; math.Abs(got-want) > epsilon {
+		t.Errorf("xs[0].U = %v, want %v", got, want)
+	}
+
+	if got, want := xs[0].V, 0.25; math.Abs(got-want) > epsilon {
+		t.Errorf("xs[0].V = %v, want %v", got, want)
+	}
 }

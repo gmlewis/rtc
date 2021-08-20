@@ -101,7 +101,7 @@ func (t *TriangleT) LocalIntersect(ray RayT) []IntersectionT {
 	}
 
 	tv := f * t.E2.Dot(originCrossE1)
-	return Intersections(Intersection(tv, t))
+	return Intersections(IntersectionWithUV(tv, t, u, v))
 }
 
 // LocalNormalAt returns the normal vector at the given point of intersection
