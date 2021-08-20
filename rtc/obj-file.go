@@ -32,17 +32,26 @@ func ParseObjFile(filename string) (*ObjFile, error) {
 func ParseObj(r io.Reader) (*ObjFile, error) {
 	obj := &ObjFile{
 		DefaultGroup: Group(),
-		Vertices:     []Tuple{Point(0, 0, 0)}, // Vertex 0 is unused.
+		Vertices:     []Tuple{Point(0, 0, 0)},  // Vertex 0 is unused.
+		Normals:      []Tuple{Vector(0, 0, 0)}, // Normal 0 is unused.
 		NamedGroups:  map[string]*GroupT{},
 	}
 	lastGroup := obj.DefaultGroup
 
 	addVertex := func(v ...float64) {
 		if len(v) != 3 {
-			log.Fatalf("expect 3 vertices, got %#v", v)
+			log.Fatalf("expect 3 vertex values, got %#v", v)
 		}
 		obj.Vertices = append(obj.Vertices, Point(v[0], v[1], v[2]))
 	}
+
+	addNormal := func(v ...float64) {
+		if len(v) != 3 {
+			log.Fatalf("expect 3 normal values, got %#v", v)
+		}
+		obj.Normals = append(obj.Normals, Vector(v[0], v[1], v[2]))
+	}
+
 	addTriangle := func(v ...float64) {
 		if len(v) < 3 {
 			log.Fatalf("expect 3 or more faces, got %#v", v)
@@ -64,6 +73,8 @@ func ParseObj(r io.Reader) (*ObjFile, error) {
 		case line == "": // silently ignore
 		case strings.HasPrefix(line, "v "):
 			parseTriplet(line[2:], addVertex)
+		case strings.HasPrefix(line, "vn "):
+			parseTriplet(line[3:], addNormal)
 		case strings.HasPrefix(line, "f "):
 			parseTriplet(line[2:], addTriangle)
 		case strings.HasPrefix(line, "g "):
@@ -87,6 +98,7 @@ type ObjFile struct {
 	IgnoredLines int
 
 	Vertices    []Tuple
+	Normals     []Tuple
 	NamedGroups map[string]*GroupT
 }
 

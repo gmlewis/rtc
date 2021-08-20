@@ -340,3 +340,40 @@ func TestParseObj_NamedGroups(t *testing.T) {
 		t.Errorf("t2.P3 = %v, want %v", got, want)
 	}
 }
+
+func TestParseObj_VertexNormals(t *testing.T) {
+	vertices := `
+vn 0 0 1
+vn 0.707 0 -0.707
+vn 1 2 3
+`
+	r := bytes.NewBufferString(vertices)
+	obj, err := ParseObj(r)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if got, want := obj.IgnoredLines, 0; got != want {
+		t.Errorf("obj.IgnoredLines = %v, want %v", got, want)
+	}
+
+	if got, want := len(obj.Vertices), 1; got != want {
+		t.Fatalf("len(obj.Vertices) = %v, want %v", got, want)
+	}
+
+	if got, want := len(obj.Normals), 4; got != want {
+		t.Fatalf("len(obj.Normals) = %v, want %v", got, want)
+	}
+
+	if got, want := obj.Normals[1], Vector(0, 0, 1); !got.Equal(want) {
+		t.Errorf("obj.Normals[1] = %v, want %v", got, want)
+	}
+
+	if got, want := obj.Normals[2], Vector(0.707, 0, -0.707); !got.Equal(want) {
+		t.Errorf("obj.Normals[2] = %v, want %v", got, want)
+	}
+
+	if got, want := obj.Normals[3], Vector(1, 2, 3); !got.Equal(want) {
+		t.Errorf("obj.Normals[3] = %v, want %v", got, want)
+	}
+}
