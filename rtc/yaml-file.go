@@ -71,7 +71,8 @@ type Item struct {
 	Value  json.RawMessage `json:"value,omitempty"`
 
 	// object
-	Material json.RawMessage `json:"material,omitempty"`
+	Material  json.RawMessage `json:"material,omitempty"`
+	Transform json.RawMessage `json:"transform,omitempty"`
 }
 
 // YAMLMaterial represents a Material.
