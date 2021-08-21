@@ -70,7 +70,7 @@ func Test_intersectionAllowed(t *testing.T) {
 	}
 }
 
-func TestCSGT_FilterIntersections(t *testing.T) {
+func TestCSG_FilterIntersections(t *testing.T) {
 	s1 := Sphere()
 	s2 := Cube()
 	xs := Intersections(Intersection(1, s1), Intersection(2, s2), Intersection(3, s1), Intersection(4, s2))
@@ -119,5 +119,42 @@ func TestCSGT_FilterIntersections(t *testing.T) {
 				t.Errorf("result[1].T = %v, want %v", got, want)
 			}
 		})
+	}
+}
+
+func TestCSG_RayMisses(t *testing.T) {
+	c := CSG(CSGUnion, Sphere(), Cube())
+	r := Ray(Point(0, 2, -5), Vector(0, 0, 1))
+	xs := c.LocalIntersect(r)
+
+	if got, want := len(xs), 0; got != want {
+		t.Errorf("len(xs) = %v, want %v", got, want)
+	}
+}
+
+func TestCSG_RayHits(t *testing.T) {
+	s1 := Sphere()
+	s2 := Sphere().SetTransform(Translation(0, 0, 0.5))
+	c := CSG(CSGUnion, s1, s2)
+	r := Ray(Point(0, 0, -5), Vector(0, 0, 1))
+	xs := c.LocalIntersect(r)
+
+	if got, want := len(xs), 2; got != want {
+		t.Fatalf("len(xs) = %v, want %v", got, want)
+	}
+
+	if got, want := xs[0].T, 4.0; got != want {
+		t.Errorf("xs[0].T = %v, want %v", got, want)
+	}
+
+	if got, want := xs[0].Object, s1; got != want {
+		t.Errorf("xs[0].Object = %v, want %v", got, want)
+	}
+	if got, want := xs[1].T, 6.5; got != want {
+		t.Errorf("xs[1].T = %v, want %v", got, want)
+	}
+
+	if got, want := xs[1].Object, s2; got != want {
+		t.Errorf("xs[1].Object = %v, want %v", got, want)
 	}
 }

@@ -74,7 +74,9 @@ func (c *CSGT) LocalIntersect(ray RayT) []IntersectionT {
 	var xs []IntersectionT
 	xs = append(xs, Intersect(c.Left, ray)...)
 	xs = append(xs, Intersect(c.Right, ray)...)
-	return Intersections(xs...) // sort them
+	xs = Intersections(xs...) // sort them
+
+	return c.FilterIntersections(xs)
 }
 
 // LocalNormalAt returns the normal vector at the given point of intersection
