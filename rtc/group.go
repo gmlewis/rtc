@@ -77,3 +77,15 @@ func (g *GroupT) LocalNormalAt(objectPoint Tuple, hit *IntersectionT) Tuple {
 	log.Fatalf("programming error - groups are abstract and do not have normals")
 	return Tuple{}
 }
+
+// Includes returns whether this object includes (or actually is) the
+// other object.
+func (g *GroupT) Includes(other Object) bool {
+	for _, child := range g.Children {
+		if child.Includes(other) {
+			return true
+		}
+	}
+
+	return false
+}

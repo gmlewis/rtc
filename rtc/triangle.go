@@ -100,3 +100,9 @@ func (t *TriangleT) LocalIntersect(ray RayT) []IntersectionT {
 func (t *TriangleT) LocalNormalAt(objectPoint Tuple, hit *IntersectionT) Tuple {
 	return t.Normal
 }
+
+// Includes returns whether this object includes (or actually is) the
+// other object.
+func (t *TriangleT) Includes(other Object) bool {
+	return t == other
+}

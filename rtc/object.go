@@ -28,6 +28,10 @@ type Object interface {
 	// Bounds returns the minimum bounding box of the object in object
 	// (untransformed) space.
 	Bounds() *BoundsT
+
+	// Includes returns whether this object includes (or actually is) the
+	// other object.
+	Includes(other Object) bool
 }
 
 // Intersect returns a slice of IntersectionT values where the ray intersects the object.

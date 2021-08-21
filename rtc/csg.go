@@ -99,3 +99,32 @@ func intersectionAllowed(op CSGOperation, leftHit, inLeft, inRight bool) bool {
 
 	return (leftHit && !inRight) || (!leftHit && inLeft)
 }
+
+// FilterIntersections filters allowed CSG intersections from all
+// possible intersections.
+func (c *CSGT) FilterIntersections(xs []IntersectionT) []IntersectionT {
+	var inLeft, inRight bool
+	var result []IntersectionT
+
+	for _, x := range xs {
+		leftHit := c.Left.Includes(x.Object)
+
+		if intersectionAllowed(c.Operation, leftHit, inLeft, inRight) {
+			result = append(result, x)
+		}
+
+		if leftHit {
+			inLeft = !inLeft
+		} else {
+			inRight = !inRight
+		}
+	}
+
+	return result
+}
+
+// Includes returns whether this object includes (or actually is) the
+// other object.
+func (c *CSGT) Includes(other Object) bool {
+	return c.Left.Includes(other) || c.Right.Includes(other)
+}

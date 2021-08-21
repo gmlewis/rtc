@@ -76,3 +76,9 @@ func (s *SphereT) LocalIntersect(ray RayT) []IntersectionT {
 func (s *SphereT) LocalNormalAt(objectPoint Tuple, hit *IntersectionT) Tuple {
 	return objectPoint.Sub(Point(0, 0, 0))
 }
+
+// Includes returns whether this object includes (or actually is) the
+// other object.
+func (s *SphereT) Includes(other Object) bool {
+	return s == other
+}

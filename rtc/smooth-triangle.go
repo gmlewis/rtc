@@ -79,3 +79,9 @@ func (s *SmoothTriangleT) LocalIntersect(ray RayT) []IntersectionT {
 func (s *SmoothTriangleT) LocalNormalAt(objectPoint Tuple, hit *IntersectionT) Tuple {
 	return s.N2.MultScalar(hit.U).Add(s.N3.MultScalar(hit.V).Add(s.N1.MultScalar(1 - hit.U - hit.V)))
 }
+
+// Includes returns whether this object includes (or actually is) the
+// other object.
+func (s *SmoothTriangleT) Includes(other Object) bool {
+	return s == other
+}

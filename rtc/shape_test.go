@@ -51,6 +51,12 @@ func (s *Shape) Bounds() *BoundsT {
 	}
 }
 
+// Includes returns whether this object includes (or actually is) the
+// other object.
+func (s *Shape) Includes(other Object) bool {
+	return s == other
+}
+
 // This is a global test function to save the ray.
 var testFuncSaveRay func(ray RayT)
 

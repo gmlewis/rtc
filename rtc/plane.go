@@ -58,3 +58,9 @@ func (p *PlaneT) LocalIntersect(ray RayT) []IntersectionT {
 func (p *PlaneT) LocalNormalAt(objectPoint Tuple, hit *IntersectionT) Tuple {
 	return Vector(0, 1, 0)
 }
+
+// Includes returns whether this object includes (or actually is) the
+// other object.
+func (p *PlaneT) Includes(other Object) bool {
+	return p == other
+}

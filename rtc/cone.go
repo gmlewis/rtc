@@ -131,3 +131,9 @@ func (c *ConeT) LocalNormalAt(objectPoint Tuple, hit *IntersectionT) Tuple {
 
 	return Vector(objectPoint.X(), y, objectPoint.Z())
 }
+
+// Includes returns whether this object includes (or actually is) the
+// other object.
+func (c *ConeT) Includes(other Object) bool {
+	return c == other
+}

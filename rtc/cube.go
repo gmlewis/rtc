@@ -92,3 +92,9 @@ func (c *CubeT) LocalNormalAt(objectPoint Tuple, hit *IntersectionT) Tuple {
 	}
 	return Vector(0, 0, objectPoint.Z())
 }
+
+// Includes returns whether this object includes (or actually is) the
+// other object.
+func (c *CubeT) Includes(other Object) bool {
+	return c == other
+}

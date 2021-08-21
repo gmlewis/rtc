@@ -127,3 +127,9 @@ func (c *CylinderT) LocalNormalAt(objectPoint Tuple, hit *IntersectionT) Tuple {
 
 	return Vector(objectPoint.X(), 0, objectPoint.Z())
 }
+
+// Includes returns whether this object includes (or actually is) the
+// other object.
+func (c *CylinderT) Includes(other Object) bool {
+	return c == other
+}
