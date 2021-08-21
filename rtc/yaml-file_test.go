@@ -24,7 +24,7 @@ func TestParseYAML(t *testing.T) {
 	wantLines := strings.Split(coverYAML, "\n")
 
 	for i := 0; i < len(gotLines) && i < len(wantLines); i++ {
-		if gotLines[i] == "Item:" {
+		if gotLines[i] == "Items:" {
 			continue
 		}
 
