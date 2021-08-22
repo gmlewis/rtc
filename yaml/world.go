@@ -40,14 +40,16 @@ func (y *YAMLFile) addLight(item *Item, w *rtc.WorldT) {
 func (y *YAMLFile) addPlane(item *Item, w *rtc.WorldT) {
 	object := rtc.Plane()
 	y.addMaterial(item, object)
+	log.Printf("\n\nGetting Plane Transform...")
 	y.setTransform(item, object)
-	// w.Objects = append(w.Objects, object)
+	w.Objects = append(w.Objects, object)
 	log.Printf("Add Plane: Transform=%v", object.Transform())
 }
 
 func (y *YAMLFile) addSphere(item *Item, w *rtc.WorldT) {
 	object := rtc.Sphere()
 	y.addMaterial(item, object)
+	log.Printf("\n\nGetting Sphere Transform...")
 	y.setTransform(item, object)
 	w.Objects = append(w.Objects, object)
 	log.Printf("Add Sphere: Transform=%v", object.Transform())
@@ -56,6 +58,7 @@ func (y *YAMLFile) addSphere(item *Item, w *rtc.WorldT) {
 func (y *YAMLFile) addCube(item *Item, w *rtc.WorldT) {
 	object := rtc.Cube()
 	y.addMaterial(item, object)
+	log.Printf("\n\nGetting Cube Transform...")
 	y.setTransform(item, object)
 	w.Objects = append(w.Objects, object)
 	log.Printf("Add Cube: Transform=%v", object.Transform())
@@ -120,11 +123,15 @@ func (y *YAMLFile) getMaterialByName(name string) rtc.MaterialT {
 }
 
 func (y *YAMLFile) getTransform(item *Item) rtc.M4 {
+	log.Printf("Getting transform by item: %v", *item)
 	transform := rtc.M4Identity()
 	for _, t := range item.Transform {
 		if t.NamedItem != nil {
 			xfm := y.getTransformByName(*t.NamedItem)
-			transform = transform.Mult(xfm)
+			log.Printf("Before named transform %q: transform=%v", *t.NamedItem, transform)
+			log.Printf("Named transform %q: m4=%v", *t.NamedItem, xfm)
+			transform = xfm.Mult(transform)
+			log.Printf("After  named transform %q: transform=%v", *t.NamedItem, transform)
 			continue
 		}
 
@@ -148,15 +155,16 @@ func (y *YAMLFile) getTransform(item *Item) rtc.M4 {
 		default:
 			log.Printf("unhandled transform: %v", v)
 		}
-		// log.Printf("Before transform: transform=%v", transform)
-		// log.Printf("Before transform: m4=%v", m4)
-		transform = transform.Mult(m4)
-		// log.Printf("After  transform: transform=%v", transform)
+		log.Printf("Before item %q transform: transform=%v", *t.Type, transform)
+		log.Printf("Item %q transform: m4=%v", *t.Type, m4)
+		transform = m4.Mult(transform)
+		log.Printf("After  item %q transform: transform=%v", *t.Type, transform)
 	}
 	return transform
 }
 
 func (y *YAMLFile) getTransformByName(name string) rtc.M4 {
+	log.Printf("Getting transform by name: %v", name)
 	item, ok := y.DefinedItems[name]
 	if !ok {
 		log.Printf("Unknown Transform named %q, ignoring.", name)
