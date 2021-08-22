@@ -42,6 +42,7 @@ func (y *YAMLFile) addPlane(item *Item, w *rtc.WorldT) {
 	y.addMaterial(item, object)
 	y.setTransform(item, object)
 	w.Objects = append(w.Objects, object)
+	log.Printf("Add Plane: Transform=%v", object.Transform())
 }
 
 func (y *YAMLFile) addSphere(item *Item, w *rtc.WorldT) {
@@ -49,6 +50,7 @@ func (y *YAMLFile) addSphere(item *Item, w *rtc.WorldT) {
 	y.addMaterial(item, object)
 	y.setTransform(item, object)
 	w.Objects = append(w.Objects, object)
+	log.Printf("Add Sphere: Transform=%v", object.Transform())
 }
 
 func (y *YAMLFile) addCube(item *Item, w *rtc.WorldT) {
@@ -56,6 +58,7 @@ func (y *YAMLFile) addCube(item *Item, w *rtc.WorldT) {
 	y.addMaterial(item, object)
 	y.setTransform(item, object)
 	w.Objects = append(w.Objects, object)
+	log.Printf("Add Cube: Transform=%v", object.Transform())
 }
 
 func (y *YAMLFile) addMaterial(item *Item, o rtc.Object) {
@@ -145,7 +148,10 @@ func (y *YAMLFile) getTransform(item *Item) rtc.M4 {
 		default:
 			log.Printf("unhandled transform: %v", v)
 		}
+		// log.Printf("Before transform: transform=%v", transform)
+		// log.Printf("Before transform: m4=%v", m4)
 		transform = transform.Mult(m4)
+		// log.Printf("After  transform: transform=%v", transform)
 	}
 	return transform
 }

@@ -19,6 +19,10 @@ type CameraT struct {
 	HalfWidth   float64
 	HalfHeight  float64
 	NumWorkers  int
+
+	cached       bool
+	cachedInv    M4 // Inverse of Transform
+	cachedOrigin Tuple
 }
 
 // Camera creates a new CameraT with the provided canvas size and
@@ -62,12 +66,15 @@ func (c *CameraT) RayForPixel(px, py int) RayT {
 	// Using the camera matrix, transform the canvas point and the origin
 	// and then compute the ray's direction vector.
 	// The canvas is at Z = -1.
-	inv := c.Transform.Inverse()
-	pixel := inv.MultTuple(Point(worldX, worldY, -1))
-	origin := inv.MultTuple(Point(0, 0, 0))
-	direction := pixel.Sub(origin).Normalize()
+	if !c.cached {
+		c.cachedInv = c.Transform.Inverse()
+		c.cachedOrigin = c.cachedInv.MultTuple(Point(0, 0, 0))
+		c.cached = true
+	}
+	pixel := c.cachedInv.MultTuple(Point(worldX, worldY, -1))
+	direction := pixel.Sub(c.cachedOrigin).Normalize()
 
-	return Ray(origin, direction)
+	return Ray(c.cachedOrigin, direction)
 }
 
 // Render renders the world with the camera and returns an image.
