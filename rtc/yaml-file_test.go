@@ -5,8 +5,34 @@ import (
 	"strings"
 	"testing"
 
-	"sigs.k8s.io/yaml"
+	"github.com/google/go-cmp/cmp"
 )
+
+func TestParseYAML_ToYAML(t *testing.T) {
+	r := bytes.NewBufferString(coverYAML)
+	y, err := ParseYAML(r)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	buf, err := y.ToYAML()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	gotLines := strings.Split(string(buf), "\n")
+	wantLines := strings.Split(coverYAML, "\n")
+
+	if got, want := len(gotLines), len(wantLines); got != want {
+		t.Errorf("len(gotLines) = %v, want %v", got, want)
+	}
+
+	for i := 0; i < len(gotLines) && i < len(wantLines); i++ {
+		if got, want := gotLines[i], wantLines[i]; got != want {
+			t.Errorf("gotLines[%v] =\n%v\n, want\n%v", i+1, got, want)
+		}
+	}
+}
 
 func TestParseYAML(t *testing.T) {
 	r := bytes.NewBufferString(coverYAML)
@@ -15,21 +41,49 @@ func TestParseYAML(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	buf, err := yaml.Marshal(y)
-	if err != nil {
-		t.Fatal(err)
+	if got, want := len(y.Items), 30; got != want {
+		t.Fatalf("len(y.Items) = %v, want %v", got, want)
 	}
 
-	gotLines := strings.Split(string(buf), "\n")
-	wantLines := strings.Split(coverYAML, "\n")
+	I := func(i int) *int { return &i }
+	F := func(f float64) *float64 { return &f }
+	S := func(s string) *string { return &s }
 
-	for i := 0; i < len(gotLines) && i < len(wantLines); i++ {
-		if gotLines[i] == "Items:" {
-			continue
-		}
-
-		if got, want := gotLines[i], wantLines[i]; got != want {
-			t.Errorf("gotLines[%v] =\n%v\n, want\n%v", i+1, got, want)
+	want := []Item{
+		{Add: S("camera"), Width: I(100), Height: I(99), FOV: F(0.785), From: []float64{-6, 6, -10}, To: []float64{6, 0, 6}, Up: []float64{-0.45, 1, 0}},
+		{Add: S("light"), At: []float64{50, 100, -50}, Intensity: []float64{1, 1, 1}},
+		{Add: S("light"), At: []float64{-400, 50, -10}, Intensity: []float64{0.2, 0.2, 0.2}},
+		{Define: S("white-material"), ValueMaterial: &YAMLMaterial{Color: []float64{1, 1, 1}, Diffuse: F(0.7), Ambient: F(0.1), Specular: F(0), Reflective: F(0.1)}},
+		{Define: S("blue-material"), Extend: S("white-material"), ValueMaterial: &YAMLMaterial{Color: []float64{0.537, 0.831, 0.914}}},
+		{Define: S("red-material"), Extend: S("white-material"), ValueMaterial: &YAMLMaterial{Color: []float64{0.941, 0.322, 0.388}}},
+		{Define: S("purple-material"), Extend: S("white-material"), ValueMaterial: &YAMLMaterial{Color: []float64{0.373, 0.404, 0.55}}},
+		{Define: S("standard-transform")},
+		{Define: S("large-object")},
+		{Define: S("medium-object")},
+		{Define: S("small-object")},
+		{Add: S("plane")},
+		{Add: S("sphere")},
+		{Add: S("cube")},
+		{Add: S("cube")},
+		{Add: S("cube")},
+		{Add: S("cube")},
+		{Add: S("cube")},
+		{Add: S("cube")},
+		{Add: S("cube")},
+		{Add: S("cube")},
+		{Add: S("cube")},
+		{Add: S("cube")},
+		{Add: S("cube")},
+		{Add: S("cube")},
+		{Add: S("cube")},
+		{Add: S("cube")},
+		{Add: S("cube")},
+		{Add: S("cube")},
+		{Add: S("cube")},
+	}
+	for i, got := range y.Items {
+		if !cmp.Equal(got, want[i]) {
+			t.Errorf("item#%v =\n%v,\nwant\n%v", i+1, got, want[i])
 		}
 	}
 }
@@ -80,8 +134,7 @@ func TestYAMLFile_Camera(t *testing.T) {
 	}
 }
 
-var coverYAML = `
-- add: camera
+var coverYAML = `- add: camera
   field-of-view: 0.785
   from:
   - -6
