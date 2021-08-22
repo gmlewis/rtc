@@ -79,22 +79,6 @@ func (w *WorldT) ColorAt(ray RayT, remaining int) Tuple {
 	return w.ShadeHit(comps, remaining)
 }
 
-// ViewTransform creates a camera transformation matrix.
-// from and to are Points, and up is a Vector.
-func ViewTransform(from, to, up Tuple) M4 {
-	forward := to.Sub(from).Normalize()
-	upn := up.Normalize()
-	left := forward.Cross(upn)
-	trueUp := left.Cross(forward)
-	orientation := M4{
-		Tuple{left.X(), left.Y(), left.Z(), 0},
-		Tuple{trueUp.X(), trueUp.Y(), trueUp.Z(), 0},
-		Tuple{-forward.X(), -forward.Y(), -forward.Z(), 0},
-		Tuple{0, 0, 0, 1},
-	}
-	return orientation.Mult(Translation(-from.X(), -from.Y(), -from.Z()))
-}
-
 // IsShadowed determines if the provided point is in a shadow for the given light.
 func (w *WorldT) IsShadowed(point Tuple, light *PointLightT) bool {
 	v := light.position.Sub(point)

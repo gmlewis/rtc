@@ -14,7 +14,7 @@ func TestCamera(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	c := y.Camera()
+	c := y.Camera(nil, nil, nil)
 	want := &rtc.CameraT{
 		HSize:       100,
 		VSize:       99,

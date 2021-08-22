@@ -22,6 +22,11 @@ func main() {
 	flag.Parse()
 
 	world := rtc.World()
+	camera := rtc.Camera(*xsize, *ysize, math.Pi/3)
+	camera.Transform = rtc.ViewTransform(
+		rtc.Point(0, 1.5, -5),
+		rtc.Point(0, 1, 0),
+		rtc.Vector(0, 1, 0))
 
 	for _, arg := range flag.Args() {
 		y, err := yaml.ParseFile(arg)
@@ -30,13 +35,11 @@ func main() {
 		}
 
 		y.AddToWorld(world)
+		if c := y.Camera(xsize, ysize, nil); c != nil {
+			camera = c
+		}
 	}
 
-	camera := rtc.Camera(*xsize, *ysize, math.Pi/3)
-	camera.Transform = rtc.ViewTransform(
-		rtc.Point(0, 1.5, -5),
-		rtc.Point(0, 1, 0),
-		rtc.Vector(0, 1, 0))
 	canvas := camera.Render(world)
 
 	if *pngFile != "" {

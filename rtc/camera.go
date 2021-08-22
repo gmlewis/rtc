@@ -52,6 +52,22 @@ func Camera(hsize, vsize int, fov float64) *CameraT {
 	return c
 }
 
+// ViewTransform creates a camera transformation matrix.
+// from and to are Points, and up is a Vector.
+func ViewTransform(from, to, up Tuple) M4 {
+	forward := to.Sub(from).Normalize()
+	upn := up.Normalize()
+	left := forward.Cross(upn)
+	trueUp := left.Cross(forward)
+	orientation := M4{
+		Tuple{left.X(), left.Y(), left.Z(), 0},
+		Tuple{trueUp.X(), trueUp.Y(), trueUp.Z(), 0},
+		Tuple{-forward.X(), -forward.Y(), -forward.Z(), 0},
+		Tuple{0, 0, 0, 1},
+	}
+	return orientation.Mult(Translation(-from.X(), -from.Y(), -from.Z()))
+}
+
 // RayForPixel returns a ray for the camera at the given pixel.
 func (c *CameraT) RayForPixel(px, py int) RayT {
 	// The offset from the edge of the canvas to the pixel's center

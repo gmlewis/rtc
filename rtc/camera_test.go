@@ -3,6 +3,8 @@ package rtc
 import (
 	"math"
 	"testing"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestCamera(t *testing.T) {
@@ -120,6 +122,58 @@ func TestCameraT_RayForPixel(t *testing.T) {
 
 			if !r.Direction.Equal(tt.wantDirection) {
 				t.Errorf("Direction = %v, want %v", r.Direction, tt.wantDirection)
+			}
+		})
+	}
+}
+
+func TestViewTransform(t *testing.T) {
+	tests := []struct {
+		name string
+		from Tuple
+		to   Tuple
+		up   Tuple
+		want M4
+	}{
+		{
+			name: "The transformation matrix for the default orientation",
+			from: Point(0, 0, 0),
+			to:   Point(0, 0, -1),
+			up:   Vector(0, 1, 0),
+			want: M4Identity(),
+		},
+		{
+			name: "A view transformation matrix looking in positive z direction",
+			from: Point(0, 0, 0),
+			to:   Point(0, 0, 1),
+			up:   Vector(0, 1, 0),
+			want: Scaling(-1, 1, -1),
+		},
+		{
+			name: "The view transformation moves the world",
+			from: Point(0, 0, 8),
+			to:   Point(0, 0, 0),
+			up:   Vector(0, 1, 0),
+			want: Translation(0, 0, -8),
+		},
+		{
+			name: "An arbitrary view transformation",
+			from: Point(1, 3, 2),
+			to:   Point(4, -2, 8),
+			up:   Vector(1, 1, 0),
+			want: M4{
+				Tuple{-0.50709, 0.50709, 0.67612, -2.36643},
+				Tuple{0.76772, 0.60609, 0.12122, -2.82843},
+				Tuple{-0.35857, 0.59761, -0.71714, 0.00000},
+				Tuple{0.00000, 0.00000, 0.00000, 1.00000},
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := ViewTransform(tt.from, tt.to, tt.up); !cmp.Equal(got, tt.want) {
+				t.Errorf("ViewTransform() = %v, want %v", got, tt.want)
 			}
 		})
 	}

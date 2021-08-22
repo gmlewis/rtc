@@ -41,7 +41,7 @@ func (y *YAMLFile) addPlane(item *Item, w *rtc.WorldT) {
 	object := rtc.Plane()
 	y.addMaterial(item, object)
 	y.setTransform(item, object)
-	w.Objects = append(w.Objects, object)
+	// w.Objects = append(w.Objects, object)
 	log.Printf("Add Plane: Transform=%v", object.Transform())
 }
 
