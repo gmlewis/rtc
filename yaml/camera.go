@@ -1,7 +1,6 @@
 package yaml
 
 import (
-	"log"
 	"math"
 
 	"github.com/gmlewis/rtc/rtc"
@@ -40,8 +39,6 @@ func (y *YAMLFile) Camera(xsize, ysize *int, fov *float64) *rtc.CameraT {
 			to := rtc.Vector(item.To[0], item.To[1], item.To[2])
 			up := rtc.Vector(item.Up[0], item.Up[1], item.Up[2])
 			camera.Transform = rtc.ViewTransform(from, to, up)
-			log.Printf("Camera: (%v,%v)\nfov=%v\nfrom=%v\nto=%v\nup=%v\nm4=%v",
-				width, height, finalFOV, from, to, up, camera.Transform)
 			return camera
 		}
 	}
