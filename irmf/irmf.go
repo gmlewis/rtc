@@ -2,8 +2,6 @@
 package irmf
 
 import (
-	"io"
-
 	"github.com/gmlewis/rtc/rtc"
 )
 
@@ -15,16 +13,6 @@ type IRMFT struct {
 }
 
 var _ rtc.Object = &IRMFT{}
-
-// IRMF returns a new IRMF object.
-func IRMF(r io.Reader) *IRMFT {
-	bounds := rtc.Bounds()
-
-	return &IRMFT{
-		Shape:  rtc.Shape{Transform: rtc.M4Identity(), Material: rtc.GetMaterial()},
-		bounds: bounds,
-	}
-}
 
 // LocalIntersect returns a slice of IntersectionT values where the
 // transformed (object space) ray intersects the object.
