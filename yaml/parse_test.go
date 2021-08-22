@@ -35,7 +35,7 @@ func TestParse(t *testing.T) {
 		{Define: S("medium-object"), Transform: []*YAMLTransform{{NamedItem: S("standard-transform")}, {Type: S("scale"), Args: []float64{3, 3, 3}}}},
 		{Define: S("small-object"), Transform: []*YAMLTransform{{NamedItem: S("standard-transform")}, {Type: S("scale"), Args: []float64{2, 2, 2}}}},
 		{Add: S("plane"), Material: &YAMLMaterial{Color: []float64{1, 1, 1}, Diffuse: F(0), Ambient: F(1), Specular: F(0)}, Transform: []*YAMLTransform{{Type: S("rotate-x"), Args: []float64{1.5707963267948966}}, {Type: S("translate"), Args: []float64{0, 0, 500}}}},
-		{Add: S("sphere"), Material: &YAMLMaterial{Color: []float64{0.373, 0.404, 0.55}, Diffuse: F(0.2), Ambient: F(0), Specular: F(1), Sininess: F(200), Reflective: F(0.7), Transparency: F(0.7), RefractiveIndex: F(1.5)}, Transform: []*YAMLTransform{{NamedItem: S("large-object")}}},
+		{Add: S("sphere"), Material: &YAMLMaterial{Color: []float64{0.373, 0.404, 0.55}, Diffuse: F(0.2), Ambient: F(0), Specular: F(1), Shininess: F(200), Reflective: F(0.7), Transparency: F(0.7), RefractiveIndex: F(1.5)}, Transform: []*YAMLTransform{{NamedItem: S("large-object")}}},
 		{Add: S("cube"), Material: &YAMLMaterial{NamedItem: S("white-material")}, Transform: []*YAMLTransform{{NamedItem: S("medium-object")}, {Type: S("translate"), Args: []float64{4, 0, 0}}}},
 		{Add: S("cube"), Material: &YAMLMaterial{NamedItem: S("blue-material")}, Transform: []*YAMLTransform{{NamedItem: S("large-object")}, {Type: S("translate"), Args: []float64{8.5, 1.5, -0.5}}}},
 		{Add: S("cube"), Material: &YAMLMaterial{NamedItem: S("red-material")}, Transform: []*YAMLTransform{{NamedItem: S("large-object")}, {Type: S("translate"), Args: []float64{0, 0, 4}}}},

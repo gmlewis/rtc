@@ -50,7 +50,7 @@ type YAMLMaterial struct {
 	Diffuse         *float64  `json:"diffuse,omitempty"`
 	Ambient         *float64  `json:"ambient,omitempty"`
 	Specular        *float64  `json:"specular,omitempty"`
-	Sininess        *float64  `json:"shininess,omitempty"`
+	Shininess       *float64  `json:"shininess,omitempty"`
 	Reflective      *float64  `json:"reflective,omitempty"`
 	Transparency    *float64  `json:"transparency,omitempty"`
 	RefractiveIndex *float64  `json:"refractive-index,omitempty"`
@@ -106,7 +106,7 @@ func (i Item) String() string {
 		p2 = addFloat(p2, v.Diffuse, "Diffuse")
 		p2 = addFloat(p2, v.Ambient, "Ambient")
 		p2 = addFloat(p2, v.Specular, "Specular")
-		p2 = addFloat(p2, v.Sininess, "Sininess")
+		p2 = addFloat(p2, v.Shininess, "Sininess")
 		p2 = addFloat(p2, v.Reflective, "Reflective")
 		p2 = addFloat(p2, v.Transparency, "Transparency")
 		p2 = addFloat(p2, v.RefractiveIndex, "RefractiveIndex")
