@@ -6,13 +6,21 @@ book by Jamis Buck, implemented in Go.
 
 ## Status
 
-This project is just getting started.
+This project is still experimental but completely implements the book's
+ray tracer in Go.
 
 ## Usage
 
+```bash
+go run cmd/test-obj/main.go -xsize 1280 -ysize 1024 file.obj
+go run cmd/test-yaml/main.go -xsize 1280 -ysize 1024 file.yaml
+```
+
 ## Examples
 
-## Features
+Here is the cover scene of the book as described in [examples/cover/cover.yaml]():
+
+![Cover](examples/cover/cover.png)
 
 ----------------------------------------------------------------------
 
