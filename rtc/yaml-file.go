@@ -244,6 +244,26 @@ func (i Item) String() string {
 		p = append(p, fmt.Sprintf("%v:&YAMLMaterial{%v}", n, strings.Join(p2, ",")))
 		return p
 	}
+	addTransform := func(p []string, v *YAMLTransform, n string) []string {
+		if v == nil {
+			return p
+		}
+		p = append(p, fmt.Sprintf("%v:&YAMLTransform{Type:%q,X:%v,Y:%v,Z:%v}", n, v.Type, v.X, v.Y, v.Z))
+		return p
+	}
+	addValueArray := func(p []string, vs []*ValueArrayItem, n string) []string {
+		if len(vs) == 0 {
+			return p
+		}
+		var p2 []string
+		for _, v := range vs {
+			p2 = addString(p2, v.NamedItem, "NamedItem")
+			p2 = addTransform(p2, v.Transform, "Transform")
+		}
+		p = append(p, fmt.Sprintf("%v:[]*ValueArrayItem{{%v}}", n, strings.Join(p2, "},{")))
+		return p
+	}
+
 	parts = addString(parts, i.Add, "Add")
 	parts = addString(parts, i.Define, "Define")
 	parts = addInt(parts, i.Width, "Width")
@@ -259,6 +279,7 @@ func (i Item) String() string {
 	parts = addRaw(parts, i.Material, "Material")
 	parts = addRaw(parts, i.Transform, "Transform")
 	parts = addValueMaterial(parts, i.ValueMaterial, "ValueMaterial")
+	parts = addValueArray(parts, i.ValueArray, "ValueArray")
 	return fmt.Sprintf("{%v}", strings.Join(parts, ","))
 }
 
