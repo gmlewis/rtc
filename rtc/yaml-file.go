@@ -52,14 +52,14 @@ func ParseYAML(r io.Reader) (*YAMLFile, error) {
 			switch []byte(item.RawValue)[0] {
 			case '[':
 				log.Printf("item.Value is an array")
-				y.Items[i].ValueArray, err = parseValueArray(item.RawValue)
+				y.Items[i].Transform, err = parseValueArray(item.RawValue)
 				if err != nil {
 					return nil, err
 				}
 				y.Items[i].RawValue = nil
 			case '{':
 				log.Printf("item.Value is an object")
-				if err := json.Unmarshal(item.RawValue, &y.Items[i].ValueMaterial); err != nil {
+				if err := json.Unmarshal(item.RawValue, &y.Items[i].Material); err != nil {
 					return nil, err
 				}
 				y.Items[i].RawValue = nil
@@ -75,19 +75,19 @@ func ParseYAML(r io.Reader) (*YAMLFile, error) {
 // ToYAML converts the scene back to a YAML file.
 func (y *YAMLFile) ToYAML() ([]byte, error) {
 	for i, item := range y.Items {
-		if item.ValueMaterial != nil {
-			buf, err := json.Marshal(item.ValueMaterial)
+		if item.Material != nil {
+			buf, err := json.Marshal(item.Material)
 			if err != nil {
 				return nil, err
 			}
 			y.Items[i].RawValue = buf
-			y.Items[i].ValueMaterial = nil
+			y.Items[i].Material = nil
 			continue
 		}
 
-		if item.ValueArray != nil {
+		if item.Transform != nil {
 			var parts []string
-			for _, v := range item.ValueArray {
+			for _, v := range item.Transform {
 				if v.NamedItem != nil {
 					parts = append(parts, fmt.Sprintf("%q", *v.NamedItem))
 					continue
@@ -99,7 +99,7 @@ func (y *YAMLFile) ToYAML() ([]byte, error) {
 			}
 			y.Items[i].RawValue = []byte(fmt.Sprintf("[%v]", strings.Join(parts, ",")))
 			log.Printf("Created y.Items[%v].Value: %s", i, y.Items[i].RawValue)
-			y.Items[i].ValueArray = nil
+			y.Items[i].Transform = nil
 		}
 	}
 
@@ -163,20 +163,20 @@ type Item struct {
 	RawTransform json.RawMessage `json:"transform,omitempty"`
 
 	// expanded raw messages:
-	ValueMaterial *YAMLMaterial     `json:"-"`
-	ValueArray    []*ValueArrayItem `json:"-"`
+	Material  *YAMLMaterial    `json:"-"`
+	Transform []*YAMLTransform `json:"-"`
 }
 
-func parseValueArray(v json.RawMessage) ([]*ValueArrayItem, error) {
+func parseValueArray(v json.RawMessage) ([]*YAMLTransform, error) {
 	var items []interface{}
 	if err := json.Unmarshal(v, &items); err != nil {
 		return nil, err
 	}
 
-	var result []*ValueArrayItem
+	var result []*YAMLTransform
 	for _, item := range items {
 		if s, ok := item.(string); ok {
-			result = append(result, &ValueArrayItem{NamedItem: &s})
+			result = append(result, &YAMLTransform{NamedItem: &s})
 			continue
 		}
 		v, ok := item.([]interface{})
@@ -187,7 +187,7 @@ func parseValueArray(v json.RawMessage) ([]*ValueArrayItem, error) {
 		X := v[1].(float64)
 		Y := v[2].(float64)
 		Z := v[3].(float64)
-		result = append(result, &ValueArrayItem{Type: &Type, X: &X, Y: &Y, Z: &Z})
+		result = append(result, &YAMLTransform{Type: &Type, X: &X, Y: &Y, Z: &Z})
 	}
 	return result, nil
 }
@@ -224,7 +224,7 @@ func (i Item) String() string {
 		}
 		return p
 	}
-	addValueMaterial := func(p []string, v *YAMLMaterial, n string) []string {
+	addYAMLMaterial := func(p []string, v *YAMLMaterial, n string) []string {
 		if v == nil {
 			return p
 		}
@@ -241,7 +241,7 @@ func (i Item) String() string {
 		p = append(p, fmt.Sprintf("%v:&YAMLMaterial{%v}", n, strings.Join(p2, ",")))
 		return p
 	}
-	addValueArray := func(p []string, vs []*ValueArrayItem, n string) []string {
+	addYAMLTransforms := func(p []string, vs []*YAMLTransform, n string) []string {
 		if len(vs) == 0 {
 			return p
 		}
@@ -255,7 +255,7 @@ func (i Item) String() string {
 			items = addFloat(items, v.Z, "Z")
 			p2 = append(p2, strings.Join(items, ","))
 		}
-		p = append(p, fmt.Sprintf("%v:[]*ValueArrayItem{{%v}}", n, strings.Join(p2, "},{")))
+		p = append(p, fmt.Sprintf("%v:[]*YAMLTransform{{%v}}", n, strings.Join(p2, "},{")))
 		return p
 	}
 
@@ -270,11 +270,11 @@ func (i Item) String() string {
 	parts = addFloatArray(parts, i.At, "At")
 	parts = addFloatArray(parts, i.Intensity, "Intensity")
 	parts = addString(parts, i.Extend, "Extend")
-	parts = addRaw(parts, i.RawValue, "Value")
-	parts = addRaw(parts, i.RawMaterial, "Material")
-	parts = addRaw(parts, i.RawTransform, "Transform")
-	parts = addValueMaterial(parts, i.ValueMaterial, "ValueMaterial")
-	parts = addValueArray(parts, i.ValueArray, "ValueArray")
+	parts = addRaw(parts, i.RawValue, "RawValue")
+	parts = addRaw(parts, i.RawMaterial, "RawMaterial")
+	parts = addRaw(parts, i.RawTransform, "RawTransform")
+	parts = addYAMLMaterial(parts, i.Material, "Material")
+	parts = addYAMLTransforms(parts, i.Transform, "Transform")
 	return fmt.Sprintf("{%v}", strings.Join(parts, ","))
 }
 
@@ -292,8 +292,8 @@ type YAMLMaterial struct {
 	RefractiveIndex *float64  `json:"refractive-index,omitempty"`
 }
 
-// ValueArrayItem is either a named DefinedItems value or a YAMLTransform.
-type ValueArrayItem struct {
+// YAMLTransform is either a named DefinedItems value or a Transform.
+type YAMLTransform struct {
 	NamedItem *string
 
 	Type    *string
