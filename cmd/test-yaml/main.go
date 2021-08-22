@@ -7,11 +7,12 @@ import (
 	"math"
 
 	"github.com/gmlewis/rtc/rtc"
+	"github.com/gmlewis/rtc/yaml"
 )
 
 var (
-	xsize = flag.Int("xsize", 1280, "X size")
-	ysize = flag.Int("ysize", 1024, "Y size")
+	xsize = flag.Int("xsize", 128, "X size")
+	ysize = flag.Int("ysize", 102, "Y size")
 
 	pngFile = flag.String("png", "test-yaml.png", "Output PNG file")
 	ppmFile = flag.String("ppm", "test-yaml.ppm", "Output PPM file")
@@ -23,12 +24,12 @@ func main() {
 	world := rtc.World()
 
 	for _, arg := range flag.Args() {
-		yaml, err := rtc.ParseYAMLFile(arg)
+		y, err := yaml.ParseFile(arg)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		log.Printf("yaml=%#v", yaml)
+		y.AddToWorld(world)
 	}
 
 	camera := rtc.Camera(*xsize, *ysize, math.Pi/3)
