@@ -8,7 +8,7 @@ import (
 // It implements the Object interface.
 func Cylinder() *CylinderT {
 	return &CylinderT{
-		Shape:   Shape{transform: M4Identity(), material: Material()},
+		Shape:   Shape{Transform: M4Identity(), Material: GetMaterial()},
 		Minimum: math.Inf(-1),
 		Maximum: math.Inf(1),
 		Closed:  false,
@@ -27,19 +27,19 @@ var _ Object = &CylinderT{}
 
 // SetTransform sets the object's transform 4x4 matrix.
 func (c *CylinderT) SetTransform(m M4) Object {
-	c.transform = m
+	c.Transform = m
 	return c
 }
 
 // SetMaterial sets the object's material.
 func (c *CylinderT) SetMaterial(material MaterialT) Object {
-	c.material = material
+	c.Material = material
 	return c
 }
 
 // SetParent sets the object's parent object.
 func (c *CylinderT) SetParent(parent Object) Object {
-	c.parent = parent
+	c.Parent = parent
 	return c
 }
 

@@ -61,13 +61,13 @@ func TestSphere_Intersect(t *testing.T) {
 func TestSphereT_Transform(t *testing.T) {
 	s := Sphere()
 
-	if got, want := s.Transform(), M4Identity(); got != want {
+	if got, want := s.GetTransform(), M4Identity(); got != want {
 		t.Errorf("Sphere default transform = %v, want %v", got, want)
 	}
 
 	x := Translation(2, 3, 4)
 	s.SetTransform(x)
-	if got, want := s.Transform(), x; got != want {
+	if got, want := s.GetTransform(), x; got != want {
 		t.Errorf("Sphere modified transform = %v, want %v", got, want)
 	}
 }
@@ -75,14 +75,14 @@ func TestSphereT_Transform(t *testing.T) {
 func TestSphereT_Material(t *testing.T) {
 	s := Sphere()
 
-	if got, want := s.Material(), Material(); !cmp.Equal(got, &want) {
+	if got, want := s.GetMaterial(), GetMaterial(); !cmp.Equal(got, &want) {
 		t.Errorf("Sphere default material = %v, want %v", got, want)
 	}
 
-	m := Material()
+	m := GetMaterial()
 	m.Ambient = 1
 	s.SetMaterial(m)
-	if got, want := s.Material(), m; !cmp.Equal(got, &want) {
+	if got, want := s.GetMaterial(), m; !cmp.Equal(got, &want) {
 		t.Errorf("Sphere modified material = %v, want %v", got, want)
 	}
 }
@@ -221,15 +221,15 @@ func TestSphereT_NormalAt_WithTransform(t *testing.T) {
 func TestGlassSphere(t *testing.T) {
 	s := GlassSphere()
 
-	if got, want := s.Transform(), M4Identity(); !got.Equal(want) {
+	if got, want := s.GetTransform(), M4Identity(); !got.Equal(want) {
 		t.Errorf("s.Transform = %v, want %v", got, want)
 	}
 
-	if got, want := s.Material().Transparency, 1.0; got != want {
-		t.Errorf("s.Material().Transparency = %v, want %v", got, want)
+	if got, want := s.GetMaterial().Transparency, 1.0; got != want {
+		t.Errorf("s.GetMaterial().Transparency = %v, want %v", got, want)
 	}
 
-	if got, want := s.Material().RefractiveIndex, 1.5; got != want {
-		t.Errorf("s.Material().RefractiveIndex = %v, want %v", got, want)
+	if got, want := s.GetMaterial().RefractiveIndex, 1.5; got != want {
+		t.Errorf("s.GetMaterial().RefractiveIndex = %v, want %v", got, want)
 	}
 }

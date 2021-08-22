@@ -26,19 +26,19 @@ var _ Object = &SmoothTriangleT{}
 
 // SetTransform sets the object's transform 4x4 matrix.
 func (s *SmoothTriangleT) SetTransform(m M4) Object {
-	s.transform = m
+	s.Transform = m
 	return s
 }
 
 // SetMaterial sets the object's material.
 func (s *SmoothTriangleT) SetMaterial(material MaterialT) Object {
-	s.material = material
+	s.Material = material
 	return s
 }
 
 // SetParent sets the object's parent object.
 func (s *SmoothTriangleT) SetParent(parent Object) Object {
-	s.parent = parent
+	s.Parent = parent
 	return s
 }
 

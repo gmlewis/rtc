@@ -46,16 +46,16 @@ func genWorld() *rtc.WorldT {
 	w := rtc.World()
 
 	floor := rtc.Plane()
-	floor.Material().Color = rtc.Color(1, 0.9, 0.9)
-	floor.Material().Specular = 0
+	floor.GetMaterial().Color = rtc.Color(1, 0.9, 0.9)
+	floor.GetMaterial().Specular = 0
 
 	leftWall := rtc.Plane()
 	leftWall.SetTransform(rtc.M4Identity().RotateX(math.Pi/2).RotateY(-math.Pi/4).Translate(0, 0, 5))
-	leftWall.SetMaterial(*floor.Material())
+	leftWall.SetMaterial(*floor.GetMaterial())
 
 	rightWall := rtc.Plane()
 	rightWall.SetTransform(rtc.M4Identity().RotateX(math.Pi/2).RotateY(math.Pi/4).Translate(0, 0, 5))
-	rightWall.SetMaterial(*floor.Material())
+	rightWall.SetMaterial(*floor.GetMaterial())
 
 	w.Objects = []rtc.Object{floor, leftWall, rightWall, hexagon()}
 	// w.Lights = []*rtc.PointLightT{rtc.PointLight(rtc.Point(-10, 10, -10), rtc.Color(1, 1, 1))}  // one light

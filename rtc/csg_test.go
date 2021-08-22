@@ -22,8 +22,8 @@ func TestCSG(t *testing.T) {
 		t.Errorf("c.Right = %v, want %v", got, want)
 	}
 
-	if got, want := s1.Parent(), c; got != want {
-		t.Errorf("s1.Parent() = %v, want %v", got, want)
+	if got, want := s1.GetParent(), c; got != want {
+		t.Errorf("s1.GetParent() = %v, want %v", got, want)
 	}
 }
 

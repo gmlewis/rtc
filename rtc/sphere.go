@@ -5,16 +5,16 @@ import "math"
 // Sphere creates a unit sphere at the origin.
 // It implements the Object interface.
 func Sphere() *SphereT {
-	return &SphereT{Shape{transform: M4Identity(), material: Material()}}
+	return &SphereT{Shape{Transform: M4Identity(), Material: GetMaterial()}}
 }
 
 // GlassSphere creates a unit glass sphere at the origin.
 // It implements the Object interface.
 func GlassSphere() *SphereT {
-	m := Material()
+	m := GetMaterial()
 	m.Transparency = 1
 	m.RefractiveIndex = 1.5
-	return &SphereT{Shape{transform: M4Identity(), material: m}}
+	return &SphereT{Shape{Transform: M4Identity(), Material: m}}
 }
 
 // SphereT represents a sphere.
@@ -26,19 +26,19 @@ var _ Object = &SphereT{}
 
 // SetTransform sets the object's transform 4x4 matrix.
 func (s *SphereT) SetTransform(m M4) Object {
-	s.transform = m
+	s.Transform = m
 	return s
 }
 
 // SetMaterial sets the object's material.
 func (s *SphereT) SetMaterial(material MaterialT) Object {
-	s.material = material
+	s.Material = material
 	return s
 }
 
 // SetParent sets the object's parent object.
 func (s *SphereT) SetParent(parent Object) Object {
-	s.parent = parent
+	s.Parent = parent
 	return s
 }
 

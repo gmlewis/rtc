@@ -39,10 +39,10 @@ func TestMaterial(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := Material()
+			got := GetMaterial()
 
 			if !cmp.Equal(got, tt.want, opt) {
-				t.Errorf("Material() = %v, want %v", got, tt.want)
+				t.Errorf("GetMaterial() = %v, want %v", got, tt.want)
 			}
 		})
 	}

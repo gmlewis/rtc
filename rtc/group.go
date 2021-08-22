@@ -7,7 +7,7 @@ import (
 // Group creates a group of objects at the origin.
 // It implements the Object interface.
 func Group(shapes ...Object) *GroupT {
-	g := &GroupT{Shape: Shape{transform: M4Identity(), material: Material()}, bounds: Bounds()}
+	g := &GroupT{Shape: Shape{Transform: M4Identity(), Material: GetMaterial()}, bounds: Bounds()}
 	g.AddChild(shapes...)
 	return g
 }
@@ -34,19 +34,19 @@ var _ Object = &GroupT{}
 
 // SetTransform sets the object's transform 4x4 matrix.
 func (g *GroupT) SetTransform(m M4) Object {
-	g.transform = m
+	g.Transform = m
 	return g
 }
 
 // SetMaterial sets the object's material.
 func (g *GroupT) SetMaterial(material MaterialT) Object {
-	g.material = material
+	g.Material = material
 	return g
 }
 
 // SetParent sets the object's parent object.
 func (g *GroupT) SetParent(parent Object) Object {
-	g.parent = parent
+	g.Parent = parent
 	return g
 }
 

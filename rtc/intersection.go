@@ -102,7 +102,7 @@ func (i *IntersectionT) PrepareComputations(ray RayT, xs []IntersectionT) *Comps
 			if len(containers) == 0 {
 				n1 = 1.0
 			} else {
-				n1 = containers[len(containers)-1].Material().RefractiveIndex
+				n1 = containers[len(containers)-1].GetMaterial().RefractiveIndex
 			}
 		}
 
@@ -117,7 +117,7 @@ func (i *IntersectionT) PrepareComputations(ray RayT, xs []IntersectionT) *Comps
 			if len(containers) == 0 {
 				n2 = 1.0
 			} else {
-				n2 = containers[len(containers)-1].Material().RefractiveIndex
+				n2 = containers[len(containers)-1].GetMaterial().RefractiveIndex
 			}
 			break
 		}

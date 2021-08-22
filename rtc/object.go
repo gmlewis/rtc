@@ -7,17 +7,17 @@ type Object interface {
 	LocalIntersect(ray RayT) []IntersectionT
 
 	// Parent returns the object's parent object.
-	Parent() Object
+	GetParent() Object
 	// SetParent sets the object's parent object.
 	SetParent(parent Object) Object
 
 	// Transform returns the object's transform 4x4 matrix.
-	Transform() M4
+	GetTransform() M4
 	// SetTransform sets the object's transform 4x4 matrix.
 	SetTransform(m M4) Object
 
 	// Material returns the object's material.
-	Material() *MaterialT
+	GetMaterial() *MaterialT
 	// SetMaterial sets the object's material.
 	SetMaterial(material MaterialT) Object
 
@@ -36,7 +36,7 @@ type Object interface {
 
 // Intersect returns a slice of IntersectionT values where the ray intersects the object.
 func Intersect(object Object, ray RayT) []IntersectionT {
-	localRay := ray.Transform(object.Transform().Inverse())
+	localRay := ray.Transform(object.GetTransform().Inverse())
 	return object.LocalIntersect(localRay)
 }
 
@@ -50,14 +50,14 @@ func UpdateTransformedBounds(object Object, boundingBox *BoundsT) *BoundsT {
 	}
 
 	bc := object.Bounds()
-	boundingBox.UpdateBounds(object.Transform().MultTuple(Point(bc.Min.X(), bc.Min.Y(), bc.Min.Z())))
-	boundingBox.UpdateBounds(object.Transform().MultTuple(Point(bc.Max.X(), bc.Min.Y(), bc.Min.Z())))
-	boundingBox.UpdateBounds(object.Transform().MultTuple(Point(bc.Max.X(), bc.Max.Y(), bc.Min.Z())))
-	boundingBox.UpdateBounds(object.Transform().MultTuple(Point(bc.Min.X(), bc.Max.Y(), bc.Min.Z())))
-	boundingBox.UpdateBounds(object.Transform().MultTuple(Point(bc.Min.X(), bc.Min.Y(), bc.Max.Z())))
-	boundingBox.UpdateBounds(object.Transform().MultTuple(Point(bc.Max.X(), bc.Min.Y(), bc.Max.Z())))
-	boundingBox.UpdateBounds(object.Transform().MultTuple(Point(bc.Max.X(), bc.Max.Y(), bc.Max.Z())))
-	boundingBox.UpdateBounds(object.Transform().MultTuple(Point(bc.Min.X(), bc.Max.Y(), bc.Max.Z())))
+	boundingBox.UpdateBounds(object.GetTransform().MultTuple(Point(bc.Min.X(), bc.Min.Y(), bc.Min.Z())))
+	boundingBox.UpdateBounds(object.GetTransform().MultTuple(Point(bc.Max.X(), bc.Min.Y(), bc.Min.Z())))
+	boundingBox.UpdateBounds(object.GetTransform().MultTuple(Point(bc.Max.X(), bc.Max.Y(), bc.Min.Z())))
+	boundingBox.UpdateBounds(object.GetTransform().MultTuple(Point(bc.Min.X(), bc.Max.Y(), bc.Min.Z())))
+	boundingBox.UpdateBounds(object.GetTransform().MultTuple(Point(bc.Min.X(), bc.Min.Y(), bc.Max.Z())))
+	boundingBox.UpdateBounds(object.GetTransform().MultTuple(Point(bc.Max.X(), bc.Min.Y(), bc.Max.Z())))
+	boundingBox.UpdateBounds(object.GetTransform().MultTuple(Point(bc.Max.X(), bc.Max.Y(), bc.Max.Z())))
+	boundingBox.UpdateBounds(object.GetTransform().MultTuple(Point(bc.Min.X(), bc.Max.Y(), bc.Max.Z())))
 
 	return boundingBox
 }

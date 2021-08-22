@@ -87,7 +87,7 @@ func TestLighting(t *testing.T) {
 		},
 	}
 
-	m := Material()
+	m := GetMaterial()
 	position := Point(0, 0, 0)
 
 	for _, tt := range tests {
@@ -101,7 +101,7 @@ func TestLighting(t *testing.T) {
 
 func TestLighting_WithPattern(t *testing.T) {
 	s := Sphere()
-	m := Material()
+	m := GetMaterial()
 	m.Pattern = StripePattern(Color(1, 1, 1), Color(0, 0, 0))
 	m.Ambient = 1
 	m.Diffuse = 0

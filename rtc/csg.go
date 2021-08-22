@@ -14,7 +14,7 @@ const (
 // CSG represents a constructive solid geometry object.
 func CSG(operation CSGOperation, left, right Object) *CSGT {
 	c := &CSGT{
-		Shape:     Shape{transform: M4Identity(), material: Material()},
+		Shape:     Shape{Transform: M4Identity(), Material: GetMaterial()},
 		Operation: operation,
 		Left:      left,
 		Right:     right,
@@ -41,19 +41,19 @@ var _ Object = &CSGT{}
 
 // SetTransform sets the object's transform 4x4 matrix.
 func (c *CSGT) SetTransform(m M4) Object {
-	c.transform = m
+	c.Transform = m
 	return c
 }
 
 // SetMaterial sets the object's material.
 func (c *CSGT) SetMaterial(material MaterialT) Object {
-	c.material = material
+	c.Material = material
 	return c
 }
 
 // SetParent sets the object's parent object.
 func (c *CSGT) SetParent(parent Object) Object {
-	c.parent = parent
+	c.Parent = parent
 	return c
 }
 

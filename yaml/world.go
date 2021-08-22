@@ -69,7 +69,7 @@ func (y *YAMLFile) setTransform(item *Item, o rtc.Object) {
 }
 
 func (y *YAMLFile) getMaterial(item *Item) rtc.MaterialT {
-	material := rtc.Material()
+	material := rtc.GetMaterial()
 	if item.Extend != nil {
 		material = y.getMaterialByName(*item.Extend)
 	}
@@ -111,7 +111,7 @@ func (y *YAMLFile) getMaterialByName(name string) rtc.MaterialT {
 	item, ok := y.DefinedItems[name]
 	if !ok {
 		log.Printf("Unknown material named %q, ignoring.", name)
-		return rtc.Material()
+		return rtc.GetMaterial()
 	}
 	return y.getMaterial(item)
 }

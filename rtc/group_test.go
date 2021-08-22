@@ -8,7 +8,7 @@ import (
 func TestGroup(t *testing.T) {
 	g := Group()
 
-	if got, want := g.Transform(), M4Identity(); !got.Equal(want) {
+	if got, want := g.GetTransform(), M4Identity(); !got.Equal(want) {
 		t.Errorf("Group.Transform = %v, want %v", got, want)
 	}
 
@@ -30,7 +30,7 @@ func TestGroupT_AddChild(t *testing.T) {
 		t.Errorf("g.Children[0] = %v, want %v", got, want)
 	}
 
-	if got, want := s.shape.Parent(), g; got != want {
+	if got, want := s.shape.GetParent(), g; got != want {
 		t.Errorf("s.shape.Parent = %v, want %v", got, want)
 	}
 }

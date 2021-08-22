@@ -16,28 +16,28 @@ type testShapeT struct {
 // testShape creates a test shape. It implements the Object interface.
 func testShape() *testShapeT {
 	return &testShapeT{
-		shape: &Shape{transform: M4Identity(), material: Material()},
+		shape: &Shape{Transform: M4Identity(), Material: GetMaterial()},
 	}
 }
 
 // SetTransform sets the object's transform 4x4 matrix.
 // Only for testing!
 func (s *Shape) SetTransform(m M4) Object {
-	s.transform = m
+	s.Transform = m
 	return s
 }
 
 // SetMaterial sets the object's material.
 // Only for testing!
 func (s *Shape) SetMaterial(material MaterialT) Object {
-	s.material = material
+	s.Material = material
 	return s
 }
 
 // SetParent sets the object's parent object.
 // Only for testing!
 func (s *Shape) SetParent(parent Object) Object {
-	s.parent = parent
+	s.Parent = parent
 	return s
 }
 
@@ -74,12 +74,12 @@ func (s *Shape) LocalNormalAt(localPoint Tuple, hit *IntersectionT) Tuple {
 func TestShape_NewTestShape(t *testing.T) {
 	ts := testShape()
 	s := ts.shape
-	if !s.Transform().Equal(M4Identity()) {
-		t.Errorf("testShape default transform should be 4x4 identity matrix, got %v", s.Transform())
+	if !s.GetTransform().Equal(M4Identity()) {
+		t.Errorf("testShape default transform should be 4x4 identity matrix, got %v", s.GetTransform())
 	}
 
 	var want Object
-	if got := s.Parent(); got != want {
+	if got := s.GetParent(); got != want {
 		t.Errorf("testShape parent = %v, want %v", got, want)
 	}
 }
@@ -88,8 +88,8 @@ func TestShape_SetTransform(t *testing.T) {
 	ts := testShape()
 	s := ts.shape
 	s.SetTransform(Translation(2, 3, 4))
-	if got, want := s.Transform(), Translation(2, 3, 4); !got.Equal(want) {
-		t.Errorf("testShape setTransform = %v, want %v", s.Transform(), want)
+	if got, want := s.GetTransform(), Translation(2, 3, 4); !got.Equal(want) {
+		t.Errorf("testShape setTransform = %v, want %v", s.GetTransform(), want)
 	}
 }
 
@@ -97,14 +97,14 @@ func TestShape_Material(t *testing.T) {
 	ts := testShape()
 	s := ts.shape
 
-	if got, want := s.Material(), Material(); !cmp.Equal(got, &want) {
+	if got, want := s.GetMaterial(), GetMaterial(); !cmp.Equal(got, &want) {
 		t.Errorf("testShape default material = %v, want %v", got, want)
 	}
 
-	m := Material()
+	m := GetMaterial()
 	m.Ambient = 1
 	s.SetMaterial(m)
-	if got, want := s.Material(), m; !cmp.Equal(got, &want) {
+	if got, want := s.GetMaterial(), m; !cmp.Equal(got, &want) {
 		t.Errorf("testShape modified material = %v, want %v", got, want)
 	}
 }

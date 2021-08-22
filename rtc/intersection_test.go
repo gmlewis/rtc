@@ -197,13 +197,13 @@ func TestIntersectionT_PrepareComputations_ReflectVector(t *testing.T) {
 func TestIntersectionT_PrepareComputations_N1N2(t *testing.T) {
 	a := GlassSphere()
 	a.SetTransform(Scaling(2, 2, 2))
-	a.Material().RefractiveIndex = 1.5
+	a.GetMaterial().RefractiveIndex = 1.5
 	b := GlassSphere()
 	b.SetTransform(Translation(0, 0, -0.25))
-	b.Material().RefractiveIndex = 2.0
+	b.GetMaterial().RefractiveIndex = 2.0
 	c := GlassSphere()
 	c.SetTransform(Translation(0, 0, 0.25))
-	c.Material().RefractiveIndex = 2.5
+	c.GetMaterial().RefractiveIndex = 2.5
 	r := Ray(Point(0, 0, -4), Vector(0, 0, 1))
 
 	xs := Intersections(Intersection(2, a), Intersection(2.75, b), Intersection(3.25, c), Intersection(4.75, b), Intersection(5.25, c), Intersection(6, a))

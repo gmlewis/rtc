@@ -26,8 +26,8 @@ func testPattern() *testPatternT {
 func TestPattern_NewTestPattern(t *testing.T) {
 	ts := testPattern()
 	s := ts.BasePattern
-	if !s.Transform().Equal(M4Identity()) {
-		t.Errorf("testPattern default transform should be 4x4 identity matrix, got %v", s.Transform())
+	if !s.GetTransform().Equal(M4Identity()) {
+		t.Errorf("testPattern default transform should be 4x4 identity matrix, got %v", s.GetTransform())
 	}
 }
 
@@ -35,8 +35,8 @@ func TestPattern_SetTransform(t *testing.T) {
 	ts := testPattern()
 	s := ts.BasePattern
 	s.SetTransform(Translation(1, 2, 3))
-	if got, want := s.Transform(), Translation(1, 2, 3); !got.Equal(want) {
-		t.Errorf("testPattern setTransform = %v, want %v", s.Transform(), want)
+	if got, want := s.GetTransform(), Translation(1, 2, 3); !got.Equal(want) {
+		t.Errorf("testPattern setTransform = %v, want %v", s.GetTransform(), want)
 	}
 }
 

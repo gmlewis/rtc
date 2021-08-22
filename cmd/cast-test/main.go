@@ -26,7 +26,7 @@ func main() {
 	half := *wallSize / 2
 	canvas := rtc.NewCanvas(*size, *size)
 	shape := rtc.Sphere()
-	shape.Material().Color = rtc.Color(1, 0.2, 1)
+	shape.GetMaterial().Color = rtc.Color(1, 0.2, 1)
 
 	lightPosition := rtc.Point(-10, 10, -10)
 	lightColor := rtc.Color(1, 1, 1)
@@ -55,7 +55,7 @@ func main() {
 				point := r.Position(hit.T)
 				normal := hit.NormalAt(point)
 				eye := r.Direction.Negate()
-				color := rtc.Lighting(hit.Object.Material(), hit.Object, light, point, eye, normal, false)
+				color := rtc.Lighting(hit.Object.GetMaterial(), hit.Object, light, point, eye, normal, false)
 				canvas.WritePixel(x, y, color)
 			}
 		}

@@ -6,7 +6,7 @@ type Pattern interface {
 	LocalPatternAt(localPoint Tuple) Tuple
 
 	// Transform returns the object's transform 4x4 matrix.
-	Transform() M4
+	GetTransform() M4
 	// SetTransform sets the object's transform 4x4 matrix.
 	SetTransform(m M4)
 }
@@ -17,7 +17,7 @@ type BasePattern struct {
 }
 
 // Transform returns the object's transform 4x4 matrix.
-func (s *BasePattern) Transform() M4 {
+func (s *BasePattern) GetTransform() M4 {
 	return s.transform
 }
 
@@ -29,6 +29,6 @@ func (s *BasePattern) SetTransform(m M4) {
 // PatternAt returns the pattern at the given point of intersection with the object.
 func PatternAt(pattern Pattern, object Object, worldPoint Tuple) Tuple {
 	localPoint := WorldToObject(object, worldPoint)
-	patternPoint := pattern.Transform().Inverse().MultTuple(localPoint)
+	patternPoint := pattern.GetTransform().Inverse().MultTuple(localPoint)
 	return pattern.LocalPatternAt(patternPoint)
 }

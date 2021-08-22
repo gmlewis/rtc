@@ -5,7 +5,7 @@ import "math"
 // Plane creates a plane at the origin on the X-Z axes and +Y is up.
 // It implements the Object interface.
 func Plane() *PlaneT {
-	return &PlaneT{Shape{transform: M4Identity(), material: Material()}}
+	return &PlaneT{Shape{Transform: M4Identity(), Material: GetMaterial()}}
 }
 
 // PlaneT represents a Plane.
@@ -17,19 +17,19 @@ var _ Object = &PlaneT{}
 
 // SetTransform sets the object's transform 4x4 matrix.
 func (p *PlaneT) SetTransform(m M4) Object {
-	p.transform = m
+	p.Transform = m
 	return p
 }
 
 // SetMaterial sets the object's material.
 func (p *PlaneT) SetMaterial(material MaterialT) Object {
-	p.material = material
+	p.Material = material
 	return p
 }
 
 // SetParent sets the object's parent object.
 func (p *PlaneT) SetParent(parent Object) Object {
-	p.parent = parent
+	p.Parent = parent
 	return p
 }
 

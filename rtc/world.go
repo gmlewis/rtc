@@ -16,9 +16,9 @@ func World() *WorldT {
 // DefaultWorld returns a default test world.
 func DefaultWorld() *WorldT {
 	s1 := Sphere()
-	s1.Material().Color = Color(0.8, 1.0, 0.6)
-	s1.Material().Diffuse = 0.7
-	s1.Material().Specular = 0.2
+	s1.GetMaterial().Color = Color(0.8, 1.0, 0.6)
+	s1.GetMaterial().Diffuse = 0.7
+	s1.GetMaterial().Specular = 0.2
 
 	s2 := Sphere()
 	s2.SetTransform(Scaling(0.5, 0.5, 0.5))
@@ -44,7 +44,7 @@ func (w *WorldT) ShadeHit(comps *Comps, remaining int) Tuple {
 	var result Tuple
 	for _, light := range w.Lights {
 		shadowed := w.IsShadowed(comps.OverPoint, light)
-		surface := Lighting(comps.Object.Material(),
+		surface := Lighting(comps.Object.GetMaterial(),
 			comps.Object,
 			light,
 			comps.Point,
@@ -56,7 +56,7 @@ func (w *WorldT) ShadeHit(comps *Comps, remaining int) Tuple {
 		reflected := w.ReflectedColor(comps, remaining)
 		refracted := w.RefractedColor(comps, remaining)
 
-		material := comps.Object.Material()
+		material := comps.Object.GetMaterial()
 		if material.Reflective > 0 && material.Transparency > 0 {
 			reflectance := comps.Schlick()
 			result = result.Add(surface).Add(reflected.MultScalar(reflectance)).Add(refracted.MultScalar(1 - reflectance))
@@ -96,18 +96,18 @@ func (w *WorldT) IsShadowed(point Tuple, light *PointLightT) bool {
 
 // ReflectedColor returns the reflected color for the precomputed intersection.
 func (w *WorldT) ReflectedColor(comps *Comps, remaining int) Tuple {
-	if remaining < 1 || comps.Object.Material().Reflective == 0 {
+	if remaining < 1 || comps.Object.GetMaterial().Reflective == 0 {
 		return Color(0, 0, 0)
 	}
 
 	reflectRay := Ray(comps.OverPoint, comps.ReflectVector)
 	color := w.ColorAt(reflectRay, remaining-1)
-	return color.MultScalar(comps.Object.Material().Reflective)
+	return color.MultScalar(comps.Object.GetMaterial().Reflective)
 }
 
 // RefractedColor returns the refracted color for the precomputed intersection.
 func (w *WorldT) RefractedColor(comps *Comps, remaining int) Tuple {
-	if remaining < 1 || comps.Object.Material().Transparency == 0 {
+	if remaining < 1 || comps.Object.GetMaterial().Transparency == 0 {
 		return Color(0, 0, 0)
 	}
 
@@ -124,27 +124,27 @@ func (w *WorldT) RefractedColor(comps *Comps, remaining int) Tuple {
 
 	refractedRay := Ray(comps.UnderPoint, direction)
 	color := w.ColorAt(refractedRay, remaining-1)
-	return color.MultScalar(comps.Object.Material().Transparency)
+	return color.MultScalar(comps.Object.GetMaterial().Transparency)
 }
 
 // WorldToObject converts a world-space point to object space, taking into
 // account all the parents of the object.
 func WorldToObject(object Object, point Tuple) Tuple {
-	if p := object.Parent(); p != nil {
+	if p := object.GetParent(); p != nil {
 		point = WorldToObject(p, point)
 	}
-	return object.Transform().Inverse().MultTuple(point)
+	return object.GetTransform().Inverse().MultTuple(point)
 }
 
 // NormalToWorld converts an object-space normal to world space, taking into
 // account all the parents of the object.
 func NormalToWorld(object Object, normal Tuple) Tuple {
-	inv := object.Transform().Inverse()
+	inv := object.GetTransform().Inverse()
 	worldNormal := inv.Transpose().MultTuple(normal)
 	worldNormal[3] = 0 // W
 	normal = worldNormal.Normalize()
 
-	if p := object.Parent(); p != nil {
+	if p := object.GetParent(); p != nil {
 		normal = NormalToWorld(p, normal)
 	}
 	return normal

@@ -5,7 +5,7 @@ import "math"
 // Cube creates a cube at the origin ranging from -1 to 1 on each axis.
 // It implements the Object interface.
 func Cube() *CubeT {
-	return &CubeT{Shape{transform: M4Identity(), material: Material()}}
+	return &CubeT{Shape{Transform: M4Identity(), Material: GetMaterial()}}
 }
 
 // CubeT represents a Cube.
@@ -17,19 +17,19 @@ var _ Object = &CubeT{}
 
 // SetTransform sets the object's transform 4x4 matrix.
 func (c *CubeT) SetTransform(m M4) Object {
-	c.transform = m
+	c.Transform = m
 	return c
 }
 
 // SetMaterial sets the object's material.
 func (c *CubeT) SetMaterial(material MaterialT) Object {
-	c.material = material
+	c.Material = material
 	return c
 }
 
 // SetParent sets the object's parent object.
 func (c *CubeT) SetParent(parent Object) Object {
-	c.parent = parent
+	c.Parent = parent
 	return c
 }
 

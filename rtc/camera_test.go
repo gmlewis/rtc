@@ -173,7 +173,7 @@ func TestViewTransform(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := ViewTransform(tt.from, tt.to, tt.up); !cmp.Equal(got, tt.want) {
-				t.Errorf("ViewTransform() = %v, want %v", got, tt.want)
+				t.Errorf("ViewGetTransform() = %v, want %v", got, tt.want)
 			}
 		})
 	}

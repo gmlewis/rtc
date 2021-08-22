@@ -14,7 +14,7 @@ type MaterialT struct {
 }
 
 // Material returns a default material.
-func Material() MaterialT {
+func GetMaterial() MaterialT {
 	return MaterialT{
 		Color:           Color(1, 1, 1),
 		Ambient:         0.1,

@@ -14,7 +14,7 @@ func Triangle(p1, p2, p3 Tuple) *TriangleT {
 	bounds.UpdateBounds(p3)
 
 	return &TriangleT{
-		Shape:  Shape{transform: M4Identity(), material: Material()},
+		Shape:  Shape{Transform: M4Identity(), Material: GetMaterial()},
 		P1:     p1,
 		P2:     p2,
 		P3:     p3,
@@ -47,19 +47,19 @@ var _ Object = &TriangleT{}
 
 // SetTransform sets the object's transform 4x4 matrix.
 func (t *TriangleT) SetTransform(m M4) Object {
-	t.transform = m
+	t.Transform = m
 	return t
 }
 
 // SetMaterial sets the object's material.
 func (t *TriangleT) SetMaterial(material MaterialT) Object {
-	t.material = material
+	t.Material = material
 	return t
 }
 
 // SetParent sets the object's parent object.
 func (t *TriangleT) SetParent(parent Object) Object {
-	t.parent = parent
+	t.Parent = parent
 	return t
 }
 

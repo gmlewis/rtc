@@ -142,14 +142,14 @@ func TestWorldT_ColorAt(t *testing.T) {
 			ray:          Ray(Point(0, 0, 0.75), Vector(0, 0, -1)),
 			outerAmbient: 1,
 			innerAmbient: 1,
-			want:         w.Objects[1].Material().Color,
+			want:         w.Objects[1].GetMaterial().Color,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			w.Objects[0].Material().Ambient = tt.outerAmbient
-			w.Objects[1].Material().Ambient = tt.innerAmbient
+			w.Objects[0].GetMaterial().Ambient = tt.outerAmbient
+			w.Objects[1].GetMaterial().Ambient = tt.innerAmbient
 
 			if got := w.ColorAt(tt.ray, maxReflections); !got.Equal(tt.want) {
 				t.Errorf("WorldT.ColorAt() = %v, want %v", got, tt.want)
@@ -201,7 +201,7 @@ func TestWorldT_ReflectedColor(t *testing.T) {
 	w := DefaultWorld()
 	r := Ray(Point(0, 0, 0), Vector(0, 0, 1))
 	shape := w.Objects[1]
-	shape.Material().Ambient = 1
+	shape.GetMaterial().Ambient = 1
 	i := Intersection(1, shape)
 
 	comps := i.PrepareComputations(r, []IntersectionT{i})
@@ -215,7 +215,7 @@ func TestWorldT_ReflectedColor_WithReflectiveMaterial(t *testing.T) {
 	sq2 := math.Sqrt2 / 2
 	w := DefaultWorld()
 	shape := Plane()
-	shape.Material().Reflective = 0.5
+	shape.GetMaterial().Reflective = 0.5
 	shape.SetTransform(Translation(0, -1, 0))
 	w.Objects = append(w.Objects, shape)
 
@@ -233,7 +233,7 @@ func TestWorldT_ShadeHit_WithReflectiveMaterial(t *testing.T) {
 	sq2 := math.Sqrt2 / 2
 	w := DefaultWorld()
 	shape := Plane()
-	shape.Material().Reflective = 0.5
+	shape.GetMaterial().Reflective = 0.5
 	shape.SetTransform(Translation(0, -1, 0))
 	w.Objects = append(w.Objects, shape)
 
@@ -251,10 +251,10 @@ func TestWorldT_ShadeHit_WithMutuallyReflectiveSurfaces(t *testing.T) {
 	w := World()
 	w.Lights = []*PointLightT{PointLight(Point(0, 0, 0), Color(1, 1, 1))}
 	lower := Plane()
-	lower.Material().Reflective = 1
+	lower.GetMaterial().Reflective = 1
 	lower.SetTransform(Translation(0, -1, 0))
 	upper := Plane()
-	upper.Material().Reflective = 1
+	upper.GetMaterial().Reflective = 1
 	upper.SetTransform(Translation(0, 1, 0))
 	w.Objects = append(w.Objects, lower, upper)
 
@@ -270,12 +270,12 @@ func TestWorldT_ShadeHit_WithTransparentMaterial(t *testing.T) {
 	sq2 := math.Sqrt2 / 2
 	w := DefaultWorld()
 	floor := Plane()
-	floor.Material().Transparency = 0.5
-	floor.Material().RefractiveIndex = 1.5
+	floor.GetMaterial().Transparency = 0.5
+	floor.GetMaterial().RefractiveIndex = 1.5
 	floor.SetTransform(Translation(0, -1, 0))
 	ball := Sphere()
-	ball.Material().Color = Color(1, 0, 0)
-	ball.Material().Ambient = 0.5
+	ball.GetMaterial().Color = Color(1, 0, 0)
+	ball.GetMaterial().Ambient = 0.5
 	ball.SetTransform(Translation(0, -3.5, -0.5))
 	w.Objects = append(w.Objects, floor, ball)
 
@@ -293,13 +293,13 @@ func TestWorldT_ShadeHit_WithReflectionAndRefraction(t *testing.T) {
 	sq2 := math.Sqrt2 / 2
 	w := DefaultWorld()
 	floor := Plane()
-	floor.Material().Reflective = 0.5
-	floor.Material().Transparency = 0.5
-	floor.Material().RefractiveIndex = 1.5
+	floor.GetMaterial().Reflective = 0.5
+	floor.GetMaterial().Transparency = 0.5
+	floor.GetMaterial().RefractiveIndex = 1.5
 	floor.SetTransform(Translation(0, -1, 0))
 	ball := Sphere()
-	ball.Material().Color = Color(1, 0, 0)
-	ball.Material().Ambient = 0.5
+	ball.GetMaterial().Color = Color(1, 0, 0)
+	ball.GetMaterial().Ambient = 0.5
 	ball.SetTransform(Translation(0, -3.5, -0.5))
 	w.Objects = append(w.Objects, floor, ball)
 
@@ -317,7 +317,7 @@ func TestWorldT_ReflectedColor_WithMaximumRecursionDepth(t *testing.T) {
 	sq2 := math.Sqrt2 / 2
 	w := DefaultWorld()
 	shape := Plane()
-	shape.Material().Reflective = 0.5
+	shape.GetMaterial().Reflective = 0.5
 	shape.SetTransform(Translation(0, -1, 0))
 	w.Objects = append(w.Objects, shape)
 
@@ -334,7 +334,7 @@ func TestWorldT_ReflectedColor_WithMaximumRecursionDepth(t *testing.T) {
 func TestWorldT_RefractedColor_WithOpaqueObject(t *testing.T) {
 	w := DefaultWorld()
 	shape := w.Objects[0]
-	shape.Material().Ambient = 1
+	shape.GetMaterial().Ambient = 1
 
 	r := Ray(Point(0, 0, -5), Vector(0, 0, 1))
 	xs := Intersections(Intersection(4, shape), Intersection(6, shape))
@@ -349,8 +349,8 @@ func TestWorldT_RefractedColor_WithOpaqueObject(t *testing.T) {
 func TestWorldT_RefractedColor_WithMaximumRecursionDepth(t *testing.T) {
 	w := DefaultWorld()
 	shape := w.Objects[0]
-	shape.Material().Transparency = 1
-	shape.Material().RefractiveIndex = 1.5
+	shape.GetMaterial().Transparency = 1
+	shape.GetMaterial().RefractiveIndex = 1.5
 
 	r := Ray(Point(0, 0, -5), Vector(0, 0, 1))
 	xs := Intersections(Intersection(4, shape), Intersection(6, shape))
@@ -366,8 +366,8 @@ func TestWorldT_RefractedColor_WithTotalInternalReflection(t *testing.T) {
 	sq2 := math.Sqrt2 / 2
 	w := DefaultWorld()
 	shape := w.Objects[0]
-	shape.Material().Transparency = 1
-	shape.Material().RefractiveIndex = 1.5
+	shape.GetMaterial().Transparency = 1
+	shape.GetMaterial().RefractiveIndex = 1.5
 
 	r := Ray(Point(0, 0, sq2), Vector(0, 1, 0))
 	xs := Intersections(Intersection(-sq2, shape), Intersection(sq2, shape))
@@ -382,11 +382,11 @@ func TestWorldT_RefractedColor_WithTotalInternalReflection(t *testing.T) {
 func TestWorldT_RefractedColor_WithRefractedColor(t *testing.T) {
 	w := DefaultWorld()
 	a := w.Objects[0]
-	a.Material().Ambient = 1
-	a.Material().Pattern = testPattern()
+	a.GetMaterial().Ambient = 1
+	a.GetMaterial().Pattern = testPattern()
 	b := w.Objects[1]
-	b.Material().Transparency = 1
-	b.Material().RefractiveIndex = 1.5
+	b.GetMaterial().Transparency = 1
+	b.GetMaterial().RefractiveIndex = 1.5
 
 	r := Ray(Point(0, 0, 0.1), Vector(0, 1, 0))
 	xs := Intersections(Intersection(-0.9899, a), Intersection(-0.4899, b), Intersection(0.4899, b), Intersection(0.9899, a))
