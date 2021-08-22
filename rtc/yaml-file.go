@@ -48,23 +48,23 @@ func ParseYAML(r io.Reader) (*YAMLFile, error) {
 		if item.Define != nil {
 			y.DefinedItems[*item.Define] = &y.Items[i]
 		}
-		if item.Value != nil {
-			switch []byte(item.Value)[0] {
+		if item.RawValue != nil {
+			switch []byte(item.RawValue)[0] {
 			case '[':
 				log.Printf("item.Value is an array")
-				y.Items[i].ValueArray, err = parseValueArray(item.Value)
+				y.Items[i].ValueArray, err = parseValueArray(item.RawValue)
 				if err != nil {
 					return nil, err
 				}
-				y.Items[i].Value = nil
+				y.Items[i].RawValue = nil
 			case '{':
 				log.Printf("item.Value is an object")
-				if err := json.Unmarshal(item.Value, &y.Items[i].ValueMaterial); err != nil {
+				if err := json.Unmarshal(item.RawValue, &y.Items[i].ValueMaterial); err != nil {
 					return nil, err
 				}
-				y.Items[i].Value = nil
+				y.Items[i].RawValue = nil
 			default:
-				log.Fatalf("Unknown item.Value: %s", item.Value)
+				log.Fatalf("Unknown item.Value: %s", item.RawValue)
 			}
 		}
 	}
@@ -80,7 +80,7 @@ func (y *YAMLFile) ToYAML() ([]byte, error) {
 			if err != nil {
 				return nil, err
 			}
-			y.Items[i].Value = buf
+			y.Items[i].RawValue = buf
 			y.Items[i].ValueMaterial = nil
 			continue
 		}
@@ -92,14 +92,13 @@ func (y *YAMLFile) ToYAML() ([]byte, error) {
 					parts = append(parts, fmt.Sprintf("%q", *v.NamedItem))
 					continue
 				}
-				t := v.Transform
-				if t == nil {
-					return nil, fmt.Errorf("expected NamedItem or Transform in ValueArray, got %#v", *v)
+				if v.Type == nil || v.X == nil || v.Y == nil || v.Z == nil {
+					return nil, fmt.Errorf("expected NamedItem or Type/X/Y/Z in ValueArray, got %#v", *v)
 				}
-				parts = append(parts, fmt.Sprintf("[%q,%v,%v,%v]", t.Type, t.X, t.Y, t.Z))
+				parts = append(parts, fmt.Sprintf("[%q,%v,%v,%v]", *v.Type, *v.X, *v.Y, *v.Z))
 			}
-			y.Items[i].Value = []byte(fmt.Sprintf("[%v]", strings.Join(parts, ",")))
-			log.Printf("Created y.Items[%v].Value: %s", i, y.Items[i].Value)
+			y.Items[i].RawValue = []byte(fmt.Sprintf("[%v]", strings.Join(parts, ",")))
+			log.Printf("Created y.Items[%v].Value: %s", i, y.Items[i].RawValue)
 			y.Items[i].ValueArray = nil
 		}
 	}
@@ -156,12 +155,12 @@ type Item struct {
 	Intensity []float64 `json:"intensity,omitempty"`
 
 	// define
-	Extend *string         `json:"extend,omitempty"`
-	Value  json.RawMessage `json:"value,omitempty"`
+	Extend   *string         `json:"extend,omitempty"`
+	RawValue json.RawMessage `json:"value,omitempty"`
 
 	// object
-	Material  json.RawMessage `json:"material,omitempty"`
-	Transform json.RawMessage `json:"transform,omitempty"`
+	RawMaterial  json.RawMessage `json:"material,omitempty"`
+	RawTransform json.RawMessage `json:"transform,omitempty"`
 
 	// expanded raw messages:
 	ValueMaterial *YAMLMaterial     `json:"-"`
@@ -184,14 +183,11 @@ func parseValueArray(v json.RawMessage) ([]*ValueArrayItem, error) {
 		if !ok {
 			return nil, fmt.Errorf("expected string or transform array, but got %#v", item)
 		}
-		result = append(result, &ValueArrayItem{
-			Transform: &YAMLTransform{
-				Type: v[0].(string),
-				X:    v[1].(float64),
-				Y:    v[2].(float64),
-				Z:    v[3].(float64),
-			},
-		})
+		Type := v[0].(string)
+		X := v[1].(float64)
+		Y := v[2].(float64)
+		Z := v[3].(float64)
+		result = append(result, &ValueArrayItem{Type: &Type, X: &X, Y: &Y, Z: &Z})
 	}
 	return result, nil
 }
@@ -233,6 +229,7 @@ func (i Item) String() string {
 			return p
 		}
 		var p2 []string
+		p2 = addString(p2, v.NamedItem, "NamedItem")
 		p2 = addFloatArray(p2, v.Color, "Color")
 		p2 = addFloat(p2, v.Diffuse, "Diffuse")
 		p2 = addFloat(p2, v.Ambient, "Ambient")
@@ -244,21 +241,19 @@ func (i Item) String() string {
 		p = append(p, fmt.Sprintf("%v:&YAMLMaterial{%v}", n, strings.Join(p2, ",")))
 		return p
 	}
-	addTransform := func(p []string, v *YAMLTransform, n string) []string {
-		if v == nil {
-			return p
-		}
-		p = append(p, fmt.Sprintf("%v:&YAMLTransform{Type:%q,X:%v,Y:%v,Z:%v}", n, v.Type, v.X, v.Y, v.Z))
-		return p
-	}
 	addValueArray := func(p []string, vs []*ValueArrayItem, n string) []string {
 		if len(vs) == 0 {
 			return p
 		}
 		var p2 []string
 		for _, v := range vs {
-			p2 = addString(p2, v.NamedItem, "NamedItem")
-			p2 = addTransform(p2, v.Transform, "Transform")
+			var items []string
+			items = addString(items, v.NamedItem, "NamedItem")
+			items = addString(items, v.Type, "Type")
+			items = addFloat(items, v.X, "X")
+			items = addFloat(items, v.Y, "Y")
+			items = addFloat(items, v.Z, "Z")
+			p2 = append(p2, strings.Join(items, ","))
 		}
 		p = append(p, fmt.Sprintf("%v:[]*ValueArrayItem{{%v}}", n, strings.Join(p2, "},{")))
 		return p
@@ -275,16 +270,18 @@ func (i Item) String() string {
 	parts = addFloatArray(parts, i.At, "At")
 	parts = addFloatArray(parts, i.Intensity, "Intensity")
 	parts = addString(parts, i.Extend, "Extend")
-	parts = addRaw(parts, i.Value, "Value")
-	parts = addRaw(parts, i.Material, "Material")
-	parts = addRaw(parts, i.Transform, "Transform")
+	parts = addRaw(parts, i.RawValue, "Value")
+	parts = addRaw(parts, i.RawMaterial, "Material")
+	parts = addRaw(parts, i.RawTransform, "Transform")
 	parts = addValueMaterial(parts, i.ValueMaterial, "ValueMaterial")
 	parts = addValueArray(parts, i.ValueArray, "ValueArray")
 	return fmt.Sprintf("{%v}", strings.Join(parts, ","))
 }
 
-// YAMLMaterial represents a Material.
+// YAMLMaterial represents either a named DefinedItems value or a Material.
 type YAMLMaterial struct {
+	NamedItem *string `json:"-"`
+
 	Color           []float64 `json:"color,omitempty"`
 	Diffuse         *float64  `json:"diffuse,omitempty"`
 	Ambient         *float64  `json:"ambient,omitempty"`
@@ -298,11 +295,7 @@ type YAMLMaterial struct {
 // ValueArrayItem is either a named DefinedItems value or a YAMLTransform.
 type ValueArrayItem struct {
 	NamedItem *string
-	Transform *YAMLTransform
-}
 
-// YAMLTransform represents a transform.
-type YAMLTransform struct {
-	Type    string
-	X, Y, Z float64
+	Type    *string
+	X, Y, Z *float64
 }
