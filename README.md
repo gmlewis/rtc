@@ -18,7 +18,7 @@ go run cmd/test-yaml/main.go -xsize 1280 -ysize 1024 file.yaml
 
 ## Examples
 
-Here is the cover scene of the book as described in [examples/cover/cover.yaml]():
+Here is the cover scene of the book as described in [examples/cover/cover.yaml]:
 
 ![Cover](examples/cover/cover.png)
 
