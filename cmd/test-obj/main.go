@@ -6,6 +6,7 @@ import (
 	"log"
 	"math"
 
+	"github.com/gmlewis/rtc/obj"
 	"github.com/gmlewis/rtc/rtc"
 )
 
@@ -29,7 +30,7 @@ func main() {
 	world := genWorld()
 
 	for _, arg := range flag.Args() {
-		obj, err := rtc.ParseObjFile(arg)
+		obj, err := obj.ParseObjFile(arg)
 		if err != nil {
 			log.Fatal(err)
 		}
